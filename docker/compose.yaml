@@ -1,0 +1,39 @@
+services:
+  frontend:
+    build:
+      context: ..
+      dockerfile: docker/node/Dockerfile
+    ports:
+      - "3001:3000"
+    volumes:
+      - ../frontend:/usr/src/app
+      - ../shared_prisma:/usr/src/app/prisma
+    working_dir: /usr/src/app
+    command: /bin/sh -c "npm install && npm run dev"
+    environment:
+      - NODE_ENV=development
+
+  admin:
+    build:
+      context: ..
+      dockerfile: docker/node/Dockerfile
+    ports:
+      - "3002:3000"
+    volumes:
+      - ../admin:/usr/src/app
+      - ../shared_prisma:/usr/src/app/prisma
+    working_dir: /usr/src/app
+    command: /bin/sh -c "npm install && npm run dev"
+    environment:
+      - NODE_ENV=development
+
+  sqlite-web:
+    build:
+      context: ..
+      dockerfile: docker/sqlite-web/Dockerfile
+    ports:
+      - "8080:8080"
+    volumes:
+      - ../shared_prisma:/data
+    environment:
+      SQLITE_DATABASE: dev.db

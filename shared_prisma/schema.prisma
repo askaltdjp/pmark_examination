@@ -1,0 +1,81 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model MTest {
+  id          Int       @id @default(autoincrement())
+  name        String?
+  startDate   DateTime  @map("start_date")
+  endDate     DateTime  @map("end_date")
+  questionNum Int       @map("question_num")
+  passNum     Int       @map("pass_num")
+  createAt    DateTime  @default(now()) @map("create_at")
+  updateAt    DateTime  @default(now()) @map("update_at")
+  deleteAt    DateTime? @map("delete_at")
+}
+
+model MTestQuestion {
+  id         Int       @id @default(autoincrement())
+  testId     Int       @map("test_id")
+  questionNo Int       @map("question_no")
+  question   String
+  commentary String?
+  correct    Boolean
+  createAt   DateTime  @default(now()) @map("create_at")
+  updateAt   DateTime  @default(now()) @map("update_at")
+  deleteAt   DateTime? @map("delete_at")
+
+  @@unique([testId, questionNo])
+}
+
+model TEmployee {
+  id           Int       @id @default(autoincrement())
+  employeeNo   String    @map("employee_no")
+  name         String
+  emailAddress String    @map("email_address")
+  password     String
+  joinDate     DateTime  @map("join_date")
+  createAt     DateTime  @default(now()) @map("create_at")
+  updateAt     DateTime  @default(now()) @map("update_at")
+  deleteAt     DateTime? @map("delete_at")
+}
+
+model TTest {
+  id         Int       @id @default(autoincrement())
+  employeeId Int       @map("employee_id")
+  testId     Int       @map("test_id")
+  testCnt    Int       @default(1) @map("test_cnt")
+  correctNum Int       @map("correct_num")
+  result     Int
+  testAt     DateTime  @default(now()) @map("test_at")
+  createAt   DateTime  @default(now()) @map("create_at")
+  updateAt   DateTime  @default(now()) @map("update_at")
+  deleteAt   DateTime? @map("delete_at")
+
+  @@unique([employeeId, testId, testCnt])
+}
+
+model TTestAnswer {
+  id         Int       @id @default(autoincrement())
+  employeeId Int       @map("employee_id")
+  testId     Int       @map("test_id")
+  testCnt    Int       @default(1) @map("test_cnt")
+  questionNo Int       @map("question_no")
+  answer     Boolean   @default(false)
+  createAt   DateTime  @default(now()) @map("create_at")
+  updateAt   DateTime  @default(now()) @map("update_at")
+  deleteAt   DateTime? @map("delete_at")
+
+  @@unique([employeeId, testId, testCnt, questionNo])
+}
