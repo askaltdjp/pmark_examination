@@ -1,5 +1,8 @@
 import LoginForm from "@/components/auth/login/LoginForm";
 
+/**
+ * ログイン画面のサーバコンポーネント
+ */
 export default function LoginPage() {
     return (
         <div className="min-h-screen flex flex-col items-center justify-center bg-base-200 px-4">
