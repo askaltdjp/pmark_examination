@@ -10,10 +10,7 @@ export async function authMiddleware(request: NextRequest): Promise<NextResponse
     const pathname = request.nextUrl.pathname;
 
     // 認証処理をスキップするパス（ログイン画面など）
-    if (
-        pathname.startsWith('/auth/login') ||
-        pathname.startsWith('/api/auth/login')
-    ) {
+    if (pathname.startsWith('/auth/login')) {
         return NextResponse.next();
     }
 

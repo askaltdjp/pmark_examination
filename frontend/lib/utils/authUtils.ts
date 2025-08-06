@@ -34,7 +34,6 @@ export async function signJwt(payload: JwtPayload, expiresIn: number = 3600): Pr
  */
 export async function verifyJwt(token: string): Promise<JwtPayload | null> {
     try {
-        console.log(token);
         const { payload } = await jwtVerify(token, JWT_SECRET, {
             algorithms: ['HS256'],
         });
