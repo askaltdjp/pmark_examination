@@ -1,33 +1,46 @@
-import jwt from "jsonwebtoken";
-import type { StringValue } from "ms";
+import { SignJWT, jwtVerify, type JWTPayload } from 'jose';
 
-const JWT_SECRET = process.env.JWT_SECRET || "your-secret-key"; // 環境変数推奨
+const JWT_SECRET_KEY = process.env.JWT_SECRET || 'your-secret-key';
+const JWT_SECRET = new TextEncoder().encode(JWT_SECRET_KEY);
 
-export interface JwtPayload {
+/**
+ * JWTのペイロード型。
+ * - jose の JWTPayload を継承しているため、setIssuedAt などにも対応。
+ */
+export interface JwtPayload extends JWTPayload {
     employeeId: number;
-    // 必要なら他の情報も追加可能
 }
 
 /**
- * JWTを発行する関数
- * @param payload - JWTに含めるペイロード（ユーザ情報など）
- * @param expiresIn - 有効期限（秒 or 文字列、例："1h"）
- * @returns 発行したJWTトークン文字列
+ * JWT を発行する
+ * @param payload - { employeeId: number } を含むオブジェクト
+ * @param expiresIn - 有効期限（秒）。デフォルトは3600（1時間）
  */
-export function signJwt(payload: JwtPayload, expiresIn: StringValue = "1h"): string {
-    return jwt.sign(payload, JWT_SECRET, { expiresIn });
+export async function signJwt(payload: JwtPayload, expiresIn: number = 3600): Promise<string> {
+    const now = Math.floor(Date.now() / 1000);
+    const exp = now + expiresIn;
+
+    return await new SignJWT(payload)
+        .setProtectedHeader({ alg: 'HS256', typ: 'JWT' })
+        .setIssuedAt(now)
+        .setExpirationTime(exp)
+        .sign(JWT_SECRET);
 }
 
 /**
- * JWTを検証しペイロードを返す関数
- * @param token - JWTトークン文字列
- * @returns ペイロード情報 or null（検証失敗時）
+ * JWT を検証し、ペイロード（employeeId含む）を返す
+ * @param token - JWT トークン文字列
+ * @returns JwtPayload（or null）
  */
-export function verifyJwt(token: string): JwtPayload | null {
+export async function verifyJwt(token: string): Promise<JwtPayload | null> {
     try {
-        return jwt.verify(token, JWT_SECRET) as JwtPayload;
-    } catch (error) {
-        console.error("JWT verification error:", error);
+        console.log(token);
+        const { payload } = await jwtVerify(token, JWT_SECRET, {
+            algorithms: ['HS256'],
+        });
+        return payload as JwtPayload;
+    } catch (err) {
+        console.error('JWT verify error:', err);
         return null;
     }
 }

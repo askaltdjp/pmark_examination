@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { authenticateUser } from "@/services/api/auth/loginService";
+import { authenticateEmployee } from "@/services/api/auth/loginService";
+import { AUTH_TOKEN_COOKIE_NAME } from "@/lib/constants";
 
 /**
  * POSTリクエストを処理するAPIハンドラ
@@ -11,7 +12,7 @@ export async function POST(req: NextRequest) {
     const { emailAddress, password } = body;
 
     // 認証サービスを呼び出し、トークンを取得
-    const token = await authenticateUser(emailAddress, password);
+    const token = await authenticateEmployee(emailAddress, password);
 
     // 認証に失敗した場合は401エラーを返す
     if (!token) {
@@ -22,7 +23,7 @@ export async function POST(req: NextRequest) {
 
         // JWTトークンをHttpOnlyクッキーとしてセット（セキュア属性は環境に応じて設定推奨）
         response.cookies.set({
-            name: "token",
+            name: AUTH_TOKEN_COOKIE_NAME,
             value: token,
             httpOnly: true,
             // secure: process.env.NODE_ENV === "production",
