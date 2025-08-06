@@ -11,12 +11,7 @@ export async function middleware(request: NextRequest) {
 
     // APIリクエストの場合は、API用のミドルウェアを使用
     if (pathname.startsWith('/api/')) {
-        const response = await apiAuthMiddleware(request);
-        if (response.status !== 200) {
-            // 認証失敗 → そのままエラーレスポンスを返す（処理継続しない）
-            return response;
-        }
-        return response;
+        return await apiAuthMiddleware(request);
     }
 
     // ページ遷移などは通常の認証ミドルウェアを使用
