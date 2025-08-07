@@ -1,9 +1,20 @@
 "use client";
 
+import { useRouter } from "next/navigation";
+
 // 認証後画面の共通ヘッダーのクライアントコンポーネント
 export default function Header() {
-    const handleLogout = () => {
-        console.log("ログアウトしました");
+    const router = useRouter();
+
+    // ログアウトボタン押下時の処理
+    const handleLogout = async () => {
+        // ログアウトAPIの呼び出し
+        await fetch('/api/auth/logout', {
+            "method": "POST",
+        });
+
+        // ログイン画面に遷移
+        router.push("/auth/login");
     };
 
     return (
