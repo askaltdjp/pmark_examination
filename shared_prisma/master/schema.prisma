@@ -21,8 +21,8 @@ model MTest {
   endAt       DateTime  @map("end_at")
   questionNum Int       @map("question_num")
   passNum     Int       @map("pass_num")
-  createAt    DateTime  @default(dbgenerated("CURRENT_TIMESTAMP(3)")) @map("create_at")
-  updateAt    DateTime  @default(dbgenerated("CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3)")) @map("update_at")
+  createAt    DateTime  @map("create_at")
+  updateAt    DateTime  @map("update_at")
   deleteAt    DateTime? @map("delete_at")
 
    @@map("m_test")
@@ -35,8 +35,8 @@ model MTestQuestion {
   question   String    @db.Text
   commentary String?   @db.Text
   correct    Boolean
-  createAt   DateTime  @default(dbgenerated("CURRENT_TIMESTAMP(3)")) @map("create_at")
-  updateAt   DateTime  @default(dbgenerated("CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3)")) @map("update_at")
+  createAt   DateTime  @map("create_at")
+  updateAt   DateTime  @map("update_at")
   deleteAt   DateTime? @map("delete_at")
 
   @@unique([testId, questionNo])
