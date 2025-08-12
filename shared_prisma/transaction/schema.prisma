@@ -6,6 +6,7 @@
 
 generator client {
   provider = "prisma-client-js"
+  output   = "../../node_modules/.prisma/client_transaction"
 }
 
 datasource db {
@@ -20,8 +21,8 @@ model TEmployee {
   emailAddress String    @map("email_address") @db.VarChar(256)
   password     String    @db.VarChar(64)
   joinDate     DateTime  @map("join_date") @db.Date
-  createAt     DateTime  @default(now()) @map("create_at")
-  updateAt     DateTime  @map("update_at")
+  createAt     DateTime  @default(dbgenerated("CURRENT_TIMESTAMP(3)")) @map("create_at")
+  updateAt     DateTime  @default(dbgenerated("CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3)")) @map("update_at")
   deleteAt     DateTime? @map("delete_at")
 
   @@index([employeeNo])
@@ -36,9 +37,9 @@ model TTest {
   testCnt    Int       @default(1) @map("test_cnt")
   correctNum Int       @map("correct_num")
   result     Int
-  testAt     DateTime  @default(now()) @map("test_at")
-  createAt   DateTime  @default(now()) @map("create_at")
-  updateAt   DateTime  @map("update_at")
+  testAt     DateTime  @default(dbgenerated("CURRENT_TIMESTAMP(3)")) @map("test_at")
+  createAt   DateTime  @default(dbgenerated("CURRENT_TIMESTAMP(3)")) @map("create_at")
+  updateAt   DateTime  @default(dbgenerated("CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3)")) @map("update_at")
   deleteAt   DateTime? @map("delete_at")
 
   @@unique([employeeId, testId, testCnt])
@@ -52,8 +53,8 @@ model TTestAnswer {
   testCnt    Int       @default(1) @map("test_cnt")
   questionNo Int       @map("question_no")
   answer     Boolean   @default(false)
-  createAt   DateTime  @default(now()) @map("create_at")
-  updateAt   DateTime  @map("update_at")
+  createAt   DateTime  @default(dbgenerated("CURRENT_TIMESTAMP(3)")) @map("create_at")
+  updateAt   DateTime  @default(dbgenerated("CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3)")) @map("update_at")
   deleteAt   DateTime? @map("delete_at")
 
   @@unique([employeeId, testId, testCnt, questionNo])

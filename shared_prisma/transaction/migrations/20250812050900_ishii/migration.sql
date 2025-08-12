@@ -7,7 +7,7 @@ CREATE TABLE `t_employee` (
     `password` VARCHAR(64) NOT NULL,
     `join_date` DATE NOT NULL,
     `create_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-    `update_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `update_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3),
     `delete_at` DATETIME(3) NULL,
 
     INDEX `t_employee_employee_no_idx`(`employee_no`),
@@ -25,7 +25,7 @@ CREATE TABLE `t_test` (
     `result` INTEGER NOT NULL,
     `test_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
     `create_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-    `update_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `update_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3),
     `delete_at` DATETIME(3) NULL,
 
     UNIQUE INDEX `t_test_employee_id_test_id_test_cnt_key`(`employee_id`, `test_id`, `test_cnt`),
@@ -41,7 +41,7 @@ CREATE TABLE `t_test_answer` (
     `question_no` INTEGER NOT NULL,
     `answer` BOOLEAN NOT NULL DEFAULT false,
     `create_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-    `update_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `update_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3),
     `delete_at` DATETIME(3) NULL,
 
     UNIQUE INDEX `t_test_answer_employee_id_test_id_test_cnt_question_no_key`(`employee_id`, `test_id`, `test_cnt`, `question_no`),

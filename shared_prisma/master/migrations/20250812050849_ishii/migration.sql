@@ -7,7 +7,7 @@ CREATE TABLE `m_test` (
     `question_num` INTEGER NOT NULL,
     `pass_num` INTEGER NOT NULL,
     `create_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-    `update_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `update_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3),
     `delete_at` DATETIME(3) NULL,
 
     PRIMARY KEY (`id`)
@@ -22,7 +22,7 @@ CREATE TABLE `m_test_question` (
     `commentary` TEXT NULL,
     `correct` BOOLEAN NOT NULL,
     `create_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3),
-    `update_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    `update_at` DATETIME(3) NOT NULL DEFAULT CURRENT_TIMESTAMP(3) ON UPDATE CURRENT_TIMESTAMP(3),
     `delete_at` DATETIME(3) NULL,
 
     UNIQUE INDEX `m_test_question_test_id_question_no_key`(`test_id`, `question_no`),
