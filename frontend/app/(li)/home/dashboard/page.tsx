@@ -1,5 +1,6 @@
 import { redirect } from "next/navigation";
 import { headers } from 'next/headers';
+import { MTestRepository } from "@/lib/repositories/mTestRepository";
 import { TEmployeeRepository } from "@/lib/repositories/tEmployeeRepository";
 import { EMPLOYEE_ID_HEADER } from "@/lib/constants";
 import ExamHistoryList from "@/components/home/dashboard/ExamHistoryList";
@@ -13,9 +14,11 @@ export default async function DashBoardPage() {
     const requestHeaders = await headers();
     const employeeId = Number(requestHeaders.get(EMPLOYEE_ID_HEADER));
 
+    // 実施中の試験情報取得
+    const mTest = await MTestRepository.findActive();
+
     // 従業員IDを元にDBから従業員情報を取得
-    const tEmployeeRepository = new TEmployeeRepository();
-    const tEmployee = await tEmployeeRepository.findById(employeeId);
+    const tEmployee = await TEmployeeRepository.findById(employeeId);
 
     // 従業員情報が取得できなければログイン画面へリダイレクト
     if (!tEmployee) {
@@ -40,7 +43,7 @@ export default async function DashBoardPage() {
                             試験内容
                         </th>
                         <td className="align-middle pl-4 py-3 w-auto border border-gray-600 bg-white">
-                            〇〇〇〇〇〇
+                            {mTest?.name ?? "実施中の試験はありません"}
                         </td>
                     </tr>
                 </tbody>
@@ -53,7 +56,7 @@ export default async function DashBoardPage() {
             <ExamHistoryList />
 
             {/* 試験開始ボタン */}
-            <StartExamButton />
+            <StartExamButton disabled={!mTest} />
         </div>
     );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-// 受験履歴テーブルコンポーネント
+// 受験履歴テーブルのクライアントコンポーネント
 export default function ExamHistoryList() {
     return (
         <div className="overflow-y-auto max-h-[400px]">

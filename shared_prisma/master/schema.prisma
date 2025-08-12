@@ -1,0 +1,43 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL_MASTER")
+}
+
+model MTest {
+  id          Int       @id @default(autoincrement())
+  name        String?   @db.VarChar(64)
+  startAt     DateTime  @map("start_at")
+  endAt       DateTime  @map("end_at")
+  questionNum Int       @map("question_num")
+  passNum     Int       @map("pass_num")
+  createAt    DateTime  @default(now()) @map("create_at")
+  updateAt    DateTime  @map("update_at")
+  deleteAt    DateTime? @map("delete_at")
+
+   @@map("m_test")
+}
+
+model MTestQuestion {
+  id         Int       @id @default(autoincrement())
+  testId     Int       @map("test_id")
+  questionNo Int       @map("question_no")
+  question   String    @db.Text
+  commentary String?   @db.Text
+  correct    Boolean
+  createAt   DateTime  @default(now()) @map("create_at")
+  updateAt   DateTime  @map("update_at")
+  deleteAt   DateTime? @map("delete_at")
+
+  @@unique([testId, questionNo])
+  @@map("m_test_question")
+}

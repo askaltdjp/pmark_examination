@@ -9,49 +9,24 @@ generator client {
 }
 
 datasource db {
-  provider = "sqlite"
-  url      = env("DATABASE_URL")
-}
-
-model MTest {
-  id          Int       @id @default(autoincrement())
-  name        String?
-  startDate   DateTime  @map("start_date")
-  endDate     DateTime  @map("end_date")
-  questionNum Int       @map("question_num")
-  passNum     Int       @map("pass_num")
-  createAt    DateTime  @default(now()) @map("create_at")
-  updateAt    DateTime  @default(now()) @map("update_at")
-  deleteAt    DateTime? @map("delete_at")
-}
-
-model MTestQuestion {
-  id         Int       @id @default(autoincrement())
-  testId     Int       @map("test_id")
-  questionNo Int       @map("question_no")
-  question   String
-  commentary String?
-  correct    Boolean
-  createAt   DateTime  @default(now()) @map("create_at")
-  updateAt   DateTime  @default(now()) @map("update_at")
-  deleteAt   DateTime? @map("delete_at")
-
-  @@unique([testId, questionNo])
+  provider = "mysql"
+  url      = env("DATABASE_URL_TRANSACTION")
 }
 
 model TEmployee {
   id           Int       @id @default(autoincrement())
-  employeeNo   String    @map("employee_no")
-  name         String
-  emailAddress String    @map("email_address")
-  password     String
-  joinDate     DateTime  @map("join_date")
+  employeeNo   String    @map("employee_no") @db.VarChar(64)
+  name         String    @db.VarChar(64)
+  emailAddress String    @map("email_address") @db.VarChar(256)
+  password     String    @db.VarChar(64)
+  joinDate     DateTime  @map("join_date") @db.Date
   createAt     DateTime  @default(now()) @map("create_at")
-  updateAt     DateTime  @default(now()) @map("update_at")
+  updateAt     DateTime  @map("update_at")
   deleteAt     DateTime? @map("delete_at")
 
   @@index([employeeNo])
   @@index([emailAddress])
+  @@map("t_employee")
 }
 
 model TTest {
@@ -63,10 +38,11 @@ model TTest {
   result     Int
   testAt     DateTime  @default(now()) @map("test_at")
   createAt   DateTime  @default(now()) @map("create_at")
-  updateAt   DateTime  @default(now()) @map("update_at")
+  updateAt   DateTime  @map("update_at")
   deleteAt   DateTime? @map("delete_at")
 
   @@unique([employeeId, testId, testCnt])
+  @@map("t_test")
 }
 
 model TTestAnswer {
@@ -77,8 +53,9 @@ model TTestAnswer {
   questionNo Int       @map("question_no")
   answer     Boolean   @default(false)
   createAt   DateTime  @default(now()) @map("create_at")
-  updateAt   DateTime  @default(now()) @map("update_at")
+  updateAt   DateTime  @map("update_at")
   deleteAt   DateTime? @map("delete_at")
 
   @@unique([employeeId, testId, testCnt, questionNo])
+  @@map("t_test_answer")
 }

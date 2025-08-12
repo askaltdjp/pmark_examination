@@ -9,7 +9,7 @@ export async function apiAuthMiddleware(request: NextRequest): Promise<NextRespo
     const pathname = request.nextUrl.pathname;
 
     // 認証処理をスキップするパス（認証APIなど）
-    if (pathname.startsWith('/api/auth/login')) {
+    if (pathname.startsWith('/api/auth/login') || pathname.startsWith('/api/sample')) {
         return NextResponse.next();
     }
 

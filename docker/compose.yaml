@@ -27,13 +27,20 @@ services:
     environment:
       - NODE_ENV=development
 
-  sqlite-web:
+  mysql:
     build:
       context: ..
-      dockerfile: docker/sqlite-web/Dockerfile
+      dockerfile: docker/mysql/Dockerfile
     ports:
-      - "8080:8080"
-    volumes:
-      - ../shared_prisma:/data
+      - "3306:3306"
     environment:
-      SQLITE_DATABASE: dev.db
+      - MYSQL_ROOT_PASSWORD=rootpassword
+      - TZ=Asia/Tokyo
+    volumes:
+      - ./mysql/my.cnf:/etc/mysql/conf.d/my.cnf
+      - ./mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
+      - mysql_data:/var/lib/mysql
+    restart: always
+
+volumes:
+  mysql_data:

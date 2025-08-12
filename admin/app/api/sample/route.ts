@@ -15,9 +15,6 @@ export async function GET(): Promise<NextResponse> {
       emailAddress: `employee${randomId}@example.com`,
       password: 'securepassword',
       joinDate: new Date(),
-      createAt: new Date(),
-      updateAt: new Date(),
-      // deleteAt はオプショナルなので不要
     },
   });
 

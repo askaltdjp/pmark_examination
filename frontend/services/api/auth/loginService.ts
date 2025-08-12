@@ -12,8 +12,7 @@ import { signJwt } from "@/lib/utils/authUtils";
  */
 export async function authenticateEmployee(emailAddress: string, password: string) {
     // メールアドレスで従業員を検索
-    const tEmployeeRepository = new TEmployeeRepository();
-    const tEmployee = await tEmployeeRepository.findByEmail(emailAddress);
+    const tEmployee = await TEmployeeRepository.findByEmail(emailAddress);
 
     // 従業員が存在しない、またはパスワードが一致しなければnullを返す
     if (!tEmployee || tEmployee.password !== password) {

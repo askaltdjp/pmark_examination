@@ -1,5 +1,5 @@
-import { TEmployee } from "@prisma/client";
-import { prisma } from "@/lib/prisma";
+import { TEmployee } from '.prisma/client_transaction';
+import { transactionPrisma } from '@/lib/prisma/transactionPrisma';
 
 /**
  * TEmployeeモデルのデータ操作を行うリポジトリクラス
@@ -10,8 +10,8 @@ export class TEmployeeRepository {
      * @param id - 検索するID
      * @returns 見つかったTEmployeeオブジェクト、なければnull
      */
-    async findById(id: number): Promise<TEmployee | null> {
-        return prisma.tEmployee.findUnique({ where: { id } });
+    static async findById(id: number): Promise<TEmployee | null> {
+        return transactionPrisma.tEmployee.findUnique({ where: { id } });
     }
 
     /**
@@ -19,7 +19,7 @@ export class TEmployeeRepository {
      * @param emailAddress - 検索するメールアドレス
      * @returns 見つかったTEmployeeオブジェクト、なければnull
      */
-    async findByEmail(emailAddress: string): Promise<TEmployee | null> {
-        return prisma.tEmployee.findFirst({ where: { emailAddress } });
+    static async findByEmail(emailAddress: string): Promise<TEmployee | null> {
+        return transactionPrisma.tEmployee.findFirst({ where: { emailAddress } });
     }
 }
