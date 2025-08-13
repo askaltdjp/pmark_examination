@@ -15,7 +15,7 @@ export default function LoginForm() {
     const [errorMessage, setErrorMessage] = useState("");
 
     // フォーム送信時の処理
-    const onSubmit = async (e: React.FormEvent) => {
+    const handleFormSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setErrorMessage("");
 
@@ -36,7 +36,7 @@ export default function LoginForm() {
     };
 
     return (
-        <form className="card w-full max-w-md bg-white shadow-md rounded-lg p-6" onSubmit={onSubmit}>
+        <form className="card w-full max-w-md bg-white shadow-md rounded-lg p-6" onSubmit={handleFormSubmit}>
             <input
                 type="email"
                 value={emailAddress}

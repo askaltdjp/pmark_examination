@@ -20,6 +20,52 @@ export default function ExamHistoryList({ mTest, tTests }: Props) {
         );
     }
 
+    // 確認ボタン押下時の処理
+    const handleConfirmButtonClick = async (testId: number, testCnt: number) => {
+        try {
+            // ファイルダウンロードAPIへPOSTリクエスト
+            const response = await fetch('/api/exam/download', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ testId, testCnt }),
+            });
+
+            // レスポンスの正常確認
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+
+            // Content-Dispositionヘッダーからファイル名を取得
+            const disposition = response.headers.get('Content-Disposition');
+            console.log(disposition);
+            if (!disposition) throw new Error('Content-Disposition header is missing');
+
+            // ファイル名を正規表現で抽出
+            const match = disposition.match(/filename="([^"]+)"/);
+            if (!match || !match[1]) throw new Error('Filename not found in Content-Disposition header');
+
+            const filename = match[1];
+
+            // レスポンスをBlobに変換し、一時URLを生成
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+
+            // ダウンロード用リンクを作成してクリックイベントを発火
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+
+            // 使い終わったリンクとURLを削除
+            link.remove();
+            window.URL.revokeObjectURL(url);
+        } catch (error) {
+            console.error('ファイルのダウンロードに失敗しました:', error);
+            alert('ファイルのダウンロードに失敗しました。再度お試しください。');
+        }
+    };
+
     return (
         <div className="overflow-y-auto max-h-[400px]">
             <table className="w-full border-collapse text-sm border border-gray-600">
@@ -43,7 +89,10 @@ export default function ExamHistoryList({ mTest, tTests }: Props) {
                                 <td className="border border-gray-600 px-3 py-2 text-center bg-white">{correct}</td>
                                 <td className="border border-gray-600 px-3 py-2 text-center bg-white">{result}</td>
                                 <td className="border border-gray-600 px-3 py-2 text-center bg-white">
-                                    <button className="btn btn-info btn-sm min-w-[80px]">確 認</button>
+                                    <button
+                                        className="btn btn-info btn-sm min-w-[80px]"
+                                        onClick={() => handleConfirmButtonClick(tTest.testId, tTest.testCnt)}
+                                    >確 認</button>
                                 </td>
                             </tr>
                         );
