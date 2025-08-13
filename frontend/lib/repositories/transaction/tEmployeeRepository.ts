@@ -11,7 +11,12 @@ export class TEmployeeRepository {
      * @returns 見つかったTEmployeeオブジェクト、なければnull
      */
     static async findById(id: number): Promise<TEmployee | null> {
-        return transactionPrisma.tEmployee.findUnique({ where: { id } });
+        return transactionPrisma.tEmployee.findFirst({
+            where: {
+                id,
+                deleteAt: null,
+            }
+        });
     }
 
     /**
@@ -20,6 +25,11 @@ export class TEmployeeRepository {
      * @returns 見つかったTEmployeeオブジェクト、なければnull
      */
     static async findByEmail(emailAddress: string): Promise<TEmployee | null> {
-        return transactionPrisma.tEmployee.findFirst({ where: { emailAddress } });
+        return transactionPrisma.tEmployee.findFirst({
+            where: {
+                emailAddress,
+                deleteAt: null
+            }
+        });
     }
 }

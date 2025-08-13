@@ -1,4 +1,4 @@
-import { TEmployeeRepository } from "@/lib/repositories/tEmployeeRepository";
+import { TEmployeeRepository } from "@/lib/repositories/transaction/tEmployeeRepository";
 import { signJwt } from "@/lib/utils/authUtils";
 
 /**

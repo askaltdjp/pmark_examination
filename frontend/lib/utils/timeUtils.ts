@@ -10,7 +10,7 @@ export function currentJST(): Date {
     return new Date(Date.now() + JST_OFFSET_MS);
 }
 
-// Dateオブジェクトを "YYYY-MM-DD HH:mm:ss" 形式の文字列に変換する関数
+// Dateオブジェクトを "YYYY/MM/DD HH:mm" 形式の文字列に変換する関数
 // Dateが内部で保持しているUTC時刻を基にフォーマットしています
 export function formatDate(date: Date): string {
     const y = date.getUTCFullYear();
@@ -18,7 +18,7 @@ export function formatDate(date: Date): string {
     const d = String(date.getUTCDate()).padStart(2, '0');
     const h = String(date.getUTCHours()).padStart(2, '0');
     const min = String(date.getUTCMinutes()).padStart(2, '0');
-    const s = String(date.getUTCSeconds()).padStart(2, '0');
+    // const s = String(date.getUTCSeconds()).padStart(2, '0');
 
-    return `${y}-${m}-${d} ${h}:${min}:${s}`;
+    return `${y}/${m}/${d} ${h}:${min}`;
 }

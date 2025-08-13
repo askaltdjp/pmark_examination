@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { verifyJwt } from '@/lib/utils/authUtils';
-import { AUTH_TOKEN_COOKIE_NAME, EMPLOYEE_ID_HEADER } from "@/lib/constants";
+import { AUTH_TOKEN_COOKIE_NAME, EMPLOYEE_ID_HEADER } from "@/lib/constants/system";
 
 /**
  * API用認証ミドルウェア関数
@@ -9,7 +9,7 @@ export async function apiAuthMiddleware(request: NextRequest): Promise<NextRespo
     const pathname = request.nextUrl.pathname;
 
     // 認証処理をスキップするパス（認証APIなど）
-    if (pathname.startsWith('/api/auth/login') || pathname.startsWith('/api/sample')) {
+    if (pathname.startsWith('/api/auth/login')) {
         return NextResponse.next();
     }
 

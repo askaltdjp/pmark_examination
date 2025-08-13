@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { AUTH_TOKEN_COOKIE_NAME } from "@/lib/constants";
+import { AUTH_TOKEN_COOKIE_NAME } from "@/lib/constants/system";
 
 /**
  * POSTリクエストを処理するAPIハンドラ

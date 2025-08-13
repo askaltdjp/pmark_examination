@@ -1,7 +1,25 @@
 "use client";
 
+import { MTest } from '.prisma/client_master/';
+import { TTest } from '.prisma/client_transaction/';
+import { formatDate } from '@/lib/utils/timeUtils';
+import { testResultLabels } from '@/lib/constants/labels';
+
+type Props = {
+    mTest: MTest | null,
+    tTests: TTest[];
+};
+
 // 受験履歴テーブルのクライアントコンポーネント
-export default function ExamHistoryList() {
+export default function ExamHistoryList({ mTest, tTests }: Props) {
+    if (mTest === null || tTests.length === 0) {
+        return (
+            <div className="text-center text-gray-800 text-lg font-semibold py-6">
+                受験履歴がありません
+            </div>
+        );
+    }
+
     return (
         <div className="overflow-y-auto max-h-[400px]">
             <table className="w-full border-collapse text-sm border border-gray-600">
@@ -14,10 +32,11 @@ export default function ExamHistoryList() {
                     </tr>
                 </thead>
                 <tbody>
-                    {[...Array(25)].map((_, i) => {
-                        const date = `2025/08/${String((i % 30) + 1).padStart(2, '0')} ${String(i % 24).padStart(2, '0')}:${String(i % 60).padStart(2, '0')}`;
-                        const correct = `${String(10 + (i % 90)).padStart(2, '0')}/90`;
-                        const result = ['中断', '不合格', '合格'][i % 3];
+                    {tTests.map((tTest, i) => {
+                        console.log(tTest);
+                        const date = formatDate(tTest.testAt);
+                        const correct = `${tTest.correctNum}/${mTest.questionNum}`;
+                        const result = testResultLabels[tTest.result];
                         return (
                             <tr key={i}>
                                 <td className="border border-gray-600 px-3 py-2 text-center bg-white">{date}</td>

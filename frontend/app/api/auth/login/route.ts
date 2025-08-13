@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { authenticateEmployee } from "@/services/api/auth/loginService";
-import { AUTH_TOKEN_COOKIE_NAME } from "@/lib/constants";
+import { AUTH_TOKEN_COOKIE_NAME } from "@/lib/constants/system";
 
 /**
  * POSTリクエストを処理するAPIハンドラ

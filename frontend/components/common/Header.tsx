@@ -1,6 +1,7 @@
 "use client";
 
 import { useRouter } from "next/navigation";
+import { SITE_TITLE } from '@/lib/constants/labels';
 
 // 認証後画面の共通ヘッダーのクライアントコンポーネント
 export default function Header() {
@@ -21,7 +22,7 @@ export default function Header() {
         <header className="fixed top-0 left-0 w-full h-14 z-50 bg-[#1a0f2c] text-white shadow-md px-4 flex items-center justify-between">
             <div className="flex-1" />
             <div className="flex-none">
-                <h1 className="text-xl font-bold text-center">Pマーク 教育テスト</h1>
+                <h1 className="text-xl font-bold text-center">{SITE_TITLE}</h1>
             </div>
             <div className="flex-1 flex justify-end">
                 <button

@@ -1,8 +1,9 @@
 import { redirect } from "next/navigation";
 import { headers } from 'next/headers';
-import { MTestRepository } from "@/lib/repositories/mTestRepository";
-import { TEmployeeRepository } from "@/lib/repositories/tEmployeeRepository";
-import { EMPLOYEE_ID_HEADER } from "@/lib/constants";
+import { MTestRepository } from "@/lib/repositories/master/mTestRepository";
+import { TEmployeeRepository } from "@/lib/repositories/transaction/tEmployeeRepository";
+import { TTestRepository } from "@/lib/repositories/transaction/tTestRepository";
+import { EMPLOYEE_ID_HEADER } from "@/lib/constants/system";
 import ExamHistoryList from "@/components/home/dashboard/ExamHistoryList";
 import StartExamButton from "@/components/home/dashboard/StartExamButton";
 
@@ -14,9 +15,6 @@ export default async function DashBoardPage() {
     const requestHeaders = await headers();
     const employeeId = Number(requestHeaders.get(EMPLOYEE_ID_HEADER));
 
-    // 実施中の試験情報取得
-    const mTest = await MTestRepository.findActive();
-
     // 従業員IDを元にDBから従業員情報を取得
     const tEmployee = await TEmployeeRepository.findById(employeeId);
 
@@ -24,6 +22,12 @@ export default async function DashBoardPage() {
     if (!tEmployee) {
         redirect("/auth/login");
     }
+
+    // 実施中の試験情報取得
+    const mTest = await MTestRepository.findActive();
+
+    // 実施中の試験に対する受験履歴取得
+    const tTests = mTest ? await TTestRepository.findAllByEmployeeIdAndTestId(employeeId, mTest.id) : [];
 
     return (
         <div className="max-w-6xl mx-auto text-gray-900 rounded pt-2 pb-6 px-6">
@@ -53,10 +57,10 @@ export default async function DashBoardPage() {
             <h2 className="text-center text-lg font-semibold mb-4">受験履歴</h2>
 
             {/* 受験履歴テーブル */}
-            <ExamHistoryList />
+            <ExamHistoryList mTest={mTest} tTests={tTests} />
 
             {/* 試験開始ボタン */}
-            <StartExamButton disabled={!mTest} />
+            <StartExamButton mTest={mTest} tTest={tTests.length > 0 ? tTests[0] : null} />
         </div>
     );
 }
