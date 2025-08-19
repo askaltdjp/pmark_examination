@@ -18,7 +18,7 @@ export async function getEmployeeFromRequest(headers: Headers): Promise<TEmploye
 
     // 社員情報が取得できなければエラー
     if (!tEmployee) {
-        throw new Error('社員情報が取得できません');
+        throw new Error('社員情報が取得できません。');
     }
 
     return tEmployee;

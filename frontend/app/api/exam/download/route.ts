@@ -7,7 +7,7 @@ import ExcelJS from "exceljs";
  * POSTリクエストを処理するAPIハンドラ
  * 仮実装：Excelを読み込んで返却するだけ
  */
-async function handler(req: NextRequest) {
+async function handler(req: NextRequest): Promise<NextResponse> {
     // リクエストボディから試験IDと受験回数を取得
     const body = await req.json();
     const { testId, testCnt } = body;

@@ -5,7 +5,7 @@ import { AUTH_TOKEN_COOKIE_NAME } from "@/lib/constants/system";
  * POSTリクエストを処理するAPIハンドラ
  * 社員のログアウト処理を行い、JWTトークンを保存しているクッキーを削除する
  */
-export function POST() {
+export function POST(): NextResponse {
     // クライアントに返すレスポンスを作成（ログアウト成功メッセージを含む）
     const response = NextResponse.json({ message: 'Logged out' });
 

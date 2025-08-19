@@ -6,7 +6,7 @@ import { AUTH_TOKEN_COOKIE_NAME } from "@/lib/constants/system";
  * POSTリクエストを処理するAPIハンドラ
  * 社員のログイン認証を行い、成功時にJWTを発行してクッキーにセットする
  */
-export async function POST(req: NextRequest) {
+export async function POST(req: NextRequest): Promise<NextResponse> {
     // リクエストボディからメールアドレスとパスワードを取得
     const body = await req.json();
     const { emailAddress, password } = body;
