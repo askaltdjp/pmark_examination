@@ -31,7 +31,7 @@ export default function StartExamButton({ mTest, tTest }: Props) {
             // レスポンスの正常確認
             if (!response.ok) {
                 const errorData = await response.json();
-                throw new Error(errorData.error || '試験開始に失敗しました');
+                throw new Error(errorData.error || '試験開始に失敗しました。もう一度お試しください。');
             }
 
             // 試験開始に成功した場合、試験画面に遷移
@@ -40,7 +40,7 @@ export default function StartExamButton({ mTest, tTest }: Props) {
         } catch (error) {
             // エラー発生時、コンソールにエラーメッセージを出力し、アラートを表示
             console.error('試験開始時のエラー:', error);
-            alert(error instanceof Error ? error.message : '不明なエラーが発生しました');
+            alert(error instanceof Error ? error.message : '予期しないエラーが発生しました。');
         }
     }
 

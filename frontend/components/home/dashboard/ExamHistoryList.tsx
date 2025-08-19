@@ -33,16 +33,22 @@ export default function ExamHistoryList({ mTest, tTests }: Props) {
             });
 
             // レスポンスの正常確認
-            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'ファイルのダウンロードに失敗しました。もう一度お試しください。');
+            }
 
             // Content-Dispositionヘッダーからファイル名を取得
             const disposition = response.headers.get('Content-Disposition');
-            console.log(disposition);
-            if (!disposition) throw new Error('Content-Disposition header is missing');
+            if (!disposition) {
+                throw new Error('ファイル名の情報がヘッダーに含まれていません。');
+            }
 
             // ファイル名を正規表現で抽出
             const match = disposition.match(/filename="([^"]+)"/);
-            if (!match || !match[1]) throw new Error('Filename not found in Content-Disposition header');
+            if (!match || !match[1]) {
+                throw new Error('ファイル名を取得できませんでした。');
+            }
 
             const filename = match[1];
 
@@ -61,8 +67,9 @@ export default function ExamHistoryList({ mTest, tTests }: Props) {
             link.remove();
             window.URL.revokeObjectURL(url);
         } catch (error) {
-            console.error('ファイルのダウンロードに失敗しました:', error);
-            alert('ファイルのダウンロードに失敗しました。再度お試しください。');
+            // エラー発生時、コンソールにエラーメッセージを出力し、アラートを表示
+            console.error('ファイルダウンロード時のエラー:', error);
+            alert(error instanceof Error ? error.message : '予期しないエラーが発生しました。');
         }
     };
 
@@ -79,7 +86,6 @@ export default function ExamHistoryList({ mTest, tTests }: Props) {
                 </thead>
                 <tbody>
                     {tTests.map((tTest, i) => {
-                        console.log(tTest);
                         const date = formatDate(tTest.testAt);
                         const correct = `${tTest.correctNum}/${mTest.questionNum}`;
                         const result = testResultLabels[tTest.result];

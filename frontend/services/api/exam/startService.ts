@@ -14,7 +14,7 @@ export async function startService(employeeId: number, testId: number) {
     // 試験IDに基づいて試験マスタを取得
     const mTest = await MTestRepository.findById(testId);
     if (!mTest) {
-        throw new Error('指定された試験が見つかりません');
+        throw new Error('指定された試験が見つかりません。');
     }
 
     // 現在の日時を取得
@@ -22,7 +22,7 @@ export async function startService(employeeId: number, testId: number) {
 
     // 試験の実施期間内かどうかを確認
     if (mTest.startAt > now || now > mTest.endAt) {
-        throw new Error('試験の実施期間外です');
+        throw new Error('試験の実施期間外です。');
     }
 
     // 社員の受験履歴を取得
@@ -31,7 +31,7 @@ export async function startService(employeeId: number, testId: number) {
 
     // すでに合格している場合は試験を開始できないようにする
     if (tTest?.result === TestResult.Pass) {
-        throw new Error('合格した試験は開始できません');
+        throw new Error('合格した試験は開始できません。');
     }
 
     // トランザクション処理
