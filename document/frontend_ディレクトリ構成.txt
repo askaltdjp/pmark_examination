@@ -6,8 +6,8 @@
 │   │   └── logout
 │   │       └── route.ts               // 認証API（ログアウト処理）
 │   └── exam
-│        ├── generate
-│        │  └── route.ts               // 試験問題生成API
+│        ├── start
+│        │  └── route.ts               // 試験開始API
 │        ├── answers
 │        │  └── route.ts               // 試験回答保存APIpmark_examination_app
 │        └── download

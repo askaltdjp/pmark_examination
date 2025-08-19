@@ -6,8 +6,8 @@ CREATE TABLE `m_test` (
     `end_at` DATETIME(3) NOT NULL,
     `question_num` INTEGER NOT NULL,
     `pass_num` INTEGER NOT NULL,
-    `create_at` DATETIME(3) NOT NULL,
-    `update_at` DATETIME(3) NOT NULL,
+    `create_at` DATETIME(3) NULL,
+    `update_at` DATETIME(3) NULL,
     `delete_at` DATETIME(3) NULL,
 
     PRIMARY KEY (`id`)
@@ -21,8 +21,8 @@ CREATE TABLE `m_test_question` (
     `question` TEXT NOT NULL,
     `commentary` TEXT NULL,
     `correct` BOOLEAN NOT NULL,
-    `create_at` DATETIME(3) NOT NULL,
-    `update_at` DATETIME(3) NOT NULL,
+    `create_at` DATETIME(3) NULL,
+    `update_at` DATETIME(3) NULL,
     `delete_at` DATETIME(3) NULL,
 
     UNIQUE INDEX `m_test_question_test_id_question_no_key`(`test_id`, `question_no`),

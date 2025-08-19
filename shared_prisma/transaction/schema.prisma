@@ -21,8 +21,8 @@ model TEmployee {
   emailAddress String    @map("email_address") @db.VarChar(256)
   password     String    @db.VarChar(64)
   joinDate     DateTime  @map("join_date") @db.Date
-  createAt     DateTime  @map("create_at")
-  updateAt     DateTime  @map("update_at")
+  createAt     DateTime? @map("create_at")
+  updateAt     DateTime? @map("update_at")
   deleteAt     DateTime? @map("delete_at")
 
   @@index([employeeNo])
@@ -38,8 +38,8 @@ model TTest {
   correctNum Int       @map("correct_num")
   result     Int
   testAt     DateTime  @map("test_at")
-  createAt   DateTime  @map("create_at")
-  updateAt   DateTime  @map("update_at")
+  createAt   DateTime? @map("create_at")
+  updateAt   DateTime? @map("update_at")
   deleteAt   DateTime? @map("delete_at")
 
   @@unique([employeeId, testId, testCnt])
@@ -53,8 +53,8 @@ model TTestAnswer {
   testCnt    Int       @default(1) @map("test_cnt")
   questionNo Int       @map("question_no")
   answer     Boolean   @default(false)
-  createAt   DateTime  @map("create_at")
-  updateAt   DateTime  @map("update_at")
+  createAt   DateTime? @map("create_at")
+  updateAt   DateTime? @map("update_at")
   deleteAt   DateTime? @map("delete_at")
 
   @@unique([employeeId, testId, testCnt, questionNo])

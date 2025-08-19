@@ -3,8 +3,8 @@ import { signJwt } from "@/lib/utils/authUtils";
 
 /**
  * 指定されたメールアドレスとパスワードで認証を行い、
- * 認証成功時にJWTトークンを発行して返す関数。
- * 認証失敗時はnullを返す。
+ * 認証成功時にJWTトークンを発行して返すサービス関数
+ * 認証失敗時はnullを返す
  * 
  * @param emailAddress - 認証対象のメールアドレス
  * @param password - 認証対象のパスワード

@@ -7,6 +7,20 @@ import { currentJST } from '../../utils/timeUtils';
  */
 export class MTestRepository {
     /**
+     * IDをキーにMTestレコードを検索する
+     * @param id - 検索する試験ID
+     * @returns 見つかったMTestオブジェクト、なければnull
+     */
+    static async findById(id: number): Promise<MTest | null> {
+        return await masterPrisma.mTest.findFirst({
+            where: {
+                id,
+                deleteAt: null,
+            },
+        });
+    }
+
+    /**
      * startDate <= 現在日時 <= endDate を満たすMTestレコードを取得する
      * @returns 条件に合致するMTestオブジェクト（存在すれば1件）、なければnull
      */
