@@ -3,22 +3,22 @@ import { TEmployeeRepository } from '@/lib/repositories/transaction/tEmployeeRep
 import { EMPLOYEE_ID_HEADER } from '@/lib/constants/system';
 
 /**
- * リクエストヘッダから従業員情報を取得する
+ * リクエストヘッダから社員情報を取得する
  * @param headers - リクエストのヘッダ情報
- * @returns 従業員情報を含むTEmployeeオブジェクト
- * @throws Error - 従業員情報が取得できなかった場合にエラーを投げる
+ * @returns 社員情報を含むTEmployeeオブジェクト
+ * @throws Error - 社員情報が取得できなかった場合にエラーを投げる
  */
 export async function getEmployeeFromRequest(headers: Headers): Promise<TEmployee> {
 
-    // カスタムヘッダから従業員IDを取得
+    // カスタムヘッダから社員IDを取得
     const employeeId = Number(headers.get(EMPLOYEE_ID_HEADER));
 
-    // 従業員IDを元にDBから従業員情報を取得
+    // 社員IDを元にDBから社員情報を取得
     const tEmployee = await TEmployeeRepository.findById(employeeId);
 
-    // 従業員情報が取得できなければエラー
+    // 社員情報が取得できなければエラー
     if (!tEmployee) {
-        throw new Error('従業員情報が取得できません');
+        throw new Error('社員情報が取得できません');
     }
 
     return tEmployee;

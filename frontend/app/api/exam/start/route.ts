@@ -8,7 +8,7 @@ import { withErrorHandler } from '@/lib/utils/withErrorHandler';
  * 指定された試験IDに基づいて試験開始処理を行う
  */
 async function handler(request: NextRequest): Promise<NextResponse> {
-    // リクエストヘッダから従業員情報を取得
+    // リクエストヘッダから社員情報を取得
     const tEmployee = await getEmployeeFromRequest(request.headers);
 
     // リクエストボディから試験IDを取得

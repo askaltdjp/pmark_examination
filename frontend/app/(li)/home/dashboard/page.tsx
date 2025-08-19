@@ -10,8 +10,8 @@ import StartExamButton from "@/components/home/dashboard/StartExamButton";
  * ホーム画面のサーバコンポーネント
  */
 export default async function DashBoardPage() {
-    // リクエストヘッダから従業員情報を取得
-    // 従業員情報が取得できなければログイン画面へリダイレクト
+    // リクエストヘッダから社員情報を取得
+    // 社員情報が取得できなければログイン画面へリダイレクト
     const tEmployee = await (async () => {
         try {
             const requestHeaders = await headers();

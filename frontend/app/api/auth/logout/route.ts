@@ -3,7 +3,7 @@ import { AUTH_TOKEN_COOKIE_NAME } from "@/lib/constants/system";
 
 /**
  * POSTリクエストを処理するAPIハンドラ
- * 従業員のログアウト処理を行い、JWTトークンを保存しているクッキーを削除する
+ * 社員のログアウト処理を行い、JWTトークンを保存しているクッキーを削除する
  */
 export function POST() {
     // クライアントに返すレスポンスを作成（ログアウト成功メッセージを含む）

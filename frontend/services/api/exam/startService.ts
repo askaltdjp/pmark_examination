@@ -7,7 +7,7 @@ import { TestResult } from '@/lib/constants/labels';
 /**
  * 試験開始処理を行うサービス関数
  * 
- * @param employeeId - 従業員ID
+ * @param employeeId - 社員ID
  * @param testId - 試験ID
  */
 export async function startService(employeeId: number, testId: number) {

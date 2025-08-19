@@ -11,10 +11,10 @@ import { signJwt } from "@/lib/utils/authUtils";
  * @returns JWTトークン文字列 または 認証失敗時は null
  */
 export async function authenticateEmployee(emailAddress: string, password: string) {
-    // メールアドレスで従業員を検索
+    // メールアドレスで社員を検索
     const tEmployee = await TEmployeeRepository.findByEmail(emailAddress);
 
-    // 従業員が存在しない、またはパスワードが一致しなければnullを返す
+    // 社員が存在しない、またはパスワードが一致しなければnullを返す
     if (!tEmployee || tEmployee.password !== password) {
         return null;
     }

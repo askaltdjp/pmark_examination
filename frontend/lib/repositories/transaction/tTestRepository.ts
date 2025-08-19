@@ -10,7 +10,7 @@ export class TTestRepository {
     /**
      * employeeId と testId を条件に TTest レコードを複数検索する（testCnt の降順で並び替え）
      * 
-     * @param employeeId - 検索する従業員ID
+     * @param employeeId - 検索する社員ID
      * @param testId - 検索する試験ID
      * @param tx - トランザクションオブジェクト（オプション）
      * @returns 条件に一致する TTest オブジェクトの配列（存在しない場合は空配列）
