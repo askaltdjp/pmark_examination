@@ -2,6 +2,7 @@
 
 import SideMenu from "@/components/common/SideMenu";
 import Header from "@/components/common/Header";
+import Breadcrumb from "@/components/common/Breadcrumb";
 
 export default function LoginLayout({ children }: { children: React.ReactNode }) {
 
@@ -16,14 +17,17 @@ export default function LoginLayout({ children }: { children: React.ReactNode })
 
                 {/* メインコンテンツ */}
                 <div className="drawer-content">
-        
+
                     {/* メニューボタン (モバイル向け) */}
                     <label htmlFor="my-drawer" className="h-8 btn btn-sm btn-primary drawer-button lg:hidden m-4 z-10">
                         メニューを開く
                     </label>
-            
+
                     {/* ヘッダー */}
                     <Header />
+
+                    {/* パンくず */}
+                    <Breadcrumb />
 
                     <div>
                         {children}
