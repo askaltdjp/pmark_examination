@@ -11,14 +11,27 @@ export function currentJST(): Date {
 }
 
 // Dateオブジェクトを "YYYY/MM/DD HH:mm" 形式の文字列に変換する関数
-// Dateが内部で保持しているUTC時刻を基にフォーマットしています
-export function formatDate(date: Date): string {
-    const y = date.getUTCFullYear();
-    const m = String(date.getUTCMonth() + 1).padStart(2, '0');
-    const d = String(date.getUTCDate()).padStart(2, '0');
-    const h = String(date.getUTCHours()).padStart(2, '0');
-    const min = String(date.getUTCMinutes()).padStart(2, '0');
-    // const s = String(date.getUTCSeconds()).padStart(2, '0');
+// 指定された Date オブジェクトを基に、指定されたフォーマットに従って文字列を返します
+// 使用可能なフォーマットのプレースホルダー：
+//   - YYYY: 年（4桁）
+//   - MM  : 月（2桁, 01〜12）
+//   - DD  : 日（2桁, 01〜31）
+//   - HH  : 時（2桁, 00〜23）
+//   - mm  : 分（2桁, 00〜59）
+//   - ss  : 秒（2桁, 00〜59）
+// デフォルトのフォーマットは "YYYY/MM/DD HH:mm"
+// @param date - フォーマット対象の Date オブジェクト
+// @param format - 出力フォーマット文字列（省略時は "YYYY/MM/DD HH:mm"）
+// @returns 指定フォーマットに整形された日付文字列（UTC時刻ベース）
+export function formatDate(date: Date, format: string = "YYYY/MM/DD HH:mm"): string {
+    const replacements: Record<string, string> = {
+        YYYY: String(date.getUTCFullYear()),
+        MM: String(date.getUTCMonth() + 1).padStart(2, '0'),
+        DD: String(date.getUTCDate()).padStart(2, '0'),
+        HH: String(date.getUTCHours()).padStart(2, '0'),
+        mm: String(date.getUTCMinutes()).padStart(2, '0'),
+        ss: String(date.getUTCSeconds()).padStart(2, '0'),
+    };
 
-    return `${y}/${m}/${d} ${h}:${min}`;
+    return format.replace(/YYYY|MM|DD|HH|mm|ss/g, match => replacements[match]);
 }

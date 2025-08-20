@@ -1,36 +1,31 @@
 import { NextRequest, NextResponse } from "next/server";
 import { withErrorHandler } from '@/lib/utils/withErrorHandler';
-import path from "path";
-import ExcelJS from "exceljs";
+import { getEmployeeFromRequest } from '@/lib/utils/employeeUtils';
+import { downloadService } from "@/services/api/exam/downloadService";
 
 /**
  * POSTリクエストを処理するAPIハンドラ
- * 仮実装：Excelを読み込んで返却するだけ
+ * 受け取った試験IDと受験回数に基づいて試験結果のExcelファイルを生成して返却する
  */
-async function handler(req: NextRequest): Promise<NextResponse> {
+async function handler(request: NextRequest): Promise<NextResponse> {
+    // リクエストヘッダから社員情報を取得
+    const tEmployee = await getEmployeeFromRequest(request.headers);
+
     // リクエストボディから試験IDと受験回数を取得
-    const body = await req.json();
+    const body = await request.json();
     const { testId, testCnt } = body;
 
-    console.log(`testId:${testId}`);
-    console.log(`testCnt:${testCnt}`);
+    // ダウンロード用Excelファイルの生成処理を呼び出す
+    const { buffer, fileName } = await downloadService(tEmployee, testId, testCnt);
 
-    // テンプレートファイルのパスを取得
-    const filePath = path.resolve(process.cwd(), "templates/sample.xlsx");
-
-    // ExcelJS でファイルを読み込む
-    const workbook = new ExcelJS.Workbook();
-    await workbook.xlsx.readFile(filePath);
-
-    // ワークブックの内容をバッファに書き出す（変更なし）
-    const buffer = await workbook.xlsx.writeBuffer();
-
-    // ファイルをレスポンスとして返す（ダウンロード）
+    // Excelファイルをバイナリとしてレスポンスにセットし、ダウンロードさせる
     return new NextResponse(buffer, {
         status: 200,
         headers: {
+            // ExcelのMIMEタイプ
             "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-            "Content-Disposition": 'attachment; filename="sample.xlsx"',
+            // ファイル名の指定（UTF-8エンコード済み）
+            'Content-Disposition': `attachment; filename*=UTF-8''${fileName}`,
         },
     });
 }

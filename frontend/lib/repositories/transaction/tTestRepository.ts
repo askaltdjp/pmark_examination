@@ -8,6 +8,30 @@ import { TestResult } from '@/lib/constants/labels';
  */
 export class TTestRepository {
     /**
+     * employeeId と testId と testCnt を条件に TTest レコードを1件検索する
+     * 
+     * @param employeeId - 検索する社員ID
+     * @param testId - 検索する試験ID
+     * @param testCnt - 検索する受験回数
+     * @param tx - トランザクションオブジェクト（オプション）
+     * @returns 条件に一致する TTest オブジェクト（存在しない場合は null）
+     * 
+     * トランザクション内で使用する場合、`tx` パラメータを指定してください。
+     * 指定しない場合、`transactionPrisma` がデフォルトで使用されます。
+     */
+    static async findByEmployeeIdAndTestIdAndTestCnt(employeeId: number, testId: number, testCnt: number, tx?: Prisma.TransactionClient): Promise<TTest | null> {
+        const prisma = tx || transactionPrisma;
+        return prisma.tTest.findFirst({
+            where: {
+                employeeId,
+                testId,
+                testCnt,
+                deleteAt: null,
+            },
+        });
+    }
+
+    /**
      * employeeId と testId を条件に TTest レコードを複数検索する（testCnt の降順で並び替え）
      * 
      * @param employeeId - 検索する社員ID

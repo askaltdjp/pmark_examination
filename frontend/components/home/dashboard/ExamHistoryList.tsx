@@ -3,7 +3,7 @@
 import { MTest } from '.prisma/client_master/';
 import { TTest } from '.prisma/client_transaction/';
 import { formatDate } from '@/lib/utils/timeUtils';
-import { testResultLabels } from '@/lib/constants/labels';
+import { TestResult, testResultLabels } from '@/lib/constants/labels';
 
 type Props = {
     mTest: MTest | null,
@@ -45,12 +45,12 @@ export default function ExamHistoryList({ mTest, tTests }: Props) {
             }
 
             // ファイル名を正規表現で抽出
-            const match = disposition.match(/filename="([^"]+)"/);
+            const match = disposition.match(/filename\*\=UTF-8''([^;]+)/);
             if (!match || !match[1]) {
                 throw new Error('ファイル名を取得できませんでした。');
             }
 
-            const filename = match[1];
+            const filename = decodeURIComponent(match[1]);
 
             // レスポンスをBlobに変換し、一時URLを生成
             const blob = await response.blob();
@@ -98,6 +98,7 @@ export default function ExamHistoryList({ mTest, tTests }: Props) {
                                     <button
                                         className="btn btn-info btn-sm min-w-[80px]"
                                         onClick={() => handleConfirmButtonClick(tTest.testId, tTest.testCnt)}
+                                        disabled={tTest.result === TestResult.Interrupted}
                                     >確 認</button>
                                 </td>
                             </tr>

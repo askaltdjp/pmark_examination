@@ -10,7 +10,7 @@ import { TestResult } from '@/lib/constants/labels';
  * @param employeeId - 社員ID
  * @param testId - 試験ID
  */
-export async function startService(employeeId: number, testId: number) {
+export async function startService(employeeId: number, testId: number): Promise<void> {
     // 試験IDに基づいて試験マスタを取得
     const mTest = await MTestRepository.findById(testId);
     if (!mTest) {
@@ -35,12 +35,9 @@ export async function startService(employeeId: number, testId: number) {
     }
 
     // トランザクション処理
-    const result = await transactionPrisma.$transaction(async (tx) => {
-        // 受験履歴がない、または受験結果が不合格の場合、新しい受験履歴を作成
-        if (!tTest || tTest.result === TestResult.Fail) {
-            // 受験回数をカウントし、受験情報を新規作成
-            const testCnt = (tTest?.testCnt ?? 0) + 1;
-            await TTestRepository.createTTest(employeeId, testId, testCnt, tx);
-        }
+    await transactionPrisma.$transaction(async (tx) => {
+        // 受験回数をカウントし、受験情報を新規作成
+        const testCnt = (tTest?.testCnt ?? 0) + 1;
+        await TTestRepository.createTTest(employeeId, testId, testCnt, tx);
     });
 }
