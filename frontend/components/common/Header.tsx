@@ -2,6 +2,7 @@
 
 import { useRouter } from "next/navigation";
 import { SITE_TITLE } from '@/lib/constants/labels';
+import { ArrowRightStartOnRectangleIcon } from '@heroicons/react/24/outline';
 
 // 認証後画面の共通ヘッダーのクライアントコンポーネント
 export default function Header() {
@@ -29,6 +30,7 @@ export default function Header() {
                     className="btn btn-sm bg-blue-200 text-gray-700 border border-blue-200 hover:bg-blue-300 hover:border-blue-300 transition-colors duration-200 mr-4"
                     onClick={handleLogout}
                 >
+                    <ArrowRightStartOnRectangleIcon className="w-5 h-5" />
                     ログアウト
                 </button>
             </div>
