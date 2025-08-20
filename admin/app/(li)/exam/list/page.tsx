@@ -1,4 +1,5 @@
 import LoginForm from "@/components/auth/login/LoginForm";
+import Breadcrumb from "@/components/common/Breadcrumb";
 
 /**
  * 試験管理一覧のサーバコンポーネント
@@ -8,13 +9,9 @@ export default function LoginPage() {
         /* ヘッダー分だけ高さを調整（モバイル対応） */
         <div className="h-[calc(100vh-116px)] lg:h-[calc(100vh-52px)] flex flex-col justify-start bg-base-200">
 
-            {/* 画面遷移 */}
-            <div className="flex justify-center h-16">
-                <div className="w-[90%] py-3">
-                    <h2 className="text-gray-600 text-xl font-bold text-left mb-4">試験管理</h2>
-                </div>
-            </div>
-
+            {/* パンくず */}
+            <Breadcrumb />
+                
             <div className="flex justify-center mt-5">
                 <div className="w-[90%]">
                     <h2 className="text-gray-600 text-3xl font-bold text-center mb-4">試験一覧</h2>
