@@ -28,37 +28,47 @@ export default async function DashBoardPage() {
     const tTests = mTest ? await TTestRepository.findAllByEmployeeIdAndTestId(tEmployee.id, mTest.id) : [];
 
     return (
-        <div className="max-w-6xl mx-auto text-gray-900 rounded pt-2 pb-6 px-6">
+        <div className="max-w-6xl mx-auto text-gray-900 rounded">
             {/* 情報テーブル */}
-            <table className="w-full border border-gray-600 border-collapse mb-10 text-sm">
-                <tbody>
-                    <tr>
-                        <th className="text-left align-middle pl-4 pr-4 py-3 w-28 text-black font-semibold bg-gray-300 border border-gray-600">
-                            氏名
-                        </th>
-                        <td className="align-middle pl-4 py-3 w-auto border border-gray-600 bg-white">
-                            {tEmployee.name}
-                        </td>
-                    </tr>
-                    <tr>
-                        <th className="text-left align-middle pl-4 pr-4 py-3 w-28 text-black font-semibold bg-gray-300 border border-gray-600">
-                            試験内容
-                        </th>
-                        <td className="align-middle pl-4 py-3 w-auto border border-gray-600 bg-white">
-                            {mTest?.name ?? "実施中の試験はありません"}
-                        </td>
-                    </tr>
-                </tbody>
-            </table>
+            <div className="p-3 bg-white shadow rounded">
+                <div className="rounded-box border border-base-content/5 bg-base-100">
+                    <table className="table">
+                        <tbody>
+                            <tr className="text-center">
+                                <th className="text-gray-600 bg-base-200 w-[30%]">
+                                    氏名
+                                </th>
+                                <td>
+                                    {tEmployee.name}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div className="rounded-box border border-base-content/5 bg-base-100 mt-2">
+                    <table className="table">
+                        <tbody>
+                            <tr className="text-center">
+                                <th className="text-gray-600 bg-base-200 w-[30%]">
+                                    試験内容
+                                </th>
+                                <td>
+                                    {mTest?.name ?? "実施中の試験はありません"}
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
 
             {/* 受験履歴テキスト */}
-            <h2 className="text-center text-lg font-semibold mb-4">受験履歴</h2>
+            <h2 className="text-gray-600 text-3xl font-bold text-center mb-4 pt-8">受験履歴</h2>
 
             {/* 受験履歴テーブル */}
             <ExamHistoryList mTest={mTest} tTests={tTests} />
 
             {/* 試験開始ボタン */}
             <StartExamButton mTest={mTest} tTest={tTests.length > 0 ? tTests[0] : null} />
-        </div>
+        </div >
     );
 }

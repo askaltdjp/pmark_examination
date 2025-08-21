@@ -49,7 +49,7 @@ export default function StartExamButton({ mTest, tTest }: Props) {
 
     return (
         <div className="mt-6 flex justify-center">
-            <button className="btn btn-info btn-lg" disabled={disabled} onClick={() => handleStartButtonClick()}>試験開始</button>
+            <button className="btn btn-lg bg-slate-600 hover:bg-slate-500 text-white" disabled={disabled} onClick={() => handleStartButtonClick()}>試験開始</button>
         </div>
     );
 }

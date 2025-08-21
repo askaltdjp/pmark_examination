@@ -5,7 +5,7 @@ export default function AuthenticatedLayout({ children }: { children: React.Reac
     return (
         <>
             <Header />
-            <main className="pt-30 min-h-screen bg-base-200">
+            <main className="pt-20 min-h-screen bg-base-200">
                 {children}
             </main>
         </>

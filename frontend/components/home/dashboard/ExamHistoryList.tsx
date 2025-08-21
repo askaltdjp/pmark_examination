@@ -74,38 +74,40 @@ export default function ExamHistoryList({ mTest, tTests }: Props) {
     };
 
     return (
-        <div className="overflow-y-auto max-h-[400px]">
-            <table className="w-full border-collapse text-sm border border-gray-600">
-                <thead>
-                    <tr className="bg-gray-300 text-gray-900 sticky top-0 z-10">
-                        <th className="border border-gray-600 px-3 py-2 text-center">受験日時</th>
-                        <th className="border border-gray-600 px-3 py-2 text-center">正解状況</th>
-                        <th className="border border-gray-600 px-3 py-2 text-center">結果</th>
-                        <th className="border border-gray-600 px-3 py-2 text-center">解答</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {tTests.map((tTest, i) => {
-                        const date = formatDate(tTest.testAt);
-                        const correct = `${tTest.correctNum}/${mTest.questionNum}`;
-                        const result = testResultLabels[tTest.result];
-                        return (
-                            <tr key={i}>
-                                <td className="border border-gray-600 px-3 py-2 text-center bg-white">{date}</td>
-                                <td className="border border-gray-600 px-3 py-2 text-center bg-white">{correct}</td>
-                                <td className="border border-gray-600 px-3 py-2 text-center bg-white">{result}</td>
-                                <td className="border border-gray-600 px-3 py-2 text-center bg-white">
-                                    <button
-                                        className="btn btn-info btn-sm min-w-[80px]"
-                                        onClick={() => handleConfirmButtonClick(tTest.testId, tTest.testCnt)}
-                                        disabled={tTest.result === TestResult.Interrupted}
-                                    >確 認</button>
-                                </td>
-                            </tr>
-                        );
-                    })}
-                </tbody>
-            </table>
+        <div className="p-3 bg-white shadow rounded">
+            <div className="overflow-x-auto max-h-[500px]">
+                <table className="table table-zebra table-pin-rows table-pin-cols">
+                    <thead>
+                        <tr className="text-center text-gray-600">
+                            <th>受験日時</th>
+                            <th>正解状況</th>
+                            <th>結果</th>
+                            <th>解答</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {tTests.map((tTest, i) => {
+                            const date = formatDate(tTest.testAt);
+                            const correct = `${tTest.correctNum}/${mTest.questionNum}`;
+                            const result = testResultLabels[tTest.result];
+                            return (
+                                <tr key={i} className="text-center">
+                                    <td>{date}</td>
+                                    <td>{correct}</td>
+                                    <td>{result}</td>
+                                    <td>
+                                        <button
+                                            className="btn bg-slate-600 hover:bg-slate-500 text-white"
+                                            onClick={() => handleConfirmButtonClick(tTest.testId, tTest.testCnt)}
+                                            disabled={tTest.result === TestResult.Interrupted}
+                                        >確 認</button>
+                                    </td>
+                                </tr>
+                            );
+                        })}
+                    </tbody>
+                </table>
+            </div>
         </div>
     );
 }
