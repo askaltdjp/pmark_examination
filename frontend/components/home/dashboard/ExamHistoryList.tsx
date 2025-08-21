@@ -10,7 +10,9 @@ type Props = {
     tTests: TTest[];
 };
 
-// 受験履歴テーブルのクライアントコンポーネント
+/**
+ * 受験履歴テーブルのクライアントコンポーネント
+ */
 export default function ExamHistoryList({ mTest, tTests }: Props) {
     if (mTest === null || tTests.length === 0) {
         return (
@@ -88,7 +90,8 @@ export default function ExamHistoryList({ mTest, tTests }: Props) {
                     <tbody>
                         {tTests.map((tTest, i) => {
                             const date = formatDate(tTest.testAt);
-                            const correct = `${tTest.correctNum}/${mTest.questionNum}`;
+                            const correctNum = (tTest.result === TestResult.Interrupted) ? '?'.repeat(String(mTest.questionNum).length) : tTest.correctNum;
+                            const correct = `${correctNum} / ${mTest.questionNum}`;
                             const result = testResultLabels[tTest.result];
                             return (
                                 <tr key={i} className="text-center">

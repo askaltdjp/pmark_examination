@@ -47,7 +47,7 @@ export async function downloadService(
     const questionNos = tTestAnswers.map(tTestAnswer => tTestAnswer.questionNo);
 
     // 試験IDと問題Noリストから試験問題を取得
-    const mTestQuestions = await MTestQuestionRepository.findByTestIdAndQuestionNos(testId, questionNos);
+    const mTestQuestions = await MTestQuestionRepository.findAllByTestIdAndQuestionNos(testId, questionNos);
     // 試験問題を問題Noをキーにした連想配列に変換（高速アクセス用）
     const mTestQuestionMap = mTestQuestions.reduce((acc, question) => {
         acc[question.questionNo] = question;

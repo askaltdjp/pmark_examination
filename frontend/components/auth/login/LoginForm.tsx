@@ -3,7 +3,9 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 
-// ログインフォームのクライアントコンポーネント
+/**
+ * ログインフォームのクライアントコンポーネント
+ */
 export default function LoginForm() {
     const router = useRouter();
 

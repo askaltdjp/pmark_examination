@@ -1,16 +1,20 @@
 import { MTestRepository } from '@/lib/repositories/master/mTestRepository';
+import { MTestQuestion } from '.prisma/client_master';
 import { TTestRepository } from '@/lib/repositories/transaction/tTestRepository';
 import { transactionPrisma } from '@/lib/prisma/transactionPrisma';
 import { currentJST } from '@/lib/utils/timeUtils';
 import { TestResult } from '@/lib/constants/labels';
+import { MTestQuestionRepository } from '@/lib/repositories/master/mTestQuestionRepository';
 
 /**
  * 試験開始処理を行うサービス関数
- * 
+ *
  * @param employeeId - 社員ID
  * @param testId - 試験ID
+ * @returns MTestQuestion[]
+ * @throws 条件に合わない場合や処理中にエラーが発生した場合に例外をスローします
  */
-export async function startService(employeeId: number, testId: number): Promise<void> {
+export async function startService(employeeId: number, testId: number): Promise<MTestQuestion[]> {
     // 試験IDに基づいて試験マスタを取得
     const mTest = await MTestRepository.findById(testId);
     if (!mTest) {
@@ -34,10 +38,21 @@ export async function startService(employeeId: number, testId: number): Promise<
         throw new Error('合格した試験は開始できません。');
     }
 
+    // 出題数だけランダムで試験問題を抽出
+    const mTestQuestions = (
+        await MTestQuestionRepository.findAllByTestId(testId)
+    )
+        .sort(() => Math.random() - 0.5) // 簡易的なランダム抽選
+        .slice(0, mTest.questionNum);
+
+    // 受験回数を計算
+    const testCnt = (tTest?.testCnt ?? 0) + 1;
+
     // トランザクション処理
     await transactionPrisma.$transaction(async (tx) => {
-        // 受験回数をカウントし、受験情報を新規作成
-        const testCnt = (tTest?.testCnt ?? 0) + 1;
+        // 受験情報を新規作成
         await TTestRepository.createTTest(employeeId, testId, testCnt, tx);
     });
+
+    return mTestQuestions;
 }

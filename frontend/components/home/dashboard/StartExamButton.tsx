@@ -1,16 +1,19 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { MTest } from '.prisma/client_master';
+import { MTest, MTestQuestion } from '.prisma/client_master';
 import { TTest } from '.prisma/client_transaction';
 import { TestResult } from '@/lib/constants/labels';
+import { LOCAL_STORAGE_EXAM_DATA_KEY } from '@/lib/constants/system';
 
 type Props = {
     mTest: MTest | null,
     tTest: TTest | null,
 };
 
-// 試験開始ボタンのクライアントコンポーネント
+/**
+ * 試験開始ボタンのクライアントコンポーネント
+ */
 export default function StartExamButton({ mTest, tTest }: Props) {
     const router = useRouter();
 
@@ -28,11 +31,27 @@ export default function StartExamButton({ mTest, tTest }: Props) {
                 }),
             });
 
+            // レスポンスのJSONデータをパース
+            const data = await response.json();
+
             // レスポンスの正常確認
             if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.error || '試験開始に失敗しました。もう一度お試しください。');
+                throw new Error(data.error || '試験開始に失敗しました。もう一度お試しください。');
             }
+
+            // 試験問題を抽出
+            const mTestQuestions: MTestQuestion[] = data.mTestQuestions;
+            const questions = mTestQuestions.map(mTestQuestion => mTestQuestion.question);
+
+            // 試験データをローカルストレージに保存
+            localStorage.setItem(
+                LOCAL_STORAGE_EXAM_DATA_KEY,
+                JSON.stringify({
+                    questions,
+                    answers: [],
+                    questionIndex: 0,
+                })
+            );
 
             // 試験開始に成功した場合、試験画面に遷移
             router.push('/exam/take');

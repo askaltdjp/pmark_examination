@@ -21,10 +21,10 @@ async function handler(request: NextRequest): Promise<NextResponse> {
     }
 
     // 試験開始処理を実行
-    await startService(tEmployee.id, testId);
+    const mTestQuestions = await startService(tEmployee.id, testId);
 
     // 成功レスポンスを返却
-    return NextResponse.json({}, { status: 200 });
+    return NextResponse.json({ mTestQuestions }, { status: 200 });
 }
 
 // エラーハンドリングを共通化したAPIハンドラとしてエクスポート
