@@ -5,7 +5,6 @@ import { MTest, MTestQuestion } from '.prisma/client_master';
 import { TTest } from '.prisma/client_transaction';
 import { TestResult } from '@/lib/constants/labels';
 import { SESSION_STORAGE_EXAM_DATA_KEY } from '@/lib/constants/system';
-import { access } from "fs";
 
 type Props = {
     mTest: MTest | null,
