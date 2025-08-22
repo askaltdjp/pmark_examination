@@ -4,7 +4,8 @@ import { useRouter } from "next/navigation";
 import { MTest, MTestQuestion } from '.prisma/client_master';
 import { TTest } from '.prisma/client_transaction';
 import { TestResult } from '@/lib/constants/labels';
-import { LOCAL_STORAGE_EXAM_DATA_KEY } from '@/lib/constants/system';
+import { SESSION_STORAGE_EXAM_DATA_KEY } from '@/lib/constants/system';
+import { access } from "fs";
 
 type Props = {
     mTest: MTest | null,
@@ -19,6 +20,11 @@ export default function StartExamButton({ mTest, tTest }: Props) {
 
     // 試験開始ボタン押下時の処理
     const handleStartButtonClick = async () => {
+        // 実施中の試験がない場合に万が一呼ばれたら即座に終了
+        if (!mTest) {
+            return;
+        }
+
         try {
             // 試験開始APIへPOSTリクエスト
             const response = await fetch('/api/exam/start', {
@@ -27,12 +33,16 @@ export default function StartExamButton({ mTest, tTest }: Props) {
                     'Content-Type': 'application/json',
                 },
                 body: JSON.stringify({
-                    testId: mTest?.id,
+                    testId: mTest.id,
                 }),
             });
 
             // レスポンスのJSONデータをパース
-            const data = await response.json();
+            const data: {
+                mTestQuestions: MTestQuestion[],
+                testCnt: number,
+                error?: string,
+            } = await response.json();
 
             // レスポンスの正常確認
             if (!response.ok) {
@@ -40,13 +50,21 @@ export default function StartExamButton({ mTest, tTest }: Props) {
             }
 
             // 試験問題を抽出
-            const mTestQuestions: MTestQuestion[] = data.mTestQuestions;
-            const questions = mTestQuestions.map(mTestQuestion => mTestQuestion.question);
+            const mTestQuestions = data.mTestQuestions;
+            const questions = mTestQuestions.map(mTestQuestion => {
+                const { questionNo, question } = mTestQuestion;
+                return {
+                    questionNo,
+                    question
+                };
+            });
 
-            // 試験データをローカルストレージに保存
-            localStorage.setItem(
-                LOCAL_STORAGE_EXAM_DATA_KEY,
+            // 試験データをセッションストレージに保存
+            sessionStorage.setItem(
+                SESSION_STORAGE_EXAM_DATA_KEY,
                 JSON.stringify({
+                    testId: mTest.id,
+                    testCnt: data.testCnt,
                     questions,
                     answers: [],
                     questionIndex: 0,
@@ -68,7 +86,7 @@ export default function StartExamButton({ mTest, tTest }: Props) {
 
     return (
         <div className="mt-6 flex justify-center">
-            <button className="btn btn-lg bg-slate-600 hover:bg-slate-500 text-white" disabled={disabled} onClick={() => handleStartButtonClick()}>試験開始</button>
+            <button className="btn btn-lg bg-slate-600 hover:bg-slate-500 text-white" disabled={disabled} onClick={handleStartButtonClick}>試験開始</button>
         </div>
     );
 }

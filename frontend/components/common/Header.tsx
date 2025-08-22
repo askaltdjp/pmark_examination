@@ -12,7 +12,7 @@ export default function Header() {
     const pathname = usePathname();
 
     // ログアウトボタン押下時の処理
-    const handleLogout = async () => {
+    const handleLogoutButtonClick = async () => {
         // ログアウトAPIの呼び出し
         await fetch('/api/auth/logout', {
             "method": "POST",
@@ -23,7 +23,10 @@ export default function Header() {
     };
 
     // ログアウトボタンを非表示にしたい画面のURL
-    const hideLogoutButtonPaths = ['/exam/take'];
+    const hideLogoutButtonPaths = [
+        '/exam/take',
+        '/exam/result',
+    ];
 
     // 現在のパスが非表示リストに含まれているか判定
     const isLogoutHidden = hideLogoutButtonPaths.includes(pathname);
@@ -39,7 +42,7 @@ export default function Header() {
                 {!isLogoutHidden && (
                     <button
                         className="btn btn-sm bg-blue-200 text-gray-700 border border-blue-200 hover:bg-blue-300 hover:border-blue-300 transition-colors duration-200 mr-4"
-                        onClick={handleLogout}
+                        onClick={handleLogoutButtonClick}
                     >
                         <ArrowRightStartOnRectangleIcon className="w-5 h-5" />
                         ログアウト

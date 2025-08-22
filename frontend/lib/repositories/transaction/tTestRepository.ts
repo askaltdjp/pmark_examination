@@ -85,4 +85,26 @@ export class TTestRepository {
 
         return tTest;
     }
+
+    /**
+     * TTest レコードの correctNum（正解数）および result（試験結果）を更新する
+     *
+     * @param id - 更新対象の TTest レコードのID
+     * @param correctNum - 正解数
+     * @param result - 試験結果（TestResult enum を参照）
+     * @param tx - トランザクションオブジェクト（オプション）
+     *
+     * トランザクション内で使用する場合は `tx` を指定してください。
+     * 指定しない場合は `transactionPrisma` が使用されます。
+     */
+    static async updateCorrectNumAndResult(id: number, correctNum: number, result: number, tx?: Prisma.TransactionClient): Promise<void> {
+        const prisma = tx || transactionPrisma;
+        await prisma.tTest.update({
+            where: { id },
+            data: {
+                correctNum,
+                result,
+            },
+        });
+    }
 }

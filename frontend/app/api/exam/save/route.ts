@@ -1,30 +1,40 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { getEmployeeFromRequest } from '@/lib/utils/employeeUtils';
-import { startService } from '@/services/api/exam/startService';
+import { resultService } from '@/services/api/exam/resultService';
 import { withErrorHandler } from '@/lib/utils/withErrorHandler';
 
 /**
  * POSTリクエストを処理するAPIハンドラ
- * 指定された試験IDに基づいて試験開始処理を行う
+ * 試験解答結果の保存処理を行う
  */
 async function handler(request: NextRequest): Promise<NextResponse> {
     // リクエストヘッダから社員情報を取得
     const tEmployee = await getEmployeeFromRequest(request.headers);
 
-    // リクエストボディから試験IDを取得
+    // リクエストボディから試験ID、受験回数、解答情報を取得
     const body = await request.json();
-    const { testId } = body;
+    const { testId, testCnt, answers } = body;
 
     // 試験IDがない場合はエラー
     if (!testId) {
         throw new Error('試験IDが提供されていません。');
     }
 
-    // 試験開始処理を実行
-    const { mTestQuestions, testCnt } = await startService(tEmployee.id, testId);
+    // 受験回数がない場合はエラー
+    if (!testCnt) {
+        throw new Error('受験回数が提供されていません。');
+    }
+
+    // 解答情報がない場合はエラー
+    if (!answers) {
+        throw new Error('解答情報が提供されていません。');
+    }
+
+    // 試験解答結果の保存を実行
+    await resultService(tEmployee.id, testId, testCnt, answers);
 
     // 成功レスポンスを返却
-    return NextResponse.json({ mTestQuestions, testCnt }, { status: 200 });
+    return NextResponse.json({}, { status: 200 });
 }
 
 // エラーハンドリングを共通化したAPIハンドラとしてエクスポート

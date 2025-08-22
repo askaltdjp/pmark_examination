@@ -32,4 +32,30 @@ export class TTestAnswerRepository {
             }
         });
     }
+
+    /**
+     * TTestAnswer レコードを複数一括で作成する
+     * 
+     * @param newTTestAnswers - 作成する TTestAnswer レコードの配列
+     * @param tx - トランザクションオブジェクト（オプション）
+     * @returns なし（void）
+     * 
+     * トランザクション内で使用する場合、`tx` パラメータを指定してください。
+     * 指定しない場合、`transactionPrisma` がデフォルトで使用されます。
+     */
+    static async createManyTTestAnswers(
+        newTTestAnswers: {
+            employeeId: number;
+            testId: number;
+            testCnt: number;
+            questionNo: number;
+            answer: boolean;
+        }[],
+        tx?: Prisma.TransactionClient
+    ): Promise<void> {
+        const prisma = tx || transactionPrisma;
+        await prisma.tTestAnswer.createMany({
+            data: newTTestAnswers,
+        });
+    }
 }

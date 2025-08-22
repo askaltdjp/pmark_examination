@@ -11,10 +11,10 @@ import { MTestQuestionRepository } from '@/lib/repositories/master/mTestQuestion
  *
  * @param employeeId - 社員ID
  * @param testId - 試験ID
- * @returns MTestQuestion[]
+ * @returns オブジェクト（ランダム抽選した試験問題と受験回数）
  * @throws 条件に合わない場合や処理中にエラーが発生した場合に例外をスローします
  */
-export async function startService(employeeId: number, testId: number): Promise<MTestQuestion[]> {
+export async function startService(employeeId: number, testId: number): Promise<{ mTestQuestions: MTestQuestion[], testCnt: number }> {
     // 試験IDに基づいて試験マスタを取得
     const mTest = await MTestRepository.findById(testId);
     if (!mTest) {
@@ -29,7 +29,7 @@ export async function startService(employeeId: number, testId: number): Promise<
         throw new Error('試験の実施期間外です。');
     }
 
-    // 社員の受験履歴を取得
+    // 社員の受験履歴を取得（最新情報を取得）
     const tTests = await TTestRepository.findAllByEmployeeIdAndTestId(employeeId, testId);
     const tTest = tTests ? tTests[0] : null;
 
@@ -50,9 +50,9 @@ export async function startService(employeeId: number, testId: number): Promise<
 
     // トランザクション処理
     await transactionPrisma.$transaction(async (tx) => {
-        // 受験情報を新規作成
+        // 受験履歴を新規作成
         await TTestRepository.createTTest(employeeId, testId, testCnt, tx);
     });
 
-    return mTestQuestions;
+    return { mTestQuestions, testCnt };
 }

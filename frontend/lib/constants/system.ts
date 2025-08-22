@@ -4,5 +4,5 @@ export const AUTH_TOKEN_COOKIE_NAME = 'auth-token';
 // レスポンスヘッダに設定する社員IDのキー名
 export const EMPLOYEE_ID_HEADER = 'x-employee-id';
 
-// ローカルストレージに保存する試験データのキー名
-export const LOCAL_STORAGE_EXAM_DATA_KEY = 'examData';
+// セッションストレージに保存する試験データのキー名
+export const SESSION_STORAGE_EXAM_DATA_KEY = 'examData';

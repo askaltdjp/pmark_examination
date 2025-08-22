@@ -8,8 +8,8 @@
 │   └── exam
 │        ├── start
 │        │  └── route.ts               // 試験開始API
-│        ├── answers
-│        │  └── route.ts               // 試験回答保存APIpmark_examination_app
+│        ├── save
+│        │  └── route.ts               // 試験解答結果保存API
 │        └── download
 │            └── route.ts              // 試験結果ExcelダウンロードAPI
 │
@@ -57,7 +57,7 @@
 │   │   └── logoutService.ts           // 認証API（ログアウト処理）用サービス
 │   └── exam
 │        ├── generateService.ts        // 試験問題生成API用サービス
-│        ├── answersService.ts         // 試験回答保存API用サービス
+│        ├── answersService.ts         // 試験解答保存API用サービス
 │        └── downloadService.ts        // 試験結果ExcelダウンロードAPI用サービス
 ├── web
 │   ├── auth
