@@ -80,6 +80,8 @@ export class TTestRepository {
                 correctNum: 0,
                 result: TestResult.Interrupted,
                 testAt: now,
+                createAt: now,
+                updateAt: now,
             },
         });
 
@@ -99,11 +101,13 @@ export class TTestRepository {
      */
     static async updateCorrectNumAndResult(id: number, correctNum: number, result: number, tx?: Prisma.TransactionClient): Promise<void> {
         const prisma = tx || transactionPrisma;
+        const now = currentJST();
         await prisma.tTest.update({
             where: { id },
             data: {
                 correctNum,
                 result,
+                updateAt: now,
             },
         });
     }

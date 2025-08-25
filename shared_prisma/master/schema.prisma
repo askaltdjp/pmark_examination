@@ -10,33 +10,54 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL_MASTER")
+  provider          = "postgresql"
+  url               = env("DATABASE_URL_MASTER")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL_MASTER")
 }
 
+/// 試験の概要
 model MTest {
+  /// ID
   id          Int       @id @default(autoincrement())
+  /// 名前
   name        String?   @db.VarChar(64)
+  /// 開始日
   startAt     DateTime  @map("start_at")
+  /// 終了日
   endAt       DateTime  @map("end_at")
+  /// 出題数
   questionNum Int       @map("question_num")
+  /// 合格数
   passNum     Int       @map("pass_num")
+  /// 登録日時
   createAt    DateTime? @map("create_at")
+  /// 更新日時
   updateAt    DateTime? @map("update_at")
+  /// 削除日時
   deleteAt    DateTime? @map("delete_at")
 
-   @@map("m_test")
+  @@map("m_test")
 }
 
+/// 試験の問題
 model MTestQuestion {
+  /// ID
   id         Int       @id @default(autoincrement())
+  /// 試験ID
   testId     Int       @map("test_id")
+  /// 問題No
   questionNo Int       @map("question_no")
+  /// 問題文
   question   String    @db.Text
+  /// 解説
   commentary String?   @db.Text
+  /// 正解
   correct    Boolean
+  /// 登録日時
   createAt   DateTime? @map("create_at")
+  /// 更新日時
   updateAt   DateTime? @map("update_at")
+  /// 削除日時
   deleteAt   DateTime? @map("delete_at")
 
   @@unique([testId, questionNo])

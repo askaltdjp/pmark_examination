@@ -1,5 +1,6 @@
 import { TTestAnswer, Prisma } from ".prisma/client_transaction/";
 import { transactionPrisma } from "@/lib/prisma/transactionPrisma";
+import { currentJST } from "@/lib/utils/timeUtils";
 
 /**
  * TTestAnswerモデルのデータ操作を行うリポジトリクラス
@@ -54,8 +55,13 @@ export class TTestAnswerRepository {
         tx?: Prisma.TransactionClient
     ): Promise<void> {
         const prisma = tx || transactionPrisma;
+        const now = currentJST();
         await prisma.tTestAnswer.createMany({
-            data: newTTestAnswers,
+            data: newTTestAnswers.map(newTTestAnswer => ({
+                ...newTTestAnswer,
+                createAt: now,
+                updateAt: now,
+            })),
         });
     }
 }

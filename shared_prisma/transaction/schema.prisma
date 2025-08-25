@@ -10,19 +10,30 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL_TRANSACTION")
+  provider          = "postgresql"
+  url               = env("DATABASE_URL_TRANSACTION")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL_TRANSACTION")
 }
 
+/// 受験対象の社員情報
 model TEmployee {
+  /// ID
   id           Int       @id @default(autoincrement())
+  /// 社員No
   employeeNo   String    @map("employee_no") @db.VarChar(64)
+  /// 名前
   name         String    @db.VarChar(64)
+  /// メールアドレス
   emailAddress String    @map("email_address") @db.VarChar(256)
+  /// パスワード
   password     String    @db.VarChar(64)
+  /// 入社日
   joinDate     DateTime  @map("join_date") @db.Date
+  /// 登録日時
   createAt     DateTime? @map("create_at")
+  /// 更新日時
   updateAt     DateTime? @map("update_at")
+  /// 削除日時
   deleteAt     DateTime? @map("delete_at")
 
   @@index([employeeNo])
@@ -30,31 +41,52 @@ model TEmployee {
   @@map("t_employee")
 }
 
+/// 社員の受験履歴
 model TTest {
+  /// ID
   id         Int       @id @default(autoincrement())
+  /// 社員ID
   employeeId Int       @map("employee_id")
+  /// 試験ID
   testId     Int       @map("test_id")
+  /// 受験回数
   testCnt    Int       @default(1) @map("test_cnt")
+  /// 正解数
   correctNum Int       @map("correct_num")
+  /// 合否
   result     Int
+  /// 受験日時
   testAt     DateTime  @map("test_at")
+  /// 登録日時
   createAt   DateTime? @map("create_at")
+  /// 更新日時
   updateAt   DateTime? @map("update_at")
+  /// 削除日時
   deleteAt   DateTime? @map("delete_at")
 
   @@unique([employeeId, testId, testCnt])
   @@map("t_test")
 }
 
+/// 社員の解答履歴
 model TTestAnswer {
+  /// ID
   id         Int       @id @default(autoincrement())
+  /// 社員ID
   employeeId Int       @map("employee_id")
+  /// 試験ID
   testId     Int       @map("test_id")
+  /// 受験回数
   testCnt    Int       @default(1) @map("test_cnt")
+  /// 問題No
   questionNo Int       @map("question_no")
+  /// 解答
   answer     Boolean   @default(false)
+  /// 登録日時
   createAt   DateTime? @map("create_at")
+  /// 更新日時
   updateAt   DateTime? @map("update_at")
+  /// 削除日時
   deleteAt   DateTime? @map("delete_at")
 
   @@unique([employeeId, testId, testCnt, questionNo])

@@ -13,7 +13,7 @@ services:
     environment:
       - NODE_ENV=development
     depends_on:
-      - mysql
+      - postgres
 
   admin:
     build:
@@ -29,22 +29,22 @@ services:
     environment:
       - NODE_ENV=development
     depends_on:
-      - mysql
+      - postgres
 
-  mysql:
+  postgres:
     build:
       context: ..
-      dockerfile: docker/mysql/Dockerfile
+      dockerfile: docker/postgres/Dockerfile
     ports:
-      - "3306:3306"
+      - "5432:5432"
     environment:
-      - MYSQL_ROOT_PASSWORD=rootpassword
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
       - TZ=Asia/Tokyo
     volumes:
-      - ./mysql/my.cnf:/etc/mysql/conf.d/my.cnf
-      - ./mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
-      - mysql_data:/var/lib/mysql
+      - ./postgres/initdb:/docker-entrypoint-initdb.d
+      - postgres_data:/var/lib/postgresql/data
     restart: always
 
 volumes:
-  mysql_data:
+  postgres_data:
