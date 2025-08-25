@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { authenticateEmployee } from "@/services/api/auth/loginService";
-import { AUTH_TOKEN_COOKIE_NAME } from "@/lib/constants/system";
+import { loginService } from "@/services/api/auth/loginService";
+import { AUTH_TOKEN_COOKIE_NAME, AUTH_TOKEN_COOKIE_MAX_AGE } from "@/lib/constants/system";
 
 /**
  * POSTリクエストを処理するAPIハンドラ
@@ -12,12 +12,9 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
     const { emailAddress, password } = body;
 
     // 認証サービスを呼び出し、トークンを取得
-    const token = await authenticateEmployee(emailAddress, password);
+    const token = await loginService(emailAddress, password);
 
-    // 認証に失敗した場合は401エラーを返す
-    if (!token) {
-        return NextResponse.json({ message: "Invalid credentials" }, { status: 401 });
-    } else {
+    if (token) {
         // 認証成功時はレスポンスを作成
         const response = NextResponse.json({ message: "Login successful" }, { status: 200 })
 
@@ -27,9 +24,12 @@ export async function POST(req: NextRequest): Promise<NextResponse> {
             value: token,
             httpOnly: true,
             // secure: process.env.NODE_ENV === "production",
-            maxAge: 3600, // 1時間
+            maxAge: AUTH_TOKEN_COOKIE_MAX_AGE,
         });
 
         return response;
+    } else {
+        // 認証に失敗した場合は401エラーを返す
+        return NextResponse.json({ message: "Invalid credentials" }, { status: 401 });
     }
 }

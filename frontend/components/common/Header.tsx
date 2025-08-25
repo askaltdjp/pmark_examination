@@ -1,8 +1,8 @@
 "use client";
 
 import { useRouter, usePathname } from "next/navigation";
-import { SITE_TITLE } from '@/lib/constants/labels';
-import { ArrowRightStartOnRectangleIcon } from '@heroicons/react/24/outline';
+import { SITE_TITLE } from "@/lib/constants/labels";
+import { ArrowRightStartOnRectangleIcon } from "@heroicons/react/24/outline";
 
 /**
  * 認証後画面の共通ヘッダーのクライアントコンポーネント
@@ -14,7 +14,7 @@ export default function Header() {
     // ログアウトボタン押下時の処理
     const handleLogoutButtonClick = async () => {
         // ログアウトAPIの呼び出し
-        await fetch('/api/auth/logout', {
+        await fetch("/api/auth/logout", {
             "method": "POST",
         });
 
@@ -24,8 +24,8 @@ export default function Header() {
 
     // ログアウトボタンを非表示にしたい画面のURL
     const hideLogoutButtonPaths = [
-        '/exam/take',
-        '/exam/result',
+        "/exam/take",
+        "/exam/result",
     ];
 
     // 現在のパスが非表示リストに含まれているか判定

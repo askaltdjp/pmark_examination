@@ -1,9 +1,9 @@
 "use client";
 
-import { MTest } from '.prisma/client_master/';
-import { TTest } from '.prisma/client_transaction/';
-import { formatDate } from '@/lib/utils/timeUtils';
-import { TestResult, testResultLabels } from '@/lib/constants/labels';
+import { MTest } from ".prisma/client_master/";
+import { TTest } from ".prisma/client_transaction/";
+import { formatDate } from "@/lib/utils/timeUtils";
+import { TestResult, testResultLabels } from "@/lib/constants/labels";
 
 type Props = {
     mTest: MTest | null,
@@ -26,10 +26,10 @@ export default function ExamHistoryList({ mTest, tTests }: Props) {
     const handleConfirmButtonClick = async (testId: number, testCnt: number) => {
         try {
             // ファイルダウンロードAPIへPOSTリクエスト
-            const response = await fetch('/api/exam/download', {
-                method: 'POST',
+            const response = await fetch("/api/exam/download", {
+                method: "POST",
                 headers: {
-                    'Content-Type': 'application/json',
+                    "Content-Type": "application/json",
                 },
                 body: JSON.stringify({ testId, testCnt }),
             });
@@ -37,19 +37,19 @@ export default function ExamHistoryList({ mTest, tTests }: Props) {
             // レスポンスの正常確認
             if (!response.ok) {
                 const errorData = await response.json();
-                throw new Error(errorData.error || 'ファイルのダウンロードに失敗しました。もう一度お試しください。');
+                throw new Error(errorData.error || "ファイルのダウンロードに失敗しました。もう一度お試しください。");
             }
 
             // Content-Dispositionヘッダーからファイル名を取得
-            const disposition = response.headers.get('Content-Disposition');
+            const disposition = response.headers.get("Content-Disposition");
             if (!disposition) {
-                throw new Error('ファイル名の情報がヘッダーに含まれていません。');
+                throw new Error("ファイル名の情報がヘッダーに含まれていません。");
             }
 
             // ファイル名を正規表現で抽出
             const match = disposition.match(/filename\*\=UTF-8''([^;]+)/);
             if (!match || !match[1]) {
-                throw new Error('ファイル名を取得できませんでした。');
+                throw new Error("ファイル名を取得できませんでした。");
             }
 
             const filename = decodeURIComponent(match[1]);
@@ -59,7 +59,7 @@ export default function ExamHistoryList({ mTest, tTests }: Props) {
             const url = window.URL.createObjectURL(blob);
 
             // ダウンロード用リンクを作成してクリックイベントを発火
-            const link = document.createElement('a');
+            const link = document.createElement("a");
             link.href = url;
             link.download = filename;
             document.body.appendChild(link);
@@ -70,8 +70,8 @@ export default function ExamHistoryList({ mTest, tTests }: Props) {
             window.URL.revokeObjectURL(url);
         } catch (error) {
             // エラー発生時、コンソールにエラーメッセージを出力し、アラートを表示
-            console.error('ファイルダウンロード時のエラー:', error);
-            alert(error instanceof Error ? error.message : '予期しないエラーが発生しました。');
+            console.error("ファイルダウンロード時のエラー:", error);
+            alert(error instanceof Error ? error.message : "予期しないエラーが発生しました。");
         }
     };
 

@@ -1,10 +1,39 @@
-import React from 'react';
-import HomeButton from '@/components/exam/result/HomeButton';
+import React from "react";
+import { headers } from "next/headers";
+import { getEmployeeFromRequest } from "@/lib/utils/employeeUtils";
+import { resultService } from "@/services/web/exam/resultService";
+import { withRedirectErrorHandler } from "@/lib/utils/withRedirectErrorHandler";
+import HomeButton from "@/components/exam/result/HomeButton";
+
+type Props = {
+    searchParams: { [key: string]: string | string[] | undefined }
+}
 
 /**
  * 試験結果画面のサーバコンポーネント
  */
-export default function ResultPage() {
+export default async function ResultPage({ searchParams }: Props) {
+    const { mTest, mTestQuestionMap, tTest, tTestAnswers, isPass } = await withRedirectErrorHandler(async () => {
+        // リクエストヘッダから社員情報を取得し、認証済みかを判定
+        const requestHeaders = await headers();
+        const tEmployee = await getEmployeeFromRequest(requestHeaders);
+
+        // クエリパラメータから試験IDを取得
+        if (!searchParams.testId) {
+            throw new Error("試験IDが提供されていません。");
+        }
+        const testId = Number(searchParams.testId);
+
+        // クエリパラメータから受験回数を取得
+        if (!searchParams.testCnt) {
+            throw new Error("受験回数が提供されていません。");
+        }
+        const testCnt = Number(searchParams.testCnt);
+
+        // 試験結果表示用の試験マスタ、試験問題マップ、受験履歴、解答履歴、合否判定を取得
+        return await resultService(tEmployee.id, testId, testCnt);
+    });
+
     return (
         <div className="px-6">
             <div className="max-w-6xl mx-auto">
@@ -17,8 +46,8 @@ export default function ResultPage() {
 
                 {/* 合否表示 */}
                 <div className="flex justify-center mb-6">
-                    <div className="bg-success text-white text-lg font-semibold py-4 px-10 rounded-md shadow">
-                        【合格】正解率： 95%
+                    <div className={`${isPass ? 'bg-success' : 'bg-error'} text-white text-lg font-semibold py-4 px-10 rounded-md shadow`}>
+                        【{isPass ? '合格' : '不合格'}】正解率： {Number(tTest.correctNum * 100 / mTest.questionNum)}%
                     </div>
                 </div>
 
@@ -35,30 +64,36 @@ export default function ResultPage() {
                                 </tr>
                             </thead>
                             <tbody>
-                                {Array.from({ length: 10 }, (_, i) => (
-                                    <tr key={i} className={`text-gray-600 ${i % 2 === 0 ? 'bg-base-100' : 'bg-base-200'}`}>
-                                        <td className="text-center">{i + 1}</td>
-                                        <td className="text-center">問<br />題</td>
-                                        <td>2021年度の個人情報の取扱いに関する事故の傾向より、1番に多い事故は「誤送付」である。</td>
-                                        <td className="text-center">{i % 2 === 0 ? 'Yes' : 'No'}</td>
-                                        <td className="text-center">〇</td>
-                                    </tr>
-                                ))}
-                                {Array.from({ length: 10 }, (_, i) => (
-                                    <React.Fragment key={i + 100}>
-                                        <tr key={i + 100} className={`text-gray-600 ${i % 2 === 0 ? 'bg-base-100' : 'bg-base-200'}`}>
-                                            <td rowSpan={2} className="text-center">{i + 11}</td>
-                                            <td className="text-center">問<br />題</td>
-                                            <td>Emotetとは、攻撃者が送り込んだ悪意のコードを、そのページを閲覧した不特定多数の社員ーに、スクリプトとして実行させることである。</td>
-                                            <td rowSpan={2} className="text-center">{i % 2 === 0 ? 'Yes' : 'No'}</td>
-                                            <td rowSpan={2} className="text-center">×</td>
-                                        </tr>
-                                        <tr key={i + 200} className={`text-gray-600 ${i % 2 === 0 ? 'bg-base-100' : 'bg-base-200'}`}>
-                                            <td className="text-center">解<br />答</td>
-                                            <td>クレジットカード情報を保持しないようにしても、サイトの脆弱性をつかれてクレジットカード情報を盗み出されるケースはある。そのため定期的にサイトの脆弱診断等、不正アクセス対策を行い続ける必要がある。</td>
-                                        </tr>
-                                    </React.Fragment>
-                                ))}
+                                {tTestAnswers.map((tTestAnswer, i) => {
+                                    const mTestQuestion = mTestQuestionMap[tTestAnswer.questionNo];
+                                    if (mTestQuestion.commentary) {
+                                        return (
+                                            <React.Fragment key={i}>
+                                                <tr className={`text-gray-600 ${i % 2 === 0 ? 'bg-base-100' : 'bg-base-200'}`}>
+                                                    <td rowSpan={2} className="text-center">{i + 1}</td>
+                                                    <td className="text-center">問<br />題</td>
+                                                    <td>{mTestQuestion.question}</td>
+                                                    <td rowSpan={2} className="text-center">{tTestAnswer.answer ? 'Yes' : 'No'}</td>
+                                                    <td rowSpan={2} className="text-center">{tTestAnswer.answer === mTestQuestion.correct ? '〇' : '×'}</td>
+                                                </tr>
+                                                <tr className={`text-gray-600 ${i % 2 === 0 ? 'bg-base-100' : 'bg-base-200'}`}>
+                                                    <td className="text-center">解<br />答</td>
+                                                    <td>{mTestQuestion.commentary}</td>
+                                                </tr>
+                                            </React.Fragment>
+                                        );
+                                    } else {
+                                        return (
+                                            <tr key={i} className={`text-gray-600 ${i % 2 === 0 ? 'bg-base-100' : 'bg-base-200'}`}>
+                                                <td className="text-center">{i + 1}</td>
+                                                <td className="text-center">問<br />題</td>
+                                                <td>{mTestQuestion.question}</td>
+                                                <td className="text-center">{tTestAnswer.answer ? 'Yes' : 'No'}</td>
+                                                <td className="text-center">{tTestAnswer.answer === mTestQuestion.correct ? '〇' : '×'}</td>
+                                            </tr>
+                                        );
+                                    }
+                                })}
                             </tbody>
                         </table>
                     </div>
@@ -68,6 +103,6 @@ export default function ResultPage() {
                 <HomeButton />
 
             </div>
-        </div>
+        </div >
     );
 }

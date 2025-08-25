@@ -1,8 +1,7 @@
-import { redirect } from "next/navigation";
-import { headers } from 'next/headers';
+import { headers } from "next/headers";
 import { getEmployeeFromRequest } from "@/lib/utils/employeeUtils";
-import { MTestRepository } from "@/lib/repositories/master/mTestRepository";
-import { TTestRepository } from "@/lib/repositories/transaction/tTestRepository";
+import { dashboardService } from "@/services/web/home/dashboardService";
+import { withRedirectErrorHandler } from "@/lib/utils/withRedirectErrorHandler";
 import ExamHistoryList from "@/components/home/dashboard/ExamHistoryList";
 import StartExamButton from "@/components/home/dashboard/StartExamButton";
 
@@ -10,26 +9,20 @@ import StartExamButton from "@/components/home/dashboard/StartExamButton";
  * ホーム画面のサーバコンポーネント
  */
 export default async function DashBoardPage() {
-    // リクエストヘッダから社員情報を取得
-    // 社員情報が取得できなければログイン画面へリダイレクト
-    const tEmployee = await (async () => {
-        try {
-            const requestHeaders = await headers();
-            return await getEmployeeFromRequest(requestHeaders);
-        } catch (error) {
-            redirect("/auth/login");
-        }
-    })();
+    const { tEmployee, mTest, tTests } = await withRedirectErrorHandler(async () => {
+        // リクエストヘッダから社員情報を取得し、認証済みかを判定
+        const requestHeaders = await headers();
+        const tEmployee = await getEmployeeFromRequest(requestHeaders);
 
-    // 実施中の試験情報取得
-    const mTest = await MTestRepository.findActive();
+        // ダッシュボード用の試験マスタと受験履歴を取得
+        const dashboardData = await dashboardService(tEmployee.id);
 
-    // 実施中の試験に対する受験履歴取得
-    const tTests = mTest ? await TTestRepository.findAllByEmployeeIdAndTestId(tEmployee.id, mTest.id) : [];
+        return { tEmployee, ...dashboardData };
+    });
 
     return (
         <div className="max-w-6xl mx-auto text-gray-900 rounded">
-            {/* 情報テーブル */}
+            {/* 氏名と試験内容 */}
             <div className="p-3 bg-white shadow rounded">
                 <div className="rounded-box border border-base-content/5 bg-base-100">
                     <table className="table">

@@ -1,7 +1,7 @@
-import { TTest, Prisma } from '.prisma/client_transaction/';
-import { transactionPrisma } from '@/lib/prisma/transactionPrisma';
-import { currentJST } from '@/lib/utils/timeUtils';
-import { TestResult } from '@/lib/constants/labels';
+import { TTest, Prisma } from ".prisma/client_transaction/";
+import { transactionPrisma } from "@/lib/prisma/transactionPrisma";
+import { currentJST } from "@/lib/utils/timeUtils";
+import { TestResult } from "@/lib/constants/labels";
 
 /**
  * TTestモデルのデータ操作を行うリポジトリクラス
@@ -52,7 +52,7 @@ export class TTestRepository {
                 deleteAt: null,
             },
             orderBy: {
-                testCnt: 'desc',
+                testCnt: "desc",
             }
         });
     }

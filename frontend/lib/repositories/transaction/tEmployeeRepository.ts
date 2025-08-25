@@ -1,5 +1,5 @@
-import { TEmployee } from '.prisma/client_transaction';
-import { transactionPrisma } from '@/lib/prisma/transactionPrisma';
+import { TEmployee } from ".prisma/client_transaction";
+import { transactionPrisma } from "@/lib/prisma/transactionPrisma";
 
 /**
  * TEmployeeモデルのデータ操作を行うリポジトリクラス

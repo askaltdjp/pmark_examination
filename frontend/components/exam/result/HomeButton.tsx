@@ -10,7 +10,7 @@ export default function HomeButton() {
 
     // ホームへボタン押下時の処理
     const handleHomeButtonClick = () => {
-        router.push('/home/dashboard');
+        router.push("/home/dashboard");
     };
 
     return (

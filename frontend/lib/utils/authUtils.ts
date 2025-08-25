@@ -1,6 +1,7 @@
-import { SignJWT, jwtVerify, type JWTPayload } from 'jose';
+import { SignJWT, jwtVerify, type JWTPayload } from "jose";
+import { AUTH_TOKEN_COOKIE_MAX_AGE } from '@/lib/constants/system';
 
-const JWT_SECRET_KEY = process.env.JWT_SECRET || 'your-secret-key';
+const JWT_SECRET_KEY = process.env.JWT_SECRET || "your-secret-key";
 const JWT_SECRET = new TextEncoder().encode(JWT_SECRET_KEY);
 
 /**
@@ -14,14 +15,14 @@ export interface JwtPayload extends JWTPayload {
 /**
  * JWT を発行する
  * @param payload - { employeeId: number } を含むオブジェクト
- * @param expiresIn - 有効期限（秒）。デフォルトは3600（1時間）
+ * @param expiresIn - 有効期限（秒）。
  */
-export async function signJwt(payload: JwtPayload, expiresIn: number = 3600): Promise<string> {
+export async function signJwt(payload: JwtPayload, expiresIn: number = AUTH_TOKEN_COOKIE_MAX_AGE): Promise<string> {
     const now = Math.floor(Date.now() / 1000);
     const exp = now + expiresIn;
 
     return await new SignJWT(payload)
-        .setProtectedHeader({ alg: 'HS256', typ: 'JWT' })
+        .setProtectedHeader({ alg: "HS256", typ: "JWT" })
         .setIssuedAt(now)
         .setExpirationTime(exp)
         .sign(JWT_SECRET);
@@ -35,11 +36,11 @@ export async function signJwt(payload: JwtPayload, expiresIn: number = 3600): Pr
 export async function verifyJwt(token: string): Promise<JwtPayload | null> {
     try {
         const { payload } = await jwtVerify(token, JWT_SECRET, {
-            algorithms: ['HS256'],
+            algorithms: ["HS256"],
         });
         return payload as JwtPayload;
     } catch (err) {
-        console.error('JWT verify error:', err);
+        console.error("JWT verify error:", err);
         return null;
     }
 }

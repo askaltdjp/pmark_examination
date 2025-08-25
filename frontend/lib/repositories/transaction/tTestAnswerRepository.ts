@@ -1,5 +1,5 @@
-import { TTestAnswer, Prisma } from '.prisma/client_transaction/';
-import { transactionPrisma } from '@/lib/prisma/transactionPrisma';
+import { TTestAnswer, Prisma } from ".prisma/client_transaction/";
+import { transactionPrisma } from "@/lib/prisma/transactionPrisma";
 
 /**
  * TTestAnswerモデルのデータ操作を行うリポジトリクラス
@@ -28,7 +28,7 @@ export class TTestAnswerRepository {
                 deleteAt: null,
             },
             orderBy: {
-                id: 'asc',
+                id: "asc",
             }
         });
     }

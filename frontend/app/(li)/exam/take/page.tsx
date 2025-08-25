@@ -1,22 +1,17 @@
-import { redirect } from "next/navigation";
-import { headers } from 'next/headers';
+import { headers } from "next/headers";
 import { getEmployeeFromRequest } from "@/lib/utils/employeeUtils";
-import ExamNavigator from '@/components/exam/take/ExamNavigator';
+import { withRedirectErrorHandler } from "@/lib/utils/withRedirectErrorHandler";
+import ExamNavigator from "@/components/exam/take/ExamNavigator";
 
 /**
  * 試験画面のサーバコンポーネント
  */
 export default async function TakePage() {
-    // リクエストヘッダから社員情報を取得
-    // 社員情報が取得できなければログイン画面へリダイレクト
-    const tEmployee = await (async () => {
-        try {
-            const requestHeaders = await headers();
-            return await getEmployeeFromRequest(requestHeaders);
-        } catch (error) {
-            redirect("/auth/login");
-        }
-    })();
+    await withRedirectErrorHandler(async () => {
+        // リクエストヘッダから社員情報を取得し、認証済みかを判定
+        const requestHeaders = await headers();
+        await getEmployeeFromRequest(requestHeaders);
+    });
 
     return (
         <ExamNavigator />

@@ -1,6 +1,6 @@
-import { TEmployee } from '.prisma/client_transaction';
-import { TEmployeeRepository } from '@/lib/repositories/transaction/tEmployeeRepository';
-import { EMPLOYEE_ID_HEADER } from '@/lib/constants/system';
+import { TEmployee } from ".prisma/client_transaction";
+import { TEmployeeRepository } from "@/lib/repositories/transaction/tEmployeeRepository";
+import { EMPLOYEE_ID_HEADER } from "@/lib/constants/system";
 
 /**
  * リクエストヘッダから社員情報を取得する
@@ -18,7 +18,7 @@ export async function getEmployeeFromRequest(headers: Headers): Promise<TEmploye
 
     // 社員情報が取得できなければエラー
     if (!tEmployee) {
-        throw new Error('社員情報が取得できません。');
+        throw new Error(`社員情報が取得できません。[employeeId=${employeeId}]`);
     }
 
     return tEmployee;

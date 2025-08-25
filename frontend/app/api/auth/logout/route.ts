@@ -1,4 +1,4 @@
-import { NextResponse } from 'next/server';
+import { NextResponse } from "next/server";
 import { AUTH_TOKEN_COOKIE_NAME } from "@/lib/constants/system";
 
 /**
@@ -7,15 +7,15 @@ import { AUTH_TOKEN_COOKIE_NAME } from "@/lib/constants/system";
  */
 export function POST(): NextResponse {
     // クライアントに返すレスポンスを作成（ログアウト成功メッセージを含む）
-    const response = NextResponse.json({ message: 'Logged out' });
+    const response = NextResponse.json({ message: "Logged out" });
 
     // JWTトークンを保存していたクッキーを削除（空文字にして、Max-Ageを0に設定）
     response.cookies.set({
         name: AUTH_TOKEN_COOKIE_NAME,
-        value: '',
+        value: "",
         httpOnly: true,
         maxAge: 0,
-        // secure: process.env.NODE_ENV === 'production', // 本番環境では有効化推奨
+        // secure: process.env.NODE_ENV === "production", // 本番環境では有効化推奨
     });
 
     // クッキー削除後のレスポンスを返す

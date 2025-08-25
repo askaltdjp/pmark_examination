@@ -1,10 +1,10 @@
-import { MTestRepository } from '@/lib/repositories/master/mTestRepository';
-import { TTestRepository } from '@/lib/repositories/transaction/tTestRepository';
-import { transactionPrisma } from '@/lib/prisma/transactionPrisma';
-import { currentJST } from '@/lib/utils/timeUtils';
-import { TestResult } from '@/lib/constants/labels';
-import { MTestQuestionRepository } from '@/lib/repositories/master/mTestQuestionRepository';
-import { TTestAnswerRepository } from '@/lib/repositories/transaction/tTestAnswerRepository';
+import { MTestRepository } from "@/lib/repositories/master/mTestRepository";
+import { TTestRepository } from "@/lib/repositories/transaction/tTestRepository";
+import { transactionPrisma } from "@/lib/prisma/transactionPrisma";
+import { currentJST } from "@/lib/utils/timeUtils";
+import { TestResult } from "@/lib/constants/labels";
+import { MTestQuestionRepository } from "@/lib/repositories/master/mTestQuestionRepository";
+import { TTestAnswerRepository } from "@/lib/repositories/transaction/tTestAnswerRepository";
 
 /**
  * 試験解答結果の保存を行うサービス関数
@@ -20,7 +20,7 @@ export async function resultService(employeeId: number, testId: number, testCnt:
     // 試験IDに基づいて試験マスタを取得
     const mTest = await MTestRepository.findById(testId);
     if (!mTest) {
-        throw new Error('指定された試験が見つかりません。');
+        throw new Error(`試験マスタが存在しません。[testId=${testId}]`);
     }
 
     // 現在の日時を取得
@@ -28,7 +28,7 @@ export async function resultService(employeeId: number, testId: number, testCnt:
 
     // 試験の実施期間内かどうかを確認
     if (mTest.startAt > now || now > mTest.endAt) {
-        throw new Error('試験の実施期間外です。');
+        throw new Error(`試験の実施期間外です。[testId=${testId}]`);
     }
 
     // 社員の受験履歴を取得（最新情報を取得）
@@ -37,11 +37,11 @@ export async function resultService(employeeId: number, testId: number, testCnt:
 
     // 試験開始処理で作成した受験履歴が存在しない場合はエラー
     if (!tTest) {
-        throw new Error('正規の手順で試験開始を行っていません。');
+        throw new Error(`正規の手順で試験開始を行っていません。[employeeId=${employeeId}] [testId=${testId}]`);
     }
     // すでに結果が確定している場合は処理を中断
     if (tTest.result === TestResult.Fail || tTest.result === TestResult.Pass) {
-        throw new Error('結果が確定している試験は受験できません。');
+        throw new Error(`結果が確定している試験は受験できません。[employeeId=${employeeId}] [testId=${testId}]`);
     }
 
     // 試験問題マスタ取得
@@ -57,7 +57,7 @@ export async function resultService(employeeId: number, testId: number, testCnt:
         return answer.answer === corrects[answer.questionNo];
     }).length;
 
-    // 合格・不合格の判定
+    // 合否判定
     const result = (mTest.passNum <= correctNum) ? TestResult.Pass : TestResult.Fail;
 
     // 解答履歴をDB登録用の形式に変換

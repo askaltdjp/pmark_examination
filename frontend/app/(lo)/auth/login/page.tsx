@@ -9,6 +9,8 @@ export default function LoginPage() {
             <h1 className="text-4xl font-extrabold text-gray-800 mb-8">
                 Web試験システム
             </h1>
+
+            {/* ログインフォーム */}
             <LoginForm />
 
             <p className="mt-8 text-sm text-gray-400">

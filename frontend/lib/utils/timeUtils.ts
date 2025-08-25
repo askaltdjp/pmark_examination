@@ -26,11 +26,11 @@ export function currentJST(): Date {
 export function formatDate(date: Date, format: string = "YYYY/MM/DD HH:mm"): string {
     const replacements: Record<string, string> = {
         YYYY: String(date.getUTCFullYear()),
-        MM: String(date.getUTCMonth() + 1).padStart(2, '0'),
-        DD: String(date.getUTCDate()).padStart(2, '0'),
-        HH: String(date.getUTCHours()).padStart(2, '0'),
-        mm: String(date.getUTCMinutes()).padStart(2, '0'),
-        ss: String(date.getUTCSeconds()).padStart(2, '0'),
+        MM: String(date.getUTCMonth() + 1).padStart(2, "0"),
+        DD: String(date.getUTCDate()).padStart(2, "0"),
+        HH: String(date.getUTCHours()).padStart(2, "0"),
+        mm: String(date.getUTCMinutes()).padStart(2, "0"),
+        ss: String(date.getUTCSeconds()).padStart(2, "0"),
     };
 
     return format.replace(/YYYY|MM|DD|HH|mm|ss/g, match => replacements[match]);

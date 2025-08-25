@@ -10,8 +10,8 @@ import { signJwt } from "@/lib/utils/authUtils";
  * @param password - 認証対象のパスワード
  * @returns JWTトークン文字列 または 認証失敗時は null
  */
-export async function authenticateEmployee(emailAddress: string, password: string): Promise<string | null> {
-    // メールアドレスで社員を検索
+export async function loginService(emailAddress: string, password: string): Promise<string | null> {
+    // メールアドレスで社員情報を検索
     const tEmployee = await TEmployeeRepository.findByEmail(emailAddress);
 
     // 社員が存在しない、またはパスワードが一致しなければnullを返す

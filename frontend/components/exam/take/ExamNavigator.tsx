@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { SESSION_STORAGE_EXAM_DATA_KEY } from '@/lib/constants/system';
+import { SESSION_STORAGE_EXAM_DATA_KEY } from "@/lib/constants/system";
 
 /**
  * 試験画面のクライアントコンポーネント
@@ -31,12 +31,12 @@ export default function ExamNavigator() {
                 setAnswers(examData.answers);
                 setQuestionIndex(examData.questionIndex);
             } else {
-                throw new Error('試験の開始に必要なデータが存在しません。');
+                throw new Error("試験の開始に必要なデータが存在しません。");
             }
         } catch (error) {
-            console.error('試験データ取得時のエラー:', error);
-            alert(error instanceof Error ? error.message : '予期しないエラーが発生しました。');
-            router.push('/auth/login');
+            console.error("試験データ取得時のエラー:", error);
+            alert(error instanceof Error ? error.message : "予期しないエラーが発生しました。");
+            router.push("/auth/login");
         }
     }, []);
 
@@ -91,10 +91,10 @@ export default function ExamNavigator() {
             });
 
             // 試験解答保存APIへPOSTリクエスト
-            const response = await fetch('/api/exam/save', {
-                method: 'POST',
+            const response = await fetch("/api/exam/save", {
+                method: "POST",
                 headers: {
-                    'Content-Type': 'application/json',
+                    "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
                     testId: testIdRef.current,
@@ -108,19 +108,24 @@ export default function ExamNavigator() {
 
             // レスポンスの正常確認
             if (!response.ok) {
-                throw new Error(data.error || '試験解答の保存に失敗しました。もう一度お試しください。');
+                throw new Error(data.error || "試験解答の保存に失敗しました。もう一度お試しください。");
             }
+
+            // 試験結果画面に渡すパラメータの構築
+            const params = new URLSearchParams();
+            params.set("testId", String(testIdRef.current));
+            params.set("testCnt", String(testCntRef.current));
 
             // セッションストレージの試験情報を削除
             sessionStorage.removeItem(SESSION_STORAGE_EXAM_DATA_KEY);
 
-            // 試験解答の保存に成功した場合、試験画面に遷移
-            router.push('/exam/result');
+            // 試験結果画面に遷移
+            router.push(`/exam/result?${params}`);
 
         } catch (error) {
             // エラー発生時、コンソールにエラーメッセージを出力し、アラートを表示
-            console.error('試験解答の保存時のエラー:', error);
-            alert(error instanceof Error ? error.message : '予期しないエラーが発生しました。');
+            console.error("試験解答の保存時のエラー:", error);
+            alert(error instanceof Error ? error.message : "予期しないエラーが発生しました。");
         }
     };
 

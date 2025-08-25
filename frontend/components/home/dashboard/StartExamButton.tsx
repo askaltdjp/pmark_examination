@@ -1,10 +1,10 @@
 "use client";
 
 import { useRouter } from "next/navigation";
-import { MTest, MTestQuestion } from '.prisma/client_master';
-import { TTest } from '.prisma/client_transaction';
-import { TestResult } from '@/lib/constants/labels';
-import { SESSION_STORAGE_EXAM_DATA_KEY } from '@/lib/constants/system';
+import { MTest, MTestQuestion } from ".prisma/client_master";
+import { TTest } from ".prisma/client_transaction";
+import { TestResult } from "@/lib/constants/labels";
+import { SESSION_STORAGE_EXAM_DATA_KEY } from "@/lib/constants/system";
 
 type Props = {
     mTest: MTest | null,
@@ -26,10 +26,10 @@ export default function StartExamButton({ mTest, tTest }: Props) {
 
         try {
             // 試験開始APIへPOSTリクエスト
-            const response = await fetch('/api/exam/start', {
-                method: 'POST',
+            const response = await fetch("/api/exam/start", {
+                method: "POST",
                 headers: {
-                    'Content-Type': 'application/json',
+                    "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
                     testId: mTest.id,
@@ -45,7 +45,7 @@ export default function StartExamButton({ mTest, tTest }: Props) {
 
             // レスポンスの正常確認
             if (!response.ok) {
-                throw new Error(data.error || '試験開始に失敗しました。もう一度お試しください。');
+                throw new Error(data.error || "試験開始に失敗しました。もう一度お試しください。");
             }
 
             // 試験問題を抽出
@@ -71,12 +71,12 @@ export default function StartExamButton({ mTest, tTest }: Props) {
             );
 
             // 試験開始に成功した場合、試験画面に遷移
-            router.push('/exam/take');
+            router.push("/exam/take");
 
         } catch (error) {
             // エラー発生時、コンソールにエラーメッセージを出力し、アラートを表示
-            console.error('試験開始時のエラー:', error);
-            alert(error instanceof Error ? error.message : '予期しないエラーが発生しました。');
+            console.error("試験開始時のエラー:", error);
+            alert(error instanceof Error ? error.message : "予期しないエラーが発生しました。");
         }
     }
 

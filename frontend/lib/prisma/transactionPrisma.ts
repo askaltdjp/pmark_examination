@@ -1,4 +1,4 @@
-import { PrismaClient as TransactionPrismaClient } from '.prisma/client_transaction';
+import { PrismaClient as TransactionPrismaClient } from ".prisma/client_transaction";
 
 // Next.js のホットリロード時に PrismaClient のインスタンスが
 // 複数生成されるのを防ぐためのシングルトンパターン。
@@ -17,6 +17,6 @@ export const transactionPrisma =
     globalForTransactionPrisma.transactionPrisma || new TransactionPrismaClient();
 
 // 本番環境以外では、作成したインスタンスをグローバルに保存
-if (process.env.NODE_ENV !== 'production') {
+if (process.env.NODE_ENV !== "production") {
     globalForTransactionPrisma.transactionPrisma = transactionPrisma;
 }

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
-import { withErrorHandler } from '@/lib/utils/withErrorHandler';
-import { getEmployeeFromRequest } from '@/lib/utils/employeeUtils';
+import { withApiErrorHandler } from "@/lib/utils/withApiErrorHandler";
+import { getEmployeeFromRequest } from "@/lib/utils/employeeUtils";
 import { downloadService } from "@/services/api/exam/downloadService";
 
 /**
@@ -8,7 +8,7 @@ import { downloadService } from "@/services/api/exam/downloadService";
  * 受け取った試験IDと受験回数に基づいて試験結果のExcelファイルを生成して返却する
  */
 async function handler(request: NextRequest): Promise<NextResponse> {
-    // リクエストヘッダから社員情報を取得
+    // リクエストヘッダから社員情報を取得し、認証済みかを判定
     const tEmployee = await getEmployeeFromRequest(request.headers);
 
     // リクエストボディから試験IDと受験回数を取得
@@ -25,10 +25,9 @@ async function handler(request: NextRequest): Promise<NextResponse> {
             // ExcelのMIMEタイプ
             "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
             // ファイル名の指定（UTF-8エンコード済み）
-            'Content-Disposition': `attachment; filename*=UTF-8''${fileName}`,
+            "Content-Disposition": `attachment; filename*=UTF-8''${fileName}`,
         },
     });
 }
 
-// エラーハンドリングを共通化したAPIハンドラとしてエクスポート
-export const POST = withErrorHandler(handler);
+export const POST = withApiErrorHandler(handler);
