@@ -3,6 +3,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { SESSION_STORAGE_EXAM_DATA_KEY } from "@/lib/constants/system";
+import { saveAction } from "@/app/actions/exam/saveAction";
 
 /**
  * 試験画面のクライアントコンポーネント
@@ -81,7 +82,7 @@ export default function ExamNavigator() {
     // 解答終了ボタン押下時の処理
     const handleAnswerCompleteButtonClick = async () => {
         try {
-            // 解答情報をサーバに送信する形式に整形（questionNoとanswerのペア）
+            // 解答情報をサーバで処理する形式に整形（questionNoとanswerのペア）
             const examAnswers = questions.map((question, i) => {
                 const { questionNo } = question;
                 return {
@@ -90,26 +91,8 @@ export default function ExamNavigator() {
                 };
             });
 
-            // 試験解答保存APIへPOSTリクエスト
-            const response = await fetch("/api/exam/save", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
-                    testId: testIdRef.current,
-                    testCnt: testCntRef.current,
-                    answers: examAnswers,
-                }),
-            });
-
-            // レスポンスのJSONデータをパース
-            const data = await response.json();
-
-            // レスポンスの正常確認
-            if (!response.ok) {
-                throw new Error(data.error || "試験解答の保存に失敗しました。もう一度お試しください。");
-            }
+            // 試験解答保存処理の実行
+            await saveAction(testIdRef.current, testCntRef.current, examAnswers);
 
             // 試験結果画面に渡すパラメータの構築
             const params = new URLSearchParams();

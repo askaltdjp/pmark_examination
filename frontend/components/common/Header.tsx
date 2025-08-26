@@ -3,6 +3,7 @@
 import { useRouter, usePathname } from "next/navigation";
 import { SITE_TITLE } from "@/lib/constants/labels";
 import { ArrowRightStartOnRectangleIcon } from "@heroicons/react/24/outline";
+import { logoutAction } from "@/app/actions/auth/logoutAction";
 
 /**
  * 認証後画面の共通ヘッダーのクライアントコンポーネント
@@ -13,11 +14,8 @@ export default function Header() {
 
     // ログアウトボタン押下時の処理
     const handleLogoutButtonClick = async () => {
-        // ログアウトAPIの呼び出し
-        await fetch("/api/auth/logout", {
-            "method": "POST",
-        });
-
+        // ログアウト処理の実行
+        await logoutAction();
         // ログイン画面に遷移
         router.push("/auth/login");
     };

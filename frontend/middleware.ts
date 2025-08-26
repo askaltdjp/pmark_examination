@@ -21,10 +21,10 @@ export async function middleware(request: NextRequest) {
 export const config = {
     // このパス群に対してミドルウェアを適用
     matcher: [
-        "/auth/:path*",
-        "/home/:path*",
-        "/exam/:path*",
         "/api/:path*",
+        "/auth/:path*",
+        "/exam/:path*",
+        "/home/:path*",
         "/",
     ],
 };

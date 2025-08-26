@@ -18,17 +18,20 @@ export default async function ResultPage({ searchParams }: Props) {
         const requestHeaders = await headers();
         const tEmployee = await getEmployeeFromRequest(requestHeaders);
 
+        // 非同期の searchParams からクエリパラメータを取得
+        const params = await searchParams;
+
         // クエリパラメータから試験IDを取得
-        if (!searchParams.testId) {
+        if (!params.testId) {
             throw new Error("試験IDが提供されていません。");
         }
-        const testId = Number(searchParams.testId);
+        const testId = Number(params.testId);
 
         // クエリパラメータから受験回数を取得
-        if (!searchParams.testCnt) {
+        if (!params.testCnt) {
             throw new Error("受験回数が提供されていません。");
         }
-        const testCnt = Number(searchParams.testCnt);
+        const testCnt = Number(params.testCnt);
 
         // 試験結果表示用の試験マスタ、試験問題マップ、受験履歴、解答履歴、合否判定を取得
         return await resultService(tEmployee.id, testId, testCnt);
