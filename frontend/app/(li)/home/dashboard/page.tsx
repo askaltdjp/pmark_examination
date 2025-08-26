@@ -57,7 +57,7 @@ export default async function DashBoardPage() {
             {/* 受験履歴テキスト */}
             <h2 className="text-gray-600 text-3xl font-bold text-center mb-4 pt-8">受験履歴</h2>
 
-            {/* 受験履歴テーブル */}
+            {/* 受験履歴一覧 */}
             <ExamHistoryList mTest={mTest} tTests={tTests} />
 
             {/* 試験開始ボタン */}

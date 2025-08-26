@@ -11,7 +11,7 @@ type Props = {
 };
 
 /**
- * 受験履歴テーブルのクライアントコンポーネント
+ * 受験履歴一覧のクライアントコンポーネント
  */
 export default function ExamHistoryList({ mTest, tTests }: Props) {
     if (mTest === null || tTests.length === 0) {
