@@ -175,48 +175,49 @@ Docker に関する環境構成ファイルと、アプリケーションのソ�
 ### プロジェクトの構成
 
 ```
-pmark_examination/               # プロジェクトのルートディレクトリ
+pmark_examination/                                       # プロジェクトのルートディレクトリ
 │
-├── admin                        # 管理画面用アプリケーション
-│   ├── README.md                # アプリの説明書
-│   ├── app                      # Next.jsのアプリケーションコード（appディレクトリ）
-│   ├── jsconfig.json            # JavaScript/TypeScript設定ファイル
-│   ├── next.config.mjs          # Next.jsの設定ファイル
-│   ├── node_modules             # 依存パッケージ（Git管理外）
-│   ├── package-lock.json        # 依存パッケージの固定バージョン情報
-│   ├── package.json             # npmのパッケージ管理ファイル
-│   ├── public                   # 静的ファイル（画像やフォントなど）
-│   └── .gitignore               # Git管理除外設定ファイル
+├── admin                                                # 管理画面用アプリケーション
+│   ├── app                                              # Next.js のアプリケーションコード
+│   ├── node_modules                                     # 依存パッケージ（Git 管理外）
+│   ├── package-lock.json                                # 依存パッケージの固定バージョン情報
+│   ├── package.json                                     # npm のパッケージ管理ファイル
+│   ├── public                                           # 静的ファイル（画像やフォントなど）
+│   ├── .env                                             # 環境設定ファイル（Git 管理外）
+│   └── .gitignore                                       # Git 管理除外設定ファイル
 │
-├── frontend                     # フロントエンド用アプリケーション
-│   ├── README.md                # アプリの説明書
-│   ├── app                      # Next.jsのアプリケーションコード
-│   ├── jsconfig.json            # JavaScript/TypeScript設定ファイル
-│   ├── next.config.mjs          # Next.jsの設定ファイル
-│   ├── node_modules             # 依存パッケージ（Git管理外）
-│   ├── package-lock.json        # 依存パッケージのバージョン管理
-│   ├── package.json             # npmパッケージ管理ファイル
-│   ├── public                   # 静的ファイル群
-│   └── .gitignore               # Git管理除外設定ファイル
+├── frontend                                             # フロントエンド用アプリケーション
+│   ├── app                                              # Next.js のアプリケーションコード
+│   ├── node_modules                                     # 依存パッケージ（Git 管理外）
+│   ├── package-lock.json                                # 依存パッケージのバージョン管理
+│   ├── package.json                                     # npm パッケージ管理ファイル
+│   ├── public                                           # 静的ファイル群
+│   ├── .env                                             # 環境設定ファイル（Git 管理外）
+│   └── .gitignore                                       # Git 管理除外設定ファイル
 │
-├── shared_prisma                # Prisma関連ファイルを共有する場所
-│   ├── master                   # 「pme_master」データベース用のPrisma設定フォルダ
-│   │   ├── migrations　　　　　　# masterDB用のマイグレーションファイル群（スキーマ変更履歴）
-│   │   └── schema.prisma        # masterDB用のPrismaスキーマファイル（DBモデル定義）
-│   └── transaction              # 「pme_transaction」データベース用のPrisma設定フォルダ
-│       ├── migrations           # transactionDB用のマイグレーションファイル群（スキーマ変更履歴）
-│       └── schema.prisma        # transactionDB用のPrismaスキーマファイル（DBモデル定義）
+├── shared_prisma                                        # Prisma 関連ファイルを共有する場所
+│   ├── master                                           # 「pme_master」データベース用の Prisma 設定フォルダ
+│   │   ├── migrations　　　　                        　　# masterDB 用のマイグレーションファイル群（スキーマ変更履歴）
+│   │   └── schema.prisma                                # masterDB 用の Prisma スキーマファイル（DB モデル定義）
+│   └── transaction                                      # 「pme_transaction」データベース用のPrisma設定フォルダ
+│       ├── migrations                                   # transactionDB 用のマイグレーションファイル群（スキーマ変更履歴）
+│       └── schema.prisma                                # transactionDB 用の Prisma スキーマファイル（DB モデル定義）
 │
-├── docker                       # Docker関連の設定や構成ファイルを格納
-│   ├── compose.yaml             # Docker Composeの設定ファイル
-│   ├── mysql                    # MySQL関連のDocker設定用ディレクトリ
-│   │   ├── Dockerfile           # MySQL用のDockerfile
-│   │   ├── init.sql             # コンテナ起動時に実行される初期化SQLスクリプト
-│   │   └── my.cnf               # MySQLサーバの設定ファイル（カスタム設定）
-│   └── node                     # Node.js関連のDocker設定用ディレクトリ
-│       └── Dockerfile           # Node.jsアプリ用のDockerfile
+├── docker                                               # Docker 関連の設定や構成ファイルを格納
+│   ├── compose.yaml                                     # Docker Composeの設定ファイル
+│   ├── node                                             # Node.js 関連の Docker 設定用ディレクトリ 
+│   │    └── Dockerfile                                  # Node.js アプリ用の Dockerfile
+│   └── postgres                                         # PostgreSQL 用の Docker 構成フォルダ 
+│        ├── Dockerfile                                  # PostgreSQL コンテナのベースとなる Dockerfile
+│        └── initdb                                      # コンテナ初回起動時に実行される初期化スクリプト群
+│             ├── 01-create-databases-and-user.sql       # データベース（master/transaction）とユーザの作成スクリプト
+│             ├── 02-grant_pme_master.sql                # pme_master データベースに対する pme_user への権限付与
+│             ├── 03-grant_pme_transaction.sql           # pme_transaction データベースに対する pme_user への権限付与
+│             ├── 04-grant_pme_master_shadow.sql         # pme_master_shadow データベースに対する pme_user への権限付与
+│             ├── 05-grant_pme_transaction_shadow.sql    # pme_transaction_shadow データベースに対する pme_user への権限付与
+│             └── init.sh                                # 初期化スクリプト一括実行用のシェルスクリプト
 │
-└── document                     # ドキュメント用フォルダ
+└── document                                             # ドキュメント用フォルダ
 ```
 
 通常、Next.js のプロジェクト内に Prisma のスキーマ定義やマイグレーションファイルを配置しますが、その場合、`admin` や `frontend` それぞれに同じファイルを持つことになり、管理や保守が煩雑になりがちです。  
@@ -245,7 +246,7 @@ services:
     environment:
       - NODE_ENV=development
     depends_on:
-      - mysql
+      - postgres
 
   admin:
     build:
@@ -261,28 +262,28 @@ services:
     environment:
       - NODE_ENV=development
     depends_on:
-      - mysql
+      - postgres
 
-  mysql:
+  postgres:
     build:
       context: ..
-      dockerfile: docker/mysql/Dockerfile
+      dockerfile: docker/postgres/Dockerfile
     ports:
-      - "3306:3306"
+      - "5432:5432"
     environment:
-      - MYSQL_ROOT_PASSWORD=rootpassword
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
       - TZ=Asia/Tokyo
     volumes:
-      - ./mysql/my.cnf:/etc/mysql/conf.d/my.cnf
-      - ./mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
-      - mysql_data:/var/lib/mysql
+      - ./postgres/initdb:/docker-entrypoint-initdb.d
+      - postgres_data:/var/lib/postgresql/data
     restart: always
 
 volumes:
-  mysql_data:
+  postgres_data:
 ```
 
-この `compose.yaml` の構成は、Next.js で作られた 2 つのアプリケーション（`frontend`, `admin`）と、`MySQL` を Docker で一括管理する構成になっています。
+この `compose.yaml` の構成は、Next.js で作られた 2 つのアプリケーション（`frontend`, `admin`）と、`PostgreSQL` を Docker で一括管理する構成になっています。
 
 #### `build` に関する説明
 
@@ -295,6 +296,14 @@ volumes:
 `frontend` と `admin` のコンテナ起動時に、`npm install && npm run dev` のコマンドを実行しています。  
 GitHub クローンした直後は `node_modules` がないため、起動時に `npm install` を自動的に行い、依存パッケージをインストールします。  
 その後、`npm run dev` を実行することで、すぐに `frontend` と `admin` の開発サーバーが立ち上がり、画面や API の確認が可能になります。
+
+#### `volumes` に関する説明
+
+`postgres_data` は、PostgreSQL のデータを永続化するための **名前付きボリューム** です。  
+これにより、コンテナを削除・再作成しても、データベース内の情報（テーブルやデータなど）は失われません。  
+名前付きボリュームとして定義することで、**ホスト環境に依存せず、Docker がボリュームの保存場所を自動管理**してくれるため、扱いやすく、安全な運用が可能になります。  
+このボリュームは、PostgreSQL コンテナ内の `/var/lib/postgresql/data` にマウントされ、実際のデータ格納先として使用されます。
+
 
 ### docker/node/Dockerfile
 
@@ -312,72 +321,100 @@ RUN apk add --no-cache \
 - タイムゾーン設定のために一時的に `tzdata` パッケージを追加し、`Asia/Tokyo` のタイムゾーン情報をシステムにコピーして設定を反映。  
 - その後、イメージサイズを軽くするために `tzdata` は削除しています。
 
-### docker/mysql/Dockerfile
+### docker/postgres/Dockerfile
 
 ```
-FROM mysql:8.4.6
+FROM postgres:17.6-alpine3.22
 ```
 
-この Dockerfile は、`mysql:8.4.6` という既存の公式イメージをそのまま使うだけの内容です。  
+この Dockerfile は、`postgres:17.6-alpine3.22` という既存の公式イメージをそのまま使うだけの内容です。  
 新たに環境を構築せず、ベースイメージをそのまま利用してコンテナを起動します。
 
-### docker/mysql/init.sql
+### docker/postgres/initdb/init.sh
+
+```bash
+#!/bin/bash
+set -e
+
+echo "📦 データベースとユーザの作成..."
+psql -U postgres -d postgres -f /docker-entrypoint-initdb.d/01-create-databases-and-user.sql
+
+echo "🔐 pme_master に権限付与..."
+psql -U postgres -d pme_master -f /docker-entrypoint-initdb.d/02-grant_pme_master.sql
+
+echo "🔐 pme_transaction に権限付与..."
+psql -U postgres -d pme_transaction -f /docker-entrypoint-initdb.d/03-grant_pme_transaction.sql
+
+echo "🔐 pme_master_shadow に権限付与..."
+psql -U postgres -d pme_master_shadow -f /docker-entrypoint-initdb.d/04-grant_pme_master_shadow.sql
+
+echo "🔐 pme_transaction_shadow に権限付与..."
+psql -U postgres -d pme_transaction_shadow -f /docker-entrypoint-initdb.d/05-grant_pme_transaction_shadow.sql
+
+echo "✅ 初期化完了"
+```
+
+このスクリプトは、PostgreSQL のコンテナ初回起動時に自動的に実行され、データベースとユーザの作成、各データベースの権限付与を行います。
+
+### docker/postgres/initdb/01-create-databases-and-user.sql
 
 ```sql
--- データベース作成（バイナリ照合順：大文字小文字・全角半角を完全に区別）
-CREATE DATABASE IF NOT EXISTS pme_master CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;
-CREATE DATABASE IF NOT EXISTS pme_transaction CHARACTER SET utf8mb4 COLLATE utf8mb4_bin;
+-- データベース作成（照合順と文字分類をCロケールに設定：バイナリ比較で大文字小文字・全角半角を厳密に区別）
+CREATE DATABASE pme_master TEMPLATE template0 ENCODING 'UTF8' LC_COLLATE 'C' LC_CTYPE 'C';
+CREATE DATABASE pme_transaction TEMPLATE template0 ENCODING 'UTF8' LC_COLLATE 'C' LC_CTYPE 'C';
 
--- アプリケーション操作用ユーザの作成（すでに存在していなければ）
-CREATE USER IF NOT EXISTS 'pme_user'@'%' IDENTIFIED WITH mysql_native_password BY 'pmepassword';
+-- Shadow データベース作成（Prisma マイグレーションや introspection 用）
+CREATE DATABASE pme_master_shadow;
+CREATE DATABASE pme_transaction_shadow;
 
--- すべてのデータベースに対してすべての操作権限を付与（CREATE, DROP, SELECT, INSERT, UPDATE, DELETE など含む）
-GRANT ALL PRIVILEGES ON *.* TO 'pme_user'@'%';
-
--- 権限の変更を即時反映
-FLUSH PRIVILEGES;
+-- アプリケーション操作用ユーザの作成
+CREATE ROLE pme_user WITH LOGIN PASSWORD 'pmepassword';
 ```
 
-このスクリプトは、MySQL 8 のコンテナ初回起動時に自動的に実行され、データベースの作成とユーザ設定を行います。
+PostgreSQL のデータベースを **4つ作成**しています。  
+「`pme_master`」と「`pme_transaction`」は、**アプリケーションが実際に利用するデータベース**です。  
+これらは文字の照合順や分類を **「Cロケール」** に設定しており、**大文字小文字や全角半角を厳密に区別するバイナリ比較**を行う仕様です。
 
-まず、`pme_master` と `pme_transaction` の2つのデータベースを作成しています。  
-文字コードは `utf8mb4` を使用し、照合順序に `utf8mb4_bin` を指定することで、大文字小文字や全角半角の違いを完全に区別するようにしています。  
-これにより、文字の微細な違いも正確に判別されるようになります。
+さらに、**Prisma のマイグレーションや introspection（既存DB構造の読み込み）用**に  
+「`pme_master_shadow`」と「`pme_transaction_shadow`」という **シャドウデータベース**も作成しています。  
+これらのシャドウデータベースは、通常 Prisma がマイグレーション時に一時的に自動作成するため、**ユーザに `createdb` 権限を付与する必要**があります。  
 
-次に、`pme_user` というアプリケーション用ユーザを作成しています。  
-`@'%'` は任意のホストからの接続を許可する設定で、認証には `mysql_native_password` を使用しています。  
-パスワードは `'pmepassword'` に設定されています。
+ただし、`createdb` は **データベース全体に対して影響を与えうる強めの権限**であるため、**運用上の安全性を考慮してアプリケーションユーザには付与していません**。  
+そのため、**あらかじめ手動で作成する方針**を採っています。
 
-このユーザには、すべてのデータベースとテーブルに対する全権限（読み書き、作成、削除など）を与えています。
+最後に、アプリケーションがこれらのデータベースに接続・操作を行うための **専用ユーザ「pme_user」** を作成しています。  
+このユーザには **ログイン権限**があり、パスワードは「`pmepassword`」に設定しています。
 
-最後に `FLUSH PRIVILEGES` を実行することで、ユーザや権限に関する変更がすぐに有効になります。
-
-このスクリプトは、MySQLの初回起動時に `/docker-entrypoint-initdb.d/` ディレクトリに配置されていることで、自動的に一度だけ実行されます。
-
-### docker/mysql/my.cnf
-
-```ini
-[mysqld]
-mysql_native_password=on
-```
-
-この設定は、MySQL 8 で以下のエラーが出る場合の対策です：
-
-```
-ERROR 1524 (HY000): Plugin 'mysql_native_password' is not loaded
-```
-
-MySQL 8 では、デフォルトで `caching_sha2_password` 認証プラグインが有効になっており、`mysql_native_password` プラグインはロードされていないことがあります。  
-この状態で以下のようなSQLを実行しようとすると、上記のエラーが発生します。
+### docker/postgres/initdb/02-grant_pme_master.sql
 
 ```sql
-CREATE USER 'user'@'%' IDENTIFIED WITH mysql_native_password BY 'password';
+-- スキーマに対する使用・作成権限を付与
+GRANT USAGE, CREATE ON SCHEMA public TO pme_user;
 ```
 
-そのため、`my.cnf` の `[mysqld]` セクションに `mysql_native_password=on` を追加しておくことで、MySQL の起動時に `mysql_native_password` プラグインが読み込まれ、エラーを回避できます。
+`pme_user` に `public` スキーマの使用（`USAGE`）とオブジェクト作成（`CREATE`）権限を付与します。  
+これにより、`pme_user` はスキーマ内で自由にテーブルやシーケンスを作成できます。
 
-この設定は認証方式そのものを変更するものではなく、「プラグインを読み込む」 ための指示です。  
-認証方式を実際に使うには、`CREATE USER` 時に `IDENTIFIED WITH mysql_native_password` を明示的に指定する必要があります。
+**補足：**  
+PostgreSQL では、**テーブルは原則として作成者のみが操作可能です。**  
+つまり、`pme_user` が作成したテーブルは、他のユーザは権限を付与されない限り操作できません。  
+他ユーザに操作権限を与える場合は以下のように対応してください。
+
+```sql
+-- 既存テーブルに対して権限付与する場合
+GRANT ALL PRIVILEGES ON テーブル名 TO 他のユーザ名;
+```
+
+```sql
+-- 今後作成されるテーブルに対して自動付与する場合
+ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL PRIVILEGES ON TABLES TO 他のユーザ名;
+```
+
+**注意：**  
+`GRANT` や `ALTER DEFAULT PRIVILEGES` は、それぞれ対象テーブルの所有者（通常は作成者）またはスーパーユーザが実行する必要があります。  
+つまり、`pme_user` が作成したテーブルの権限を他ユーザに与えたい場合は、必ず `pme_user` ユーザでこれらのコマンドを実行してください。
+
+その他の初期化スクリプトの内容は、上記と同様で、データベースの `public` スキーマに対して同じ権限設定を行っています。
 
 ### admin/* と frontend/*
 
@@ -392,14 +429,28 @@ $ docker run --rm -it \
   node:24.4.1-alpine3.21 \
   sh -c "npx create-next-app@latest . && npm install @prisma/client && npm install prisma --save-dev && npx prisma init && npm install --save-dev daisyui"
 
-# schema.prisma を shared_prisma にコピー
-$ cp prisma/schema.prisma ../shared_prisma/
+# プロジェクト直下に作成された prisma の削除
 $ sudo rm -rf prisma/
 
-# .env の DATABASE_URL を次のように変更
+# admin の直下にある .env を次のように修正
 ===========================================
-DATABASE_URL_MASTER="mysql://pme_user:pmepassword@mysql:3306/pme_master"
-DATABASE_URL_TRANSACTION="mysql://pme_user:pmepassword@mysql:3306/pme_transaction"
+# pme_master データベースへの接続URL
+DATABASE_URL_MASTER="postgresql://pme_user:pmepassword@postgres:5432/pme_master"
+
+# pme_transaction データベースへの接続URL
+DATABASE_URL_TRANSACTION="postgresql://pme_user:pmepassword@postgres:5432/pme_transaction"
+
+# pme_master_shadow データベースへの接続URL
+SHADOW_DATABASE_URL_MASTER="postgresql://pme_user:pmepassword@postgres:5432/pme_master_shadow"
+
+# pme_transaction_shadow データベースへの接続URL
+SHADOW_DATABASE_URL_TRANSACTION="postgresql://pme_user:pmepassword@postgres:5432/pme_transaction_shadow"
+
+# 管理者のログインID
+ADMIN_LOGIN_ID="admin"
+
+# 管理者のパスワード
+ADMIN_LOGIN_PASSWORD="password"
 ===========================================
 
 # 作業ディレクトリに移動（frontend）
@@ -412,19 +463,32 @@ $ docker run --rm -it \
   node:24.4.1-alpine3.21 \
   sh -c "npx create-next-app@latest . && npm install @prisma/client && npm install prisma --save-dev && npm install --save-dev daisyui"
 
-# admin の .env を frontend にコピー
-$ cp ../admin/.env .
+# frontend の直下に .env を作成
+$ vi .env
+===========================================
+# pme_master データベースへの接続URL
+DATABASE_URL_MASTER="postgresql://pme_user:pmepassword@postgres:5432/pme_master"
+
+# pme_transaction データベースへの接続URL
+DATABASE_URL_TRANSACTION="postgresql://pme_user:pmepassword@postgres:5432/pme_transaction"
+
+# pme_master_shadow データベースへの接続URL
+SHADOW_DATABASE_URL_MASTER="postgresql://pme_user:pmepassword@postgres:5432/pme_master_shadow"
+
+# pme_transaction_shadow データベースへの接続URL
+SHADOW_DATABASE_URL_TRANSACTION="postgresql://pme_user:pmepassword@postgres:5432/pme_transaction_shadow"
+===========================================
 ```
 
 まず、`admin` ディレクトリ内で Next.js の初期プロジェクトと Prisma と DaisyUI を導入しています。  
 Prisma は ORM で、DaisyUI は Tailwind CSS をベースにしたコンポーネントライブラリです。
 
 `npx prisma init` を実行すると、`admin` 内に `.env` と `prisma/schema.prisma` が作成されます。  
-`.env` は機能ごとに分けて使うためそのままにしますが、`schema.prisma` はスキーマ定義ファイルで、一元管理すべきものなので共有ディレクトリの `shared_prisma` に移動しています。  
-また、`.env` の初期設定は PostgreSQL 用になっているため、MySQL コンテナの `master` データベースと `transaction` データベースを参照する設定に書き換えています。
+`.env` は環境固有の設定を定義するためプロジェクトごとに必要になりますが、`schema.prisma` はスキーマを定義するファイルなので一元管理すべきものになります。  
+のちほど、`admin` と `frontend` の両方から参照できるように `shared_prisma` の下に `schema.prisma` を作成するため、プロジェクトの直下にある `schema.prisma` は削除しておきます。
 
-次に、`frontend` では `npx prisma init` は実行せず、代わりに `admin` の `.env` をコピーして使用しています。  
-スキーマファイルは共有ディレクトリのものを参照しているため問題ありません。
+次に、`frontend` では `npx prisma init` は実行せず、代わりに `.env` を手動で作成しています。  
+スキーマファイルは共有ディレクトリのものを参照するため、プロジェクト内になくても問題ありません。
 
 `admin` と `frontend` の両方で、Next.js のインストール時に質問が聞かれますが、下記のように回答します。
 
@@ -441,7 +505,7 @@ Prisma は ORM で、DaisyUI は Tailwind CSS をベースにしたコンポー�
 
 ### shared_prisma/master/schema.prisma
 
-次のようにファイルを修正します。
+次のようにファイルを作成します。
 
 ```
 // This is your Prisma schema file,
@@ -456,33 +520,54 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL_MASTER")
+  provider          = "postgresql"
+  url               = env("DATABASE_URL_MASTER")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL_MASTER")
 }
 
+/// 試験の概要
 model MTest {
+  /// ID
   id          Int       @id @default(autoincrement())
+  /// 名前
   name        String?   @db.VarChar(64)
+  /// 開始日
   startAt     DateTime  @map("start_at")
+  /// 終了日
   endAt       DateTime  @map("end_at")
+  /// 出題数
   questionNum Int       @map("question_num")
+  /// 合格数
   passNum     Int       @map("pass_num")
-  createAt    DateTime  @map("create_at")
-  updateAt    DateTime  @map("update_at")
+  /// 登録日時
+  createAt    DateTime? @map("create_at")
+  /// 更新日時
+  updateAt    DateTime? @map("update_at")
+  /// 削除日時
   deleteAt    DateTime? @map("delete_at")
 
-   @@map("m_test")
+  @@map("m_test")
 }
 
+/// 試験の問題
 model MTestQuestion {
+  /// ID
   id         Int       @id @default(autoincrement())
+  /// 試験ID
   testId     Int       @map("test_id")
+  /// 問題No
   questionNo Int       @map("question_no")
+  /// 問題文
   question   String    @db.Text
+  /// 解説
   commentary String?   @db.Text
+  /// 正解
   correct    Boolean
-  createAt   DateTime  @map("create_at")
-  updateAt   DateTime  @map("update_at")
+  /// 登録日時
+  createAt   DateTime? @map("create_at")
+  /// 更新日時
+  updateAt   DateTime? @map("update_at")
+  /// 削除日時
   deleteAt   DateTime? @map("delete_at")
 
   @@unique([testId, questionNo])
@@ -494,14 +579,15 @@ model MTestQuestion {
 
 - **`generator`**  
   Prisma Client を TypeScript 用に生成し、`../../node_modules/.prisma/client_master` ディレクトリに出力する設定です。  
-  この設定で生成されたクライアントをそのパスから TypeScript でインポートして使えます。
+  `output` を指定しない場合、Prisma Client はデフォルトで `node_modules/@prisma/client` に出力されますが、今回は `pme_master` と `pme_transaction` の 2 つのクライアントを区別して扱うため、明示的にパスを指定しています。
 - **`datasource`**  
-  データベースとして MySQL を使用し、接続先は `.env` の `DATABASE_URL_MASTER` に記述します。
+  データベースとして PostgreSQL を使用し、接続先は `.env` の `DATABASE_URL_MASTER` に記述します。  
+  マイグレーションの検証には `.env` の `SHADOW_DATABASE_URL_MASTER` を使用し、これは一時的な「シャドウデータベース」への接続を意味します。
 - **`model`**  
   データベースのテーブルを表現するもので、各フィールドがテーブルのカラムに対応します。  
   リレーションや制約を指定して、データベース構造をコードで定義します。
 
-MySQL に複数のデータベースがあるため、それぞれに対応する `master` 用と `transaction` 用の2つの `schema.prisma` ファイルを用意し、個別に管理しています。
+PostgreSQL に複数のデータベースがあるため、それぞれに対応する `pme_master` 用と `pme_transaction` 用の2つの `schema.prisma` ファイルを用意し、個別に管理しています。
 
 ### shared_prisma/transaction/schema.prisma
 
@@ -518,19 +604,30 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL_TRANSACTION")
+  provider          = "postgresql"
+  url               = env("DATABASE_URL_TRANSACTION")
+  shadowDatabaseUrl = env("SHADOW_DATABASE_URL_TRANSACTION")
 }
 
+/// 受験対象の社員情報
 model TEmployee {
+  /// ID
   id           Int       @id @default(autoincrement())
+  /// 社員No
   employeeNo   String    @map("employee_no") @db.VarChar(64)
+  /// 名前
   name         String    @db.VarChar(64)
+  /// メールアドレス
   emailAddress String    @map("email_address") @db.VarChar(256)
+  /// パスワード
   password     String    @db.VarChar(64)
+  /// 入社日
   joinDate     DateTime  @map("join_date") @db.Date
-  createAt     DateTime  @map("create_at")
-  updateAt     DateTime  @map("update_at")
+  /// 登録日時
+  createAt     DateTime? @map("create_at")
+  /// 更新日時
+  updateAt     DateTime? @map("update_at")
+  /// 削除日時
   deleteAt     DateTime? @map("delete_at")
 
   @@index([employeeNo])
@@ -538,31 +635,52 @@ model TEmployee {
   @@map("t_employee")
 }
 
+/// 社員の受験履歴
 model TTest {
+  /// ID
   id         Int       @id @default(autoincrement())
+  /// 社員ID
   employeeId Int       @map("employee_id")
+  /// 試験ID
   testId     Int       @map("test_id")
+  /// 受験回数
   testCnt    Int       @default(1) @map("test_cnt")
+  /// 正解数
   correctNum Int       @map("correct_num")
+  /// 合否
   result     Int
+  /// 受験日時
   testAt     DateTime  @map("test_at")
-  createAt   DateTime  @map("create_at")
-  updateAt   DateTime  @map("update_at")
+  /// 登録日時
+  createAt   DateTime? @map("create_at")
+  /// 更新日時
+  updateAt   DateTime? @map("update_at")
+  /// 削除日時
   deleteAt   DateTime? @map("delete_at")
 
   @@unique([employeeId, testId, testCnt])
   @@map("t_test")
 }
 
+/// 社員の解答履歴
 model TTestAnswer {
+  /// ID
   id         Int       @id @default(autoincrement())
+  /// 社員ID
   employeeId Int       @map("employee_id")
+  /// 試験ID
   testId     Int       @map("test_id")
+  /// 受験回数
   testCnt    Int       @default(1) @map("test_cnt")
+  /// 問題No
   questionNo Int       @map("question_no")
+  /// 解答
   answer     Boolean   @default(false)
-  createAt   DateTime  @map("create_at")
-  updateAt   DateTime  @map("update_at")
+  /// 登録日時
+  createAt   DateTime? @map("create_at")
+  /// 更新日時
+  updateAt   DateTime? @map("update_at")
+  /// 削除日時
   deleteAt   DateTime? @map("delete_at")
 
   @@unique([employeeId, testId, testCnt, questionNo])
@@ -570,7 +688,7 @@ model TTestAnswer {
 }
 ```
 
-この設定は、`DATABASE_URL_TRANSACTION` の環境変数を使って、MySQLデータベース (`transaction`) に接続するデータソースを定義しています。
+この設定は、`DATABASE_URL_TRANSACTION` の環境変数を使って、PostgreSQLデータベース (`pme_transaction`) に接続するデータソースを定義しています。
 
 ### admin/app/globals.css と frontend/app/globals.css
 
@@ -584,62 +702,6 @@ model TTestAnswer {
 
 これによって、DaisyUI が提供するカスタムコンポーネントやユーティリティクラスが Tailwind のスタイルに組み込まれ、簡単に DaisyUI のデザインを使えるようになります。
 
-### admin/app/sample/page.tsx と frontend/app/sample/page.tsx
-
-```js
-export default function SamplePage() {
-    return (
-        <main className="p-8">
-            <h1 className="text-4xl font-bold mb-6">DaisyUI + Next.js サーバーコンポーネント例</h1>
-
-            <button className="btn btn-primary mr-4">プライマリーボタン</button>
-            <button className="btn btn-secondary">セカンダリーボタン</button>
-
-            <div className="alert alert-info mt-8">
-                <span>これは DaisyUI のアラートコンポーネントです。</span>
-            </div>
-        </main>
-    );
-}
-```
-
-こちらは DaisyUI のスタイルを適用した Next.js のサーバコンポーネントの例で、ボタンやアラートといった UI 要素を表示しています。
-
-### admin/app/api/sample/route.ts と frontend/app/api/sample/route.ts
-
-```js
-import { PrismaClient } from '@prisma/client';
-import { NextResponse } from 'next/server';
-
-const prisma = new PrismaClient();
-
-export async function GET(): Promise<NextResponse> {
-    const randomId = Math.floor(Math.random() * 1000);
-    const now = new Date(); // TODO: UTC+9時間する必要がある
-
-    // 従業員を作成
-    await prisma.tEmployee.create({
-        data: {
-            employeeNo: `EMP${randomId}`,
-            name: `Employee ${randomId}`,
-            emailAddress: `employee${randomId}@example.com`,
-            password: 'securepassword',
-            joinDate: now,
-            createAt: now,
-            updateAt: now,
-        },
-    });
-
-    // 全従業員を取得
-    const employees = await prisma.tEmployee.findMany();
-
-    return NextResponse.json(employees);
-}
-```
-
-このコードは、Prisma を用いて従業員のデータを作成し、その一覧を返す API の処理を実装しています。  
-このように、Next.js の API ルートなどで使用できる、シンプルなユーザ操作の例になっています。
-
 ### Docker のビルド・起動
 
 上記までファイルの準備、コマンド操作を行ったら、Docker イメージのビルド、および、Docker コンテナの起動を行います（コマンドについては後述）
@@ -647,20 +709,6 @@ export async function GET(): Promise<NextResponse> {
 ### マイグレーションと Prisma Client の生成
 
 Docker コンテナ起動後、schema.prisma の内容に基づきデータベースのマイグレーションと Prisma Client の生成を行います（コマンドについては後述）
-
-#### マイグレーションファイルの修正
-
-Prisma で生成されたテーブルの照合順序は次のようになっています。
-
-```sql
-) DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-```
-
-`utf8mb4_unicode_ci` は、大文字小文字や全角半角の違いを区別せずに比較します。  
-そのため `"A"` と `"a"`、`"ｱ"` と `"ア"` も同じ文字列として扱われ、柔軟な検索には便利ですが、厳密な比較やユニーク制約では不都合が生じることがあります。
-
-そのため、全テーブルの照合順序を `utf8mb4_bin` に変更します。  
-これにより、文字列をバイナリレベルで正確に比較でき、大文字・小文字・全角・半角の違いもきちんと判別できるようになります。
 
 <a id="git_crlf"></a>
 ## Git の改行コード設定
@@ -785,10 +833,16 @@ ls: cannot access 'admin/.env': No such file or directory
 # admin に .env が存在しない場合は作成
 $ cat <<EOF > admin/.env
 # pme_master データベースへの接続URL
-DATABASE_URL_MASTER="mysql://pme_user:pmepassword@mysql:3306/pme_master"
+DATABASE_URL_MASTER="postgresql://pme_user:pmepassword@postgres:5432/pme_master"
 
 # pme_transaction データベースへの接続URL
-DATABASE_URL_TRANSACTION="mysql://pme_user:pmepassword@mysql:3306/pme_transaction"
+DATABASE_URL_TRANSACTION="postgresql://pme_user:pmepassword@postgres:5432/pme_transaction"
+
+# pme_master_shadow データベースへの接続URL
+SHADOW_DATABASE_URL_MASTER="postgresql://pme_user:pmepassword@postgres:5432/pme_master_shadow"
+
+# pme_transaction_shadow データベースへの接続URL
+SHADOW_DATABASE_URL_TRANSACTION="postgresql://pme_user:pmepassword@postgres:5432/pme_transaction_shadow"
 
 # 管理者のログインID
 ADMIN_LOGIN_ID="admin"
@@ -804,15 +858,21 @@ ls: cannot access 'frontend/.env': No such file or directory
 # frontend に .env が存在しない場合は作成
 $ cat <<EOF > frontend/.env
 # pme_master データベースへの接続URL
-DATABASE_URL_MASTER="mysql://pme_user:pmepassword@mysql:3306/pme_master"
+DATABASE_URL_MASTER="postgresql://pme_user:pmepassword@postgres:5432/pme_master"
 
 # pme_transaction データベースへの接続URL
-DATABASE_URL_TRANSACTION="mysql://pme_user:pmepassword@mysql:3306/pme_transaction"
+DATABASE_URL_TRANSACTION="postgresql://pme_user:pmepassword@postgres:5432/pme_transaction"
+
+# pme_master_shadow データベースへの接続URL
+SHADOW_DATABASE_URL_MASTER="postgresql://pme_user:pmepassword@postgres:5432/pme_master_shadow"
+
+# pme_transaction_shadow データベースへの接続URL
+SHADOW_DATABASE_URL_TRANSACTION="postgresql://pme_user:pmepassword@postgres:5432/pme_transaction_shadow"
 EOF
 ```
 
-これらの `.env` ファイルは、Prisma が MySQL コンテナに接続するために使用します。  
-具体的には、`.env` に設定された `DATABASE_URL_MASTER` および `DATABASE_URL_TRANSACTION` の値を参照して接続します。
+これらの `.env` ファイルは、Prisma が PostgreSQL コンテナに接続するために使用します。  
+具体的には、2つの PostgreSQL データベース（`pme_master` と `pme_transaction`）およびそれぞれのシャドウデータベースへの接続URLが含まれています。
 
 また、`admin` 側の `.env` には、**管理画面のログイン ID とパスワード**も含まれており、管理者としてログインする際に使用されます。
 
@@ -830,25 +890,29 @@ $ docker compose up -d
 
 # Docker コンテナの状態確認　※ STATUS が UP になっていれば OK です。
 $ docker compose ps -a
-NAME                IMAGE             COMMAND                  SERVICE    CREATED          STATUS          PORTS
-docker-admin-1      docker-admin      "docker-entrypoint.s…"   admin      11 seconds ago   Up 11 seconds   0.0.0.0:3002->3000/tcp, [::]:3002->3000/tcp
-docker-frontend-1   docker-frontend   "docker-entrypoint.s…"   frontend   11 seconds ago   Up 11 seconds   0.0.0.0:3001->3000/tcp, [::]:3001->3000/tcp
-docker-mysql-1      docker-mysql      "docker-entrypoint.s…"   mysql      11 seconds ago   Up 11 seconds   0.0.0.0:3306->3306/tcp, [::]:3306->3306/tcp, 33060/tcp
+NAME                IMAGE             COMMAND                  SERVICE    CREATED        STATUS          PORTS
+docker-admin-1      docker-admin      "docker-entrypoint.s…"   admin      17 hours ago   Up 16 seconds   0.0.0.0:3002->3000/tcp, [::]:3002->3000/tcp
+docker-frontend-1   docker-frontend   "docker-entrypoint.s…"   frontend   17 hours ago   Up 16 seconds   0.0.0.0:3001->3000/tcp, [::]:3001->3000/tcp
+docker-postgres-1   docker-postgres   "docker-entrypoint.s…"   postgres   17 hours ago   Up 32 minutes   0.0.0.0:5432->5432/tcp, [::]:5432->5432/tcp
 ```
 
 ### 補足：使用頻度が高いコマンド
 - Docker コンテナを停止・削除する場合
   - `docker compose down`
+- Docker コンテナを再起動する場合
+  - `docker compose restart`
 - Docker コンテナのログを確認する場合
   - `docker compose logs [サービス名 (例：frontend)]`
   - `docker compose logs -f [サービス名 (例：frontend)]`
-    - サービス名を省略した場合は全ての Docker コンテナのログが出力される
-- Docker コンテナの中に入る場合
+    - サービス名を省略した場合は全ての Docker コンテナのログが出力されます
+- Docker コンテナ内のコマンドを実行する場合
+  - `docker compose exec [サービス名 (例：frontend)] [コンテナ内で実行するコマンド]`
   - `docker compose exec [サービス名 (例：frontend)] sh`
+    - コマンドに shell コマンド (sh, bash 等) を指定するとコンテナの中に入ります
 
 ## マイグレーションと Prisma Client の生成
 
-リポジトリをクローンした直後は、MySQL の テーブルが存在しないため、まずマイグレーションを実行してテーブルを作成する必要があります。  
+リポジトリをクローンした直後は、PostgreSQL の テーブルが存在しないため、まずマイグレーションを実行してテーブルを作成する必要があります。  
 あわせて、Node.js からテーブルを操作するために必要な Prisma Client も生成します。
 
 ### 他人が行ったテーブルの変更を反映する場合
@@ -876,6 +940,7 @@ $ docker compose exec admin npx prisma migrate dev --name [任意の名前] --sc
 # 名前の例：init、create_table_users、add_column_profile_and_birthday_to_users など
 
 # admin コンテナでマイグレーションファイルのみを作成
+# マイグレーションファイルを修正したい場合は --create-only オプションを付けて実行
 # $ docker compose exec admin npx prisma migrate dev --name [任意の名前] --create-only --schema=prisma/master/schema.prisma
 # $ docker compose exec admin npx prisma migrate dev --name [任意の名前] --create-only --schema=prisma/transaction/schema.prisma
 
@@ -898,7 +963,7 @@ sh: prisma: not found
 ```
 もしくは
 ```
-Error: P1001: Can't reach database server at `mysql:3306`
+Error: P1001: Can't reach database server at `postgres:5432`
 ```
 
 上記エラーが発生する場合は、`docker compose restart` を実行してから、もう一度 `npx prisma migrate dev` を実行してください。
@@ -918,24 +983,22 @@ Error: P1001: Can't reach database server at `mysql:3306`
 
 **補足③：**  
 
-Docker コンテナ上でマイグレーションファイルを作成すると、ファイルの所有者が `root` ユーザになるため、Ubuntu にログインしているユーザでは、そのファイルを削除したり編集したりできない場合があります。  
+Docker コンテナ上でマイグレーションファイルを作成すると、ファイルの所有者が `root` ユーザになるため、Ubuntu にログインしているユーザでは、そのファイルの編集や削除ができません。  
 そのため、`sudo chown` コマンドを使って、マイグレーションファイルの所有者を現在のログインユーザに変更しておいてください。
 
-## MySQL の確認
+## PostgreSQL の確認
 
 任意の SQL クライアントツールを使用して、以下の接続情報でデータベースに接続してください。
 
-| 項目       | 値             |
-|------------|----------------|
-| ユーザ     | pme_user       |
-| パスワード | pmepassword    |
-| ホスト     | 127.0.0.1      |
-| ポート番号 | 3306           |
+| 項目           | 値                            |
+| -------------- | ----------------------------- |
+| ユーザ         | pme_user                      |
+| パスワード     | pmepassword                   |
+| ホスト         | 127.0.0.1                     |
+| ポート番号     | 5432                          |
+| データベース名 | pme_master と pme_transaction |
 
-接続後、以下の2つのデータベースと、それぞれに含まれるテーブルが存在することを確認してください。
-
-- `pme_master`
-- `pme_transaction`
+接続後、各データベースの `public` スキーマの中にテーブルが存在することを確認してください。
 
 また、フロント画面でログインするために必要となるため、`pme_transaction` データベース内の `t_employee` テーブルに、従業員のレコードを 1 件以上手動で追加しておいてください。
 
@@ -943,7 +1006,7 @@ Docker コンテナ上でマイグレーションファイルを作成すると�
 
 以下の URL にアクセスし、それぞれのログイン画面で正常にログインできることを確認してください。
 
-### Frontend ログイン画面
+### フロント用ログイン画面
 
 - **URL**：[http://localhost:3001/auth/login/](http://localhost:3001/auth/login/)
 - **ログイン情報**：  
@@ -951,12 +1014,13 @@ Docker コンテナ上でマイグレーションファイルを作成すると�
   - `email_address`（メールアドレス）  
   - `password`（パスワード）  
 
-### 管理者用（Admin）ログイン画面
+### 管理者用ログイン画面
 
 - **URL**：[http://localhost:3002/auth/login/](http://localhost:3002/auth/login/)
 - **ログイン情報**：  
-  - ログインID：`admin`  
-  - パスワード：`password`
+  `.env` に定義されている
+  - `ADMIN_LOGIN_ID`（ログインID）
+  - `ADMIN_LOGIN_PASSWORD`（パスワード）
 
 ## Visual Studio Code の設定
 

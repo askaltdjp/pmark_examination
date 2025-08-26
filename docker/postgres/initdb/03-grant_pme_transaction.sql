@@ -1,10 +1,2 @@
 -- スキーマの作成・使用・テーブル操作などの権限を付与
 GRANT USAGE, CREATE ON SCHEMA public TO pme_user;
-
--- 既存テーブル・シーケンスへの全権限
-GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA public TO pme_user;
-GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO pme_user;
-
--- 今後作成されるテーブル・シーケンスに対しても権限を自動付与
-ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL PRIVILEGES ON TABLES TO pme_user;
-ALTER DEFAULT PRIVILEGES IN SCHEMA public GRANT ALL PRIVILEGES ON SEQUENCES TO pme_user;
