@@ -1,7 +1,7 @@
 "use server";
 
 import { cookies } from "next/headers";
-import { AUTH_TOKEN_COOKIE_NAME } from "@/lib/constants/system";
+import { AUTH_TOKEN_COOKIE_NAME } from "@/lib/definitions/system";
 
 /**
  * ユーザのログアウト処理を行うサーバアクション

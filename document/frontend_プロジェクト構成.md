@@ -66,9 +66,10 @@
 │       └── dashboardService.ts                 // ホーム画面用サービス
 
 /lib                                            // 共通機能
-├── constants                                   // 定数
+├── definitions                                 // 定数・型定義などの共通定義群
 │   ├── labels.ts                               // ラベルや表示文言などの定数定義
-│   └── system.ts                               // システム共通の定数（Cookie名、制限値など）
+│   ├── system.ts                               // システム共通の定数（Cookie名、制限値など）
+│   └── types.ts                                // アプリケーション全体で使用される型定義
 ├── middleware　　　　　　　　　　　         　 　// 認証ミドルウェア関連の共通関数群
 │   ├── apiAuthMiddleware.ts                    // API 用の認証ミドルウェア
 │   └── authMiddleware.ts                       // 画面（サーバコンポーネント）用の認証ミドルウェア

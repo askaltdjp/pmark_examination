@@ -3,7 +3,7 @@ import { getEmployeeFromRequest } from "@/lib/utils/employeeUtils";
 import { dashboardService } from "@/services/web/home/dashboardService";
 import { withRedirectErrorHandler } from "@/lib/utils/withRedirectErrorHandler";
 import { formatDate } from "@/lib/utils/timeUtils";
-import { TestResult, testResultLabels } from "@/lib/constants/labels";
+import { TestResult, testResultLabels } from "@/lib/definitions/labels";
 import ConfirmButton from "@/components/home/dashboard/ConfirmButton";
 import StartExamButton from "@/components/home/dashboard/StartExamButton";
 

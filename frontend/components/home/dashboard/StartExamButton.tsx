@@ -3,9 +3,10 @@
 import { useRouter } from "next/navigation";
 import { MTest } from ".prisma/client_master";
 import { TTest } from ".prisma/client_transaction";
-import { TestResult } from "@/lib/constants/labels";
-import { SESSION_STORAGE_EXAM_DATA_KEY } from "@/lib/constants/system";
+import { TestResult } from "@/lib/definitions/labels";
+import { SESSION_STORAGE_EXAM_DATA_KEY } from "@/lib/definitions/system";
 import { startAction } from "@/app/actions/exam/startAction";
+import { ExamData } from "@/lib/definitions/types";
 
 type Props = {
     mTest: MTest | null,
@@ -39,15 +40,17 @@ export default function StartExamButton({ mTest, tTest }: Props) {
             });
 
             // 試験データをセッションストレージに保存
+            const examData: ExamData = {
+                testId: mTest.id,
+                testCnt: testCnt,
+                questions,
+                answers: [],
+                questionIndex: 0,
+                isExamInProgress: false, // 試験画面に入ったらフラグを立てる
+            };
             sessionStorage.setItem(
                 SESSION_STORAGE_EXAM_DATA_KEY,
-                JSON.stringify({
-                    testId: mTest.id,
-                    testCnt: testCnt,
-                    questions,
-                    answers: [],
-                    questionIndex: 0,
-                })
+                JSON.stringify(examData),
             );
 
             // 試験開始に成功した場合、試験画面に遷移

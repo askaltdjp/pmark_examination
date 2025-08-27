@@ -2,7 +2,7 @@
 
 import { cookies } from 'next/headers'
 import { loginService } from "@/services/actions/auth/loginService";
-import { AUTH_TOKEN_COOKIE_NAME, AUTH_TOKEN_COOKIE_MAX_AGE } from "@/lib/constants/system";
+import { AUTH_TOKEN_COOKIE_NAME, AUTH_TOKEN_COOKIE_MAX_AGE } from "@/lib/definitions/system";
 
 /**
  * ユーザ認証を行うサーバアクション

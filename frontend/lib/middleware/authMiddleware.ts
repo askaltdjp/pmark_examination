@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import type { NextRequest } from "next/server";
 import { verifyJwt } from "@/lib/utils/authUtils";
-import { AUTH_TOKEN_COOKIE_NAME, EMPLOYEE_ID_HEADER } from "@/lib/constants/system";
+import { AUTH_TOKEN_COOKIE_NAME, EMPLOYEE_ID_HEADER } from "@/lib/definitions/system";
 
 /**
  * 認証用ミドルウェア関数

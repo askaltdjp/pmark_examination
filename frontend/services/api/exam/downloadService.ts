@@ -5,7 +5,7 @@ import { MTestQuestionRepository } from "@/lib/repositories/master/mTestQuestion
 import { TTestRepository } from "@/lib/repositories/transaction/tTestRepository";
 import { TTestAnswerRepository } from "@/lib/repositories/transaction/tTestAnswerRepository";
 import { formatDate } from "@/lib/utils/timeUtils";
-import { testResultLabels } from "@/lib/constants/labels";
+import { testResultLabels } from "@/lib/definitions/labels";
 import path from "path";
 import ExcelJS from "exceljs";
 
@@ -50,10 +50,10 @@ export async function downloadService(
     // 試験IDと問題Noリストから試験問題マスタを取得
     const mTestQuestions = await MTestQuestionRepository.findAllByTestIdAndQuestionNos(testId, questionNos);
     // 試験問題マスタを問題Noをキーにした連想配列に変換（高速アクセス用）
-    const mTestQuestionMap = mTestQuestions.reduce((acc, mTestQuestion) => {
+    const mTestQuestionMap = mTestQuestions.reduce<Record<number, MTestQuestion>>((acc, mTestQuestion) => {
         acc[mTestQuestion.questionNo] = mTestQuestion;
         return acc;
-    }, {} as Record<number, MTestQuestion>);
+    }, {});
 
     // Excelテンプレートファイルの絶対パスを取得
     const filePath = path.resolve(process.cwd(), "templates/[試験名]_受験結果_([氏名])_[yyyymmdd].xlsx");

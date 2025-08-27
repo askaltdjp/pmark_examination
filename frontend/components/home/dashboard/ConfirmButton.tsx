@@ -1,7 +1,7 @@
 "use client";
 
 import { TTest } from ".prisma/client_transaction/";
-import { TestResult } from "@/lib/constants/labels";
+import { TestResult } from "@/lib/definitions/labels";
 
 type Props = {
     tTest: TTest;

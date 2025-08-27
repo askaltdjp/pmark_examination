@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter, usePathname } from "next/navigation";
-import { SITE_TITLE } from "@/lib/constants/labels";
+import { SITE_TITLE } from "@/lib/definitions/labels";
 import { ArrowRightStartOnRectangleIcon } from "@heroicons/react/24/outline";
 import { logoutAction } from "@/app/actions/auth/logoutAction";
 

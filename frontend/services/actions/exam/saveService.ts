@@ -2,7 +2,7 @@ import { MTestRepository } from "@/lib/repositories/master/mTestRepository";
 import { TTestRepository } from "@/lib/repositories/transaction/tTestRepository";
 import { transactionPrisma } from "@/lib/prisma/transactionPrisma";
 import { currentJST } from "@/lib/utils/timeUtils";
-import { TestResult } from "@/lib/constants/labels";
+import { TestResult } from "@/lib/definitions/labels";
 import { MTestQuestionRepository } from "@/lib/repositories/master/mTestQuestionRepository";
 import { TTestAnswerRepository } from "@/lib/repositories/transaction/tTestAnswerRepository";
 
@@ -52,10 +52,10 @@ export async function saveService(
     // 試験問題マスタ取得
     const mTestQuestions = await MTestQuestionRepository.findAllByTestId(testId);
     // 試験問題マスタを Record<number, boolean> 形式に変換（key: questionNo, value: correct）
-    const corrects = mTestQuestions.reduce((acc, mTestQuestion) => {
+    const corrects = mTestQuestions.reduce<Record<number, boolean>>((acc, mTestQuestion) => {
         acc[mTestQuestion.questionNo] = mTestQuestion.correct;
         return acc;
-    }, {} as Record<number, boolean>);
+    }, {});
 
     // 正答数を計算
     const correctNum = answers.filter(answer => {

@@ -3,7 +3,7 @@ import { MTestQuestion } from ".prisma/client_master";
 import { TTestRepository } from "@/lib/repositories/transaction/tTestRepository";
 import { transactionPrisma } from "@/lib/prisma/transactionPrisma";
 import { currentJST } from "@/lib/utils/timeUtils";
-import { TestResult } from "@/lib/constants/labels";
+import { TestResult } from "@/lib/definitions/labels";
 import { MTestQuestionRepository } from "@/lib/repositories/master/mTestQuestionRepository";
 
 /**

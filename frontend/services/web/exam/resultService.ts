@@ -37,10 +37,10 @@ export async function resultService(
     const mTestQuestions = await MTestQuestionRepository.findAllByTestId(testId);
 
     // 試験問題マスタを Record<number, MTestQuestion> 形式に変換（key: questionNo, value: MTestQuestionオブジェクト）
-    const mTestQuestionMap = mTestQuestions.reduce((acc, mTestQuestion) => {
+    const mTestQuestionMap = mTestQuestions.reduce<Record<number, MTestQuestion>>((acc, mTestQuestion) => {
         acc[mTestQuestion.questionNo] = mTestQuestion;
         return acc;
-    }, {} as Record<number, MTestQuestion>);
+    }, {});
 
     // 社員の該当試験とその受験回数に応じた受験履歴を取得
     const tTest = await TTestRepository.findByEmployeeIdAndTestIdAndTestCnt(

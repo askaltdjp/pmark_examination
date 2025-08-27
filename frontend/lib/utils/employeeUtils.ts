@@ -1,6 +1,6 @@
 import { TEmployee } from ".prisma/client_transaction";
 import { TEmployeeRepository } from "@/lib/repositories/transaction/tEmployeeRepository";
-import { EMPLOYEE_ID_HEADER } from "@/lib/constants/system";
+import { EMPLOYEE_ID_HEADER } from "@/lib/definitions/system";
 
 /**
  * リクエストヘッダから社員情報を取得する

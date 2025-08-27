@@ -1,5 +1,5 @@
 import { SignJWT, jwtVerify, type JWTPayload } from "jose";
-import { AUTH_TOKEN_COOKIE_MAX_AGE } from '@/lib/constants/system';
+import { AUTH_TOKEN_COOKIE_MAX_AGE } from '@/lib/definitions/system';
 
 const JWT_SECRET_KEY = process.env.JWT_SECRET || "your-secret-key";
 const JWT_SECRET = new TextEncoder().encode(JWT_SECRET_KEY);
