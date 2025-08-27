@@ -16,7 +16,12 @@ import { TTestAnswerRepository } from "@/lib/repositories/transaction/tTestAnswe
  * @returns void
  * @throws 条件に合わない場合や処理中にエラーが発生した場合に例外をスローします
  */
-export async function saveService(employeeId: number, testId: number, testCnt: number, answers: { questionNo: number, answer: boolean }[]): Promise<void> {
+export async function saveService(
+    employeeId: number,
+    testId: number,
+    testCnt: number,
+    answers: { questionNo: number; answer: boolean }[]
+): Promise<void> {
     // 試験IDに基づいて試験マスタを取得
     const mTest = await MTestRepository.findById(testId);
     if (!mTest) {

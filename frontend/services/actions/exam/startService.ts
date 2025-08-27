@@ -14,7 +14,13 @@ import { MTestQuestionRepository } from "@/lib/repositories/master/mTestQuestion
  * @returns オブジェクト（ランダム抽選した試験問題と受験回数）
  * @throws 条件に合わない場合や処理中にエラーが発生した場合に例外をスローします
  */
-export async function startService(employeeId: number, testId: number): Promise<{ mTestQuestions: MTestQuestion[], testCnt: number }> {
+export async function startService(
+    employeeId: number,
+    testId: number
+): Promise<{
+    mTestQuestions: MTestQuestion[];
+    testCnt: number;
+}> {
     // 試験IDに基づいて試験マスタを取得
     const mTest = await MTestRepository.findById(testId);
     if (!mTest) {
@@ -45,8 +51,10 @@ export async function startService(employeeId: number, testId: number): Promise<
         .sort(() => Math.random() - 0.5) // 簡易的なランダム抽選
         .slice(0, mTest.questionNum);
 
-    // 受験回数を計算
-    const testCnt = (tTest?.testCnt ?? 0) + 1;
+    // 今回の受験回数を計算
+    // 注意：受験回数に論理削除されたデータも含めないと、insert時にduplicateエラーが発生する
+    const maxTestCnt = await TTestRepository.findMaxTestCntByEmployeeIdAndTestId(employeeId, testId);
+    const testCnt = maxTestCnt + 1;
 
     // トランザクション処理
     await transactionPrisma.$transaction(async (tx) => {

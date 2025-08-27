@@ -19,8 +19,14 @@ export class TTestAnswerRepository {
      * トランザクション内で使用する場合、`tx` パラメータを指定してください。
      * 指定しない場合、`transactionPrisma` がデフォルトで使用されます。
      */
-    static async findAllByEmployeeIdAndTestIdAndTestCnt(employeeId: number, testId: number, testCnt: number, tx?: Prisma.TransactionClient): Promise<TTestAnswer[]> {
+    static async findAllByEmployeeIdAndTestIdAndTestCnt(
+        employeeId: number,
+        testId: number,
+        testCnt: number,
+        tx?: Prisma.TransactionClient
+    ): Promise<TTestAnswer[]> {
         const prisma = tx || transactionPrisma;
+
         return prisma.tTestAnswer.findMany({
             where: {
                 employeeId,
@@ -29,8 +35,8 @@ export class TTestAnswerRepository {
                 deleteAt: null,
             },
             orderBy: {
-                id: "asc",
-            }
+                id: 'asc',
+            },
         });
     }
 

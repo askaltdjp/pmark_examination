@@ -46,7 +46,7 @@
 │       └── ExamNavigator.tsx                   // 試験問題表示・解答 UI
 ├── home
 │   └── dashboard
-│       ├── ExamHistoryList.tsx                 // 受験履歴一覧
+│       ├── ConfirmButton.tsx                   // 確認ボタン
 │       └── StartExamButton.tsx                 // 試験開始ボタン
 
 /services                                       // サービス層（ビジネスロジック）

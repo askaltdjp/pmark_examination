@@ -19,8 +19,14 @@ export class TTestRepository {
      * トランザクション内で使用する場合、`tx` パラメータを指定してください。
      * 指定しない場合、`transactionPrisma` がデフォルトで使用されます。
      */
-    static async findByEmployeeIdAndTestIdAndTestCnt(employeeId: number, testId: number, testCnt: number, tx?: Prisma.TransactionClient): Promise<TTest | null> {
+    static async findByEmployeeIdAndTestIdAndTestCnt(
+        employeeId: number,
+        testId: number,
+        testCnt: number,
+        tx?: Prisma.TransactionClient
+    ): Promise<TTest | null> {
         const prisma = tx || transactionPrisma;
+
         return prisma.tTest.findFirst({
             where: {
                 employeeId,
@@ -43,8 +49,13 @@ export class TTestRepository {
      * トランザクション内で使用する場合、`tx` パラメータを指定してください。
      * 指定しない場合、`transactionPrisma` がデフォルトで使用されます。
      */
-    static async findAllByEmployeeIdAndTestId(employeeId: number, testId: number, tx?: Prisma.TransactionClient): Promise<TTest[]> {
+    static async findAllByEmployeeIdAndTestId(
+        employeeId: number,
+        testId: number,
+        tx?: Prisma.TransactionClient
+    ): Promise<TTest[]> {
         const prisma = tx || transactionPrisma;
+
         return prisma.tTest.findMany({
             where: {
                 employeeId,
@@ -52,9 +63,38 @@ export class TTestRepository {
                 deleteAt: null,
             },
             orderBy: {
-                testCnt: "desc",
-            }
+                testCnt: 'desc',
+            },
         });
+    }
+
+    /**
+     * employeeId と testId を条件に、testCnt の最大値を取得する
+     *
+     * @param employeeId - 社員ID
+     * @param testId - 試験ID
+     * @param tx - トランザクションオブジェクト（オプション）
+     * @returns 最大の testCnt（存在しない場合は 0）
+     */
+    static async findMaxTestCntByEmployeeIdAndTestId(
+        employeeId: number,
+        testId: number,
+        tx?: Prisma.TransactionClient
+    ): Promise<number> {
+        const prisma = tx || transactionPrisma;
+
+        const result = await prisma.tTest.aggregate({
+            where: {
+                employeeId,
+                testId,
+                // deleteAt: null, 論理削除は考慮しない
+            },
+            _max: {
+                testCnt: true,
+            },
+        });
+
+        return result._max.testCnt ?? 0;
     }
 
     /**
@@ -69,9 +109,15 @@ export class TTestRepository {
      * トランザクション内で使用する場合、`tx` パラメータを指定してください。
      * 指定しない場合、`transactionPrisma` がデフォルトで使用されます。
      */
-    static async createTTest(employeeId: number, testId: number, testCnt: number, tx?: Prisma.TransactionClient): Promise<TTest> {
+    static async createTTest(
+        employeeId: number,
+        testId: number,
+        testCnt: number,
+        tx?: Prisma.TransactionClient
+    ): Promise<TTest> {
         const prisma = tx || transactionPrisma;
         const now = currentJST();
+
         const tTest = await prisma.tTest.create({
             data: {
                 employeeId,
@@ -99,11 +145,19 @@ export class TTestRepository {
      * トランザクション内で使用する場合は `tx` を指定してください。
      * 指定しない場合は `transactionPrisma` が使用されます。
      */
-    static async updateCorrectNumAndResult(id: number, correctNum: number, result: number, tx?: Prisma.TransactionClient): Promise<void> {
+    static async updateCorrectNumAndResult(
+        id: number,
+        correctNum: number,
+        result: number,
+        tx?: Prisma.TransactionClient
+    ): Promise<void> {
         const prisma = tx || transactionPrisma;
         const now = currentJST();
+
         await prisma.tTest.update({
-            where: { id },
+            where: {
+                id,
+            },
             data: {
                 correctNum,
                 result,
