@@ -6,17 +6,11 @@ import { PrismaClient as MasterPrismaClient } from ".prisma/client_master";
 // 「Next.js と Prisma のトラブルシューティング」ページを参照。
 // https://www.prisma.io/docs/orm/more/help-and-troubleshooting/nextjs-help
 
-// 開発環境での PrismaClient の多重インスタンス生成を防ぐため、
-// グローバルオブジェクトにキャッシュ（シングルトンパターン）を保持
-const globalForMasterPrisma = globalThis as typeof globalThis & {
-    masterPrisma?: MasterPrismaClient;
-};
+// globalオブジェクトを拡張して、prismaの型を定義
+const globalForPrisma = global as unknown as { masterPrisma: MasterPrismaClient };
 
-// 既存のインスタンスがあればそれを使い、なければ新しく作成
-export const masterPrisma =
-    globalForMasterPrisma.masterPrisma || new MasterPrismaClient();
+// すでにインスタンスがあれば使う。なければ新しく作る。
+export const masterPrisma = globalForPrisma.masterPrisma || new MasterPrismaClient();
 
-// 本番環境以外では、作成したインスタンスをグローバルに保存
-if (process.env.NODE_ENV !== "production") {
-    globalForMasterPrisma.masterPrisma = masterPrisma;
-}
+// 開発モードの場合だけglobalに保存しておく（本番は不要）
+if (process.env.NODE_ENV !== "production") globalForPrisma.masterPrisma = masterPrisma;

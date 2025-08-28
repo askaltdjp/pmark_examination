@@ -6,17 +6,11 @@ import { PrismaClient as TransactionPrismaClient } from ".prisma/client_transact
 // 「Next.js と Prisma のトラブルシューティング」ページを参照。
 // https://www.prisma.io/docs/orm/more/help-and-troubleshooting/nextjs-help
 
-// 開発環境での PrismaClient の多重インスタンス生成を防ぐため、
-// グローバルオブジェクトにキャッシュ（シングルトンパターン）を保持
-const globalForTransactionPrisma = globalThis as typeof globalThis & {
-    transactionPrisma?: TransactionPrismaClient;
-};
+// globalオブジェクトを拡張して、prismaの型を定義
+const globalForPrisma = global as unknown as { transactionPrisma: TransactionPrismaClient };
 
-// 既存のインスタンスがあればそれを使い、なければ新しく作成
-export const transactionPrisma =
-    globalForTransactionPrisma.transactionPrisma || new TransactionPrismaClient();
+// すでにインスタンスがあれば使う。なければ新しく作る。
+export const transactionPrisma = globalForPrisma.transactionPrisma || new TransactionPrismaClient();
 
-// 本番環境以外では、作成したインスタンスをグローバルに保存
-if (process.env.NODE_ENV !== "production") {
-    globalForTransactionPrisma.transactionPrisma = transactionPrisma;
-}
+// 開発モードの場合だけglobalに保存しておく（本番は不要）
+if (process.env.NODE_ENV !== "production") globalForPrisma.transactionPrisma = transactionPrisma;

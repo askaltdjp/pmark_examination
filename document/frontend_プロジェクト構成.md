@@ -70,7 +70,7 @@
 │   ├── labels.ts                               // ラベルや表示文言などの定数定義
 │   ├── system.ts                               // システム共通の定数（Cookie名、制限値など）
 │   └── types.ts                                // アプリケーション全体で使用される型定義
-├── middleware　　　　　　　　　　　         　 　// 認証ミドルウェア関連の共通関数群
+├── middleware                                  // 認証ミドルウェア関連の共通関数群
 │   ├── apiAuthMiddleware.ts                    // API 用の認証ミドルウェア
 │   └── authMiddleware.ts                       // 画面（サーバコンポーネント）用の認証ミドルウェア
 ├── prisma                                      // Prisma クライアント初期化
