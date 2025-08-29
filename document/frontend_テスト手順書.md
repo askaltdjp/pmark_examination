@@ -15,12 +15,33 @@ Ubuntu ターミナルでログインして、下記のコマンドを実行し�
 $ cd ~/pmark_examination/docker
 
 # Jest と関連パッケージのインストール
-$ docker compose exec frontend npm install --save-dev jest @types/jest ts-jest
+$ docker compose exec frontend npm install --save-dev jest @types/jest ts-jest jest-environment-jsdom
 ```
 
-- `jest`: テストランナー本体
-- `@types/jest`: TypeScript 用の型定義
-- `ts-jest`: TypeScript を Jest で実行できるようにするトランスパイラ
+- `jest`
+  - テストランナー本体
+- `@types/jest`
+  - TypeScript 用の型定義
+- `ts-jest`
+  - TypeScript を Jest で実行できるようにするトランスパイラ
+- `jest-environment-jsdom`
+  - Jest でブラウザの DOM 環境をエミュレートするための環境設定パッケージ（React のテストなどで必要）
+
+## React Testing Library のインストール
+
+React Testing Library は、React コンポーネントをユーザ視点でテストするためのライブラリです。  
+実際の DOM 操作に近い形でコンポーネントの振る舞いを検証でき、サーバコンポーネントやクライアントコンポーネントのテストに使用します。
+
+```bash
+$ docker compose exec frontend npm install --save-dev @testing-library/react @testing-library/dom @testing-library/jest-dom
+```
+
+- `@testing-library/react`
+  - React コンポーネントのテストに使う基本ライブラリ
+- `@testing-library/dom`
+  - DOM 要素の操作や検証を助けるユーティリティライブラリ
+- `@testing-library/jest-dom`
+  - Jest のテストで使う拡張マッチャー（例: `toBeInTheDocument`）を追加
 
 ## Jest の設定ファイル（jest.config.js）の作成
 
@@ -53,42 +74,94 @@ The following questions will help Jest to create a suitable configuration for yo
 
 設定ファイル（jest.config.js）が作成されたら、中身を下記のように修正します。
 
-**94 行目付近：**
+### 94 行目付近：
 ```
-修正前
+■ 修正前
 // A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module
 // moduleNameMapper: {},
 
-修正後
+■ 修正後
 // A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module
 moduleNameMapper: {'^@/(.*)$': '<rootDir>/$1'},
 ```
 
 `moduleNameMapper` は、`@/` で始まるモジュールのインポートパスを `<rootDir>/` 以下の対応するパスに変換します。  
-`<rootDir>` はプロジェクトルート（通常は package.json のあるディレクトリ）を指します。  
+`<rootDir>` はプロジェクトルート（通常はプロジェクトのルートディレクトリ）を指します。  
 これにより、`@/lib/utils/timeUtils` のようなエイリアスを使ったインポートが正しく解決されるようになります。
 
-**106 行目付近：**
+### 106 行目付近：
 ```
-修正前
+■ 修正前
 // A preset that is used as a base for Jest's configuration
 // preset: undefined,
 
-修正後
+■ 修正後
 // A preset that is used as a base for Jest's configuration
 preset: 'ts-jest',
 ```
 
-`preset: 'ts-jest'` を指定することで、TypeScript ファイルを Jest 実行時に自動でトランスパイル（ts → js）し、TypeScript コードをそのままテストできるようになります。  
-これがないと Jest は TypeScript を理解できずエラーになります。
+`preset` は Jest の設定の「ひな型」のようなもので、あらかじめ用意された設定群をまとめて読み込むためのものです。  
+`preset: 'ts-jest'` を指定すると、TypeScript を扱うために必要な基本設定（`transform` 設定など）を自動で適用してくれます。
 
-上記の修正後に下記のファイルを GitHub に push します。
+ただし、`preset` による設定はあくまで基本のひな型であり、状況によっては細かい設定をカスタマイズするために `transform` を明示的に指定する必要があります。  
+今回のように JSX のトランスパイルを正しく動作させたい場合は、`transform` の設定を上書きして独自の設定を加えることで対応できます。
 
-- 追加ファイル
-  - jest.config.ts
-- 更新ファイル
-  - package-lock.json
-  - package.json
+### 179 行目付近：
+```
+■ 修正前
+// A map from regular expressions to paths to transformers
+// transform: undefined,
+
+■ 修正後
+// A map from regular expressions to paths to transformers
+transform: { '^.+\\.(ts|tsx)$': ['ts-jest', { tsconfig: 'tsconfig.jest.json' }] },
+```
+
+`transform` は Jest に対して「どのファイルをどう変換（トランスパイル）するか」を細かく指定する設定です。  
+例えば、`.ts` や `.tsx` ファイルは Jest がそのまま理解できないため、`ts-jest` というトランスフォーマーを使って TypeScript から JavaScript に変換するというルールをここで自分で定義します。
+
+この設定により、Jest はテスト実行時に対象ファイルを自動でトランスパイルし、TypeScript の構文や型情報を考慮した形でテストを実行できます。
+
+さらに、`transform` のオプションとして `{ tsconfig: 'tsconfig.jest.json' }` を指定することで、テスト実行時に使う TypeScript のコンパイル設定ファイルを切り替えられ、テスト環境に最適化された設定を利用可能です。
+
+**補足：**  
+`preset: 'ts-jest'` は `transform` を含む基本設定を持っていますが、`transform` を明示的に書くと `preset` の設定を上書きするため、カスタマイズしたい場合は `transform` を自分で指定する必要があります。
+
+そのため、最初は `preset` だけ設定しても `.ts` ファイルの基本的なトランスパイルは動きますが、JSX を含むファイルは正しく変換されないケースがあります。  
+今回のような環境では、`transform` で JSX も含めたトランスパイル設定を明示的に指定するのが確実な方法です。
+
+### 191 行目付近：
+```
+■ 修正前
+// Indicates whether each individual test should be reported during the run
+// verbose: undefined,
+
+■ 修正後
+// Indicates whether each individual test should be reported during the run
+verbose: true,
+```
+
+`verbose` はテスト実行時に各テストケースの詳細な結果をコンソールに表示するかどうかを決める設定です。  
+`true` にするとテスト名ごとにパス・失敗などが詳しくレポートされ、デバッグしやすくなります。
+
+## Jest テスト環境向け tsconfig.jest.json の作成
+
+プロジェクトの直下に次のファイル（`tsconfig.jest.json`）を作成します。
+
+```typescript
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "jsx": "react-jsx",
+  }
+}
+```
+
+`tsconfig.jest.json` は Jest のテスト実行時に使う TypeScript のコンパイル設定ファイルです。  
+このファイルは通常の `tsconfig.json` をベースにしていて、`extends` によって設定を継承しています。
+
+`compilerOptions` の中で `"jsx": "react-jsx"` を指定しているのは、React の新しい JSX 変換方式を有効にするためです。  
+これにより、テスト環境で JSX が正しくコンパイルされ、React コンポーネントのテストがスムーズに実行できます。
 
 ## Jest のテストファイルについて
 
@@ -122,6 +195,8 @@ describe("ファイル名", () => {
       // テスト内容を書く
     });
   });
+
+  // 状況に応じて describe の階層をもっと深くして細分化してもよい
 });
 ```
 
@@ -137,6 +212,23 @@ describe("ファイル名", () => {
 - 1つの `test` には 1 つの期待動作を書くのが望ましいです。  
   複数の動作をまとめると、どの部分で失敗したかわかりにくくなります。
 - ファイルの冒頭でテスト対象の関数を `import` して使います。
+
+### 注意点
+
+サーバコンポーネントとクライアントコンポーネントをテストする場合は下記のコードをファイルの先頭に記述する必要があります。
+
+```
+/**
+ * @jest-environment jsdom
+ */
+```
+
+このコメントは、Jest に対して「このテストファイルはブラウザの DOM 環境（jsdom）で実行する」ことを指定するものです。
+
+特に React のコンポーネントテストでは、ブラウザの DOM が必要になるため、この指定が重要です。  
+サーバコンポーネントのテストでは通常 Node 環境が使われますが、レンダリング結果の検証や DOM 操作を行う場合は jsdom が必要になります。
+
+また、クライアントコンポーネントのテストでも DOM が必須なので、ほとんどの React コンポーネントテストでは `@jest-environment jsdom` を付けることで、安全かつ確実にブラウザ環境をエミュレートしてテストできます。
 
 ## Jest の実行方法
 

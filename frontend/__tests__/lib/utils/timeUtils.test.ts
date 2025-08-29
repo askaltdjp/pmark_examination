@@ -3,7 +3,7 @@ import { currentJST, formatDate } from "@/lib/utils/timeUtils";
 describe("timeUtils.ts", () => {
 
     describe("currentJST", () => {
-        test("UTC＋9時間のDateクラスを返却すること", () => {
+        test("UTC＋9時間のDateクラスを返却する", () => {
             const now = Date.now();
             const result = currentJST().getTime();
             const expected = now + 9 * 60 * 60 * 1000;
@@ -13,14 +13,14 @@ describe("timeUtils.ts", () => {
     });
 
     describe("formatDate", () => {
-        test("デフォルトフォーマットで日時文字列を返却すること", () => {
+        test("デフォルトフォーマットで日時文字列を返却する", () => {
             // UTC時間としてDateオブジェクトを作成
             const date = new Date("2025-08-28T12:07:09Z");
             const result = formatDate(date);
             const expected = "2025/08/28 12:07";
             expect(result).toBe(expected);
         });
-        test("カスタムフォーマットで日時文字列を返却すること", () => {
+        test("カスタムフォーマットで日時文字列を返却する", () => {
             // UTC時間としてDateオブジェクトを作成
             const date = new Date("2025-08-28T12:07:09Z");
             const result = formatDate(date, "YYYY年MM月DD日 HH時mm分ss秒");

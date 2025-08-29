@@ -24,7 +24,7 @@ export default async function DashBoardPage() {
 
     return (
         <div className="max-w-6xl mx-auto text-gray-900 rounded">
-            {/* 氏名と試験内容 */}
+            {/* 社員情報と試験内容の概要表示 */}
             <div className="p-3 bg-white shadow rounded">
                 <div className="rounded-box border border-base-content/5 bg-base-100">
                     <table className="table">
