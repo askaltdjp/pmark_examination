@@ -9,6 +9,7 @@ import { TEmployee } from ".prisma/client_transaction";
 import { MTest } from ".prisma/client_master";
 import { TTest } from ".prisma/client_transaction/";
 import { TestResult } from "@/lib/definitions/labels";
+import { dashboardService } from '@/services/web/home/dashboardService';
 
 // 固定された日時（全テストで共通に使用）
 const fixedDate = new Date("2025-08-29T11:01:20Z");
@@ -43,10 +44,8 @@ jest.mock("next/navigation", () => ({
     }),
 }));
 
-// dashboardServiceをモック（後で mockResolvedValue により戻り値を定義）
+// dashboardServiceをモック（後で戻り値を定義）
 jest.mock("@/services/web/home/dashboardService");
-
-import { dashboardService } from '@/services/web/home/dashboardService';
 
 describe("page.tsx", () => {
     describe("DashBoardPage", () => {
@@ -105,8 +104,7 @@ describe("page.tsx", () => {
                 ];
 
                 // モック化したdashboardServiceの戻り値を設定
-                const mockedDashboardService = dashboardService as jest.Mock;
-                mockedDashboardService.mockResolvedValue({ mTest, tTests });
+                (dashboardService as jest.Mock).mockResolvedValue({ mTest, tTests });
 
                 // Reactエレメントを取得してレンダリング
                 const page = await DashBoardPage();
@@ -202,14 +200,13 @@ describe("page.tsx", () => {
                         deleteAt: null,
                     },
                 ];
-                const mockedDashboardService = dashboardService as jest.Mock;
-                mockedDashboardService.mockResolvedValue({ mTest, tTests });
+                (dashboardService as jest.Mock).mockResolvedValue({ mTest, tTests });
 
                 const page = await DashBoardPage();
                 render(page);
             });
 
-            test("試験開始ボタンが非活性であること", () => {
+            test("試験開始ボタンが非活性である", () => {
                 const button = screen.getByRole("button", { name: "試験開始" });
                 expect(button).toBeInTheDocument();
                 expect(button).toBeDisabled();
@@ -230,14 +227,13 @@ describe("page.tsx", () => {
                     deleteAt: null,
                 };
                 const tTests: TTest[] = [];
-                const mockedDashboardService = dashboardService as jest.Mock;
-                mockedDashboardService.mockResolvedValue({ mTest, tTests });
+                (dashboardService as jest.Mock).mockResolvedValue({ mTest, tTests });
 
                 const page = await DashBoardPage();
                 render(page);
             });
 
-            test("受験履歴が表示されないこと", () => {
+            test("受験履歴が表示されない", () => {
                 const text = screen.getByText("受験履歴がありません");
                 expect(text).toBeInTheDocument();
             });
@@ -247,19 +243,18 @@ describe("page.tsx", () => {
             beforeEach(async () => {
                 const mTest: MTest | null = null;
                 const tTests: TTest[] = [];
-                const mockedDashboardService = dashboardService as jest.Mock;
-                mockedDashboardService.mockResolvedValue({ mTest, tTests });
+                (dashboardService as jest.Mock).mockResolvedValue({ mTest, tTests });
 
                 const page = await DashBoardPage();
                 render(page);
             });
 
-            test("受験履歴が表示されないこと", () => {
+            test("受験履歴が表示されない", () => {
                 const text = screen.getByText("受験履歴がありません");
                 expect(text).toBeInTheDocument();
             });
 
-            test("試験開始ボタンが非活性であること", () => {
+            test("試験開始ボタンが非活性である", () => {
                 const button = screen.getByRole("button", { name: "試験開始" });
                 expect(button).toBeInTheDocument();
                 expect(button).toBeDisabled();

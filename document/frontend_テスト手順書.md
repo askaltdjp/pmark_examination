@@ -33,7 +33,11 @@ React Testing Library は、React コンポーネントをユーザ視点でテ�
 実際の DOM 操作に近い形でコンポーネントの振る舞いを検証でき、サーバコンポーネントやクライアントコンポーネントのテストに使用します。
 
 ```bash
-$ docker compose exec frontend npm install --save-dev @testing-library/react @testing-library/dom @testing-library/jest-dom
+$ docker compose exec frontend npm install --save-dev \
+  @testing-library/react \
+  @testing-library/dom \
+  @testing-library/jest-dom \
+  @testing-library/user-event
 ```
 
 - `@testing-library/react`
@@ -42,6 +46,8 @@ $ docker compose exec frontend npm install --save-dev @testing-library/react @te
   - DOM 要素の操作や検証を助けるユーティリティライブラリ
 - `@testing-library/jest-dom`
   - Jest のテストで使う拡張マッチャー（例: `toBeInTheDocument`）を追加
+- `@testing-library/user-event`
+  - ユーザーの実際の操作を忠実に再現（クリック・入力など）できる補助ライブラリ
 
 ## Jest の設定ファイル（jest.config.js）の作成
 
@@ -237,19 +243,19 @@ describe("ファイル名", () => {
 $ docker compose exec frontend npm run test
 ```
 
-**個別にテストコードを実行する場合①**
+**個別にテストコードを実行する場合 ①**
 
 ファイル指定で実行したいときはファイルパスを指定します。  
 ```bash 
 $ docker compose exec frontend npm run test [__tests__/からのテストファイルのファイルパス]
 ```
 
-**個別にテストコードを実行する場合②**
+**個別にテストコードを実行する場合 ②**
 
 `npm run` 経由で jest に引数を渡すときは、`--` の後にオプションを渡してください。  
 これは、`--` がないと `-t` オプション以降の文字列が npm コマンドの引数として解釈されてしまい、jest に正しく渡らないためです。
 
 ```bash
 例）describe 名にマッチするテストだけを実行する場合
-$ docker compose exec frontend npm run test -- -t "describeの第一引数に指定した文字列（部分一致）"
+$ docker compose exec frontend npm run test -- -t [describeの第一引数に指定した文字列（部分一致）]
 ```
