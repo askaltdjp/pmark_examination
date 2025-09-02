@@ -4,24 +4,28 @@
 
 import { render, screen, within } from "@testing-library/react";
 import '@testing-library/jest-dom';
+import { headers } from "next/headers";
+import { getEmployeeFromRequest } from "@/lib/utils/employeeUtils";
 import DashBoardPage from "@/app/(li)/home/dashboard/page";
 import { TEmployee } from ".prisma/client_transaction";
 import { MTest } from ".prisma/client_master";
 import { TTest } from ".prisma/client_transaction/";
 import { TestResult } from "@/lib/definitions/labels";
 import { dashboardService } from '@/services/web/home/dashboardService';
+import { useRouter } from "next/navigation";
 
 // 固定された日時（全テストで共通に使用）
 const fixedDate = new Date("2025-08-29T11:01:20Z");
 
-// headersをモック
-jest.mock("next/headers", () => ({
-    headers: jest.fn(() => Promise.resolve({})),
-}));
+// モックの宣言（DashBoardPageの依存モジュール）
+jest.mock("next/headers");
+jest.mock("@/lib/utils/employeeUtils");
+jest.mock("next/navigation");
+jest.mock("@/services/web/home/dashboardService");
 
-// getEmployeeFromRequestをモック（ログイン中の社員情報を返す）
-jest.mock("@/lib/utils/employeeUtils", () => ({
-    getEmployeeFromRequest: jest.fn((headers: Headers) => {
+describe("page.tsx", () => {
+    beforeAll(() => {
+        (headers as jest.Mock).mockResolvedValue({});
         const tEmployee: TEmployee = {
             id: 1,
             employeeNo: "001",
@@ -33,21 +37,10 @@ jest.mock("@/lib/utils/employeeUtils", () => ({
             updateAt: fixedDate,
             deleteAt: null,
         };
-        return Promise.resolve(tEmployee);
-    }),
-}));
+        (getEmployeeFromRequest as jest.Mock).mockResolvedValue(tEmployee);
+        (useRouter as jest.Mock).mockResolvedValue({});
+    });
 
-// next/navigationをモック（router機能）
-jest.mock("next/navigation", () => ({
-    useRouter: () => ({
-        push: jest.fn(),
-    }),
-}));
-
-// dashboardServiceをモック（後で戻り値を定義）
-jest.mock("@/services/web/home/dashboardService");
-
-describe("page.tsx", () => {
     describe("DashBoardPage", () => {
 
         describe("試験実施期間中・未合格", () => {

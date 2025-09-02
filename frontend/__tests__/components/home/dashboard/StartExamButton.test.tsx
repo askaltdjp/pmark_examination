@@ -6,6 +6,7 @@ import { render, screen } from "@testing-library/react";
 import '@testing-library/jest-dom';
 import userEvent from "@testing-library/user-event";
 import StartExamButton from "@/components/home/dashboard/StartExamButton";
+import { useRouter } from "next/navigation";
 import { MTest } from ".prisma/client_master";
 import { TTest } from ".prisma/client_transaction/";
 import { TestResult } from "@/lib/definitions/labels";
@@ -17,26 +18,24 @@ import { SESSION_STORAGE_EXAM_DATA_KEY } from "@/lib/definitions/system";
 // 固定された日時（全テストで共通に使用）
 const fixedDate = new Date("2025-08-29T11:01:20Z");
 
-// startActionをモック（後で戻り値と例外を定義）
+// モックの宣言（StartExamButtonの依存モジュール）
 jest.mock("@/app/actions/exam/startAction");
-
-// next/navigationをモック（router機能）
-const mockPush = jest.fn();
-jest.mock("next/navigation", () => ({
-    useRouter: () => ({
-        push: mockPush,
-    }),
-}));
+jest.mock("next/navigation");
 
 describe("StartExamButton.tsx", () => {
     describe("StartExamButton", () => {
+        let mockPush: jest.Mock;
         let mTest: MTest;
 
-        afterEach(() => {
-            // Jestのモックをリセット（spyOnなどを含む）
-            jest.restoreAllMocks();
-            // mockPush の呼び出し履歴をリセット（状態クリア）
-            mockPush.mockReset();
+        beforeAll(() => {
+            // コンポーネント呼び出し直後にuseRouterを使用しているため、その前にモックを定義する必要がある
+            mockPush = jest.fn();
+            (useRouter as jest.Mock).mockReturnValue({ push: mockPush });
+        });
+
+        beforeAll(() => {
+            // mockPushの呼び出し履歴をクリア
+            mockPush.mockClear();
         });
 
         describe("試験実施期間中・未受験", () => {
@@ -62,7 +61,7 @@ describe("StartExamButton.tsx", () => {
             });
 
             test("試験開始ボタン押下により試験画面に遷移する", async () => {
-                // startAction が返す質問情報を定義
+                // モックの定義
                 const mTestQuestions: MTestQuestion[] = [
                     {
                         id: 1,
@@ -88,11 +87,10 @@ describe("StartExamButton.tsx", () => {
                     },
                 ];
                 const testCnt = 1;
-                // モックされた startAction の戻り値を設定
                 (startAction as jest.Mock).mockResolvedValue({ mTestQuestions, testCnt });
-                // sessionStorage.setItem の呼び出しを監視
                 const sessionStorageSpy = jest.spyOn(window.sessionStorage.__proto__, "setItem");
 
+                // 試験開始ボタンを取得
                 const button = screen.getByRole("button", { name: "試験開始" });
 
                 // 試験開始をクリック
@@ -114,14 +112,18 @@ describe("StartExamButton.tsx", () => {
 
                 // 試験画面への遷移が実行されたか確認
                 expect(mockPush).toHaveBeenCalledWith("/exam/take");
+
+                // スパイの解除
+                sessionStorageSpy.mockRestore();
             });
 
             test("試験開始ボタン押下によりエラーが発生する", async () => {
                 // startAction がエラーを返すように設定
                 (startAction as jest.Mock).mockRejectedValue(new Error("サーバエラーテスト"));
 
-                // console.errorの抑制 と window.alertの監視
+                // console.errorが実行されてしまうと、テスト結果にエラーログが出力されてしまうため抑制
                 const errorSpy = jest.spyOn(console, "error").mockImplementation(() => { });
+                // window.alertの監視
                 const alertSpy = jest.spyOn(window, "alert").mockImplementation(() => { });
 
                 const button = screen.getByRole("button", { name: "試験開始" });
@@ -129,6 +131,11 @@ describe("StartExamButton.tsx", () => {
                 await userEvent.click(button);
 
                 expect(alertSpy).toHaveBeenCalledWith("サーバエラーテスト");
+
+                // console.logやwindow.alertを複数のテストで使用する場合は、
+                // スパイの設定をbeforeAllにまとめて書き、解除はafterAllで行う
+                errorSpy.mockRestore();
+                alertSpy.mockRestore();
             });
         });
 
