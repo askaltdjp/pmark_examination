@@ -13,14 +13,14 @@ import { startService } from "@/services/actions/exam/startService";
 export async function startAction(
     testId: number
 ): Promise<{ mTestQuestions: MTestQuestion[]; testCnt: number }> {
-    // リクエストヘッダから社員情報を取得し、認証済みかを判定
-    const requestHeaders = await headers();
-    const tEmployee = await getEmployeeFromRequest(requestHeaders);
-
     // 試験IDがない場合はエラー
     if (!testId) {
         throw new Error("試験IDが提供されていません。");
     }
+
+    // リクエストヘッダから社員情報を取得し、認証済みかを判定
+    const requestHeaders = await headers();
+    const tEmployee = await getEmployeeFromRequest(requestHeaders);
 
     // 受験履歴を新規作成して、対象の試験問題マスタと受験回数を取得
     const { mTestQuestions, testCnt } = await startService(tEmployee.id, testId);
