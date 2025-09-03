@@ -117,7 +117,7 @@ describe("StartExamButton.tsx", () => {
                 sessionStorageSpy.mockRestore();
             });
 
-            test("試験開始ボタン押下によりエラーが発生する", async () => {
+            test("試験開始ボタン押下により例外が発生する", async () => {
                 // startAction がエラーを返すように設定
                 (startAction as jest.Mock).mockRejectedValue(new Error("サーバエラーテスト"));
 
