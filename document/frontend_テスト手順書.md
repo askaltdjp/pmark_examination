@@ -30,7 +30,8 @@ $ docker compose exec frontend npm install --save-dev jest @types/jest ts-jest j
 ## React Testing Library のインストール
 
 React Testing Library は、React コンポーネントをユーザ視点でテストするためのライブラリです。  
-実際の DOM 操作に近い形でコンポーネントの振る舞いを検証でき、サーバコンポーネントやクライアントコンポーネントのテストに使用します。
+コンポーネントを実際にレンダリングし、ボタンのクリックやテキストの入力など、ユーザー操作に近い形で挙動を検証できます。  
+これにより、サーバコンポーネントやクライアントコンポーネントの振る舞いを、実際の利用状況に近い形でテストできます。
 
 ```bash
 $ docker compose exec frontend npm install --save-dev \
@@ -128,7 +129,7 @@ transform: { '^.+\\.(ts|tsx)$': ['ts-jest', { tsconfig: 'tsconfig.jest.json' }] 
 
 この設定により、Jest はテスト実行時に対象ファイルを自動でトランスパイルし、TypeScript の構文や型情報を考慮した形でテストを実行できます。
 
-さらに、`transform` のオプションとして `{ tsconfig: 'tsconfig.jest.json' }` を指定することで、テスト実行時に使う TypeScript のコンパイル設定ファイルを切り替えられ、テスト環境に最適化された設定を利用可能です。
+さらに、`transform` のオプションとして `{ tsconfig: 'tsconfig.jest.json' }` を指定することで、テスト実行時に使う TypeScript のコンパイル設定ファイルを切り替えられ、テスト環境に最適化された設定を利用可能です（`tsconfig.jest.json` については後述）
 
 **補足：**  
 `preset: 'ts-jest'` は `transform` を含む基本設定を持っていますが、`transform` を明示的に書くと `preset` の設定を上書きするため、カスタマイズしたい場合は `transform` を自分で指定する必要があります。
@@ -167,14 +168,14 @@ verbose: true,
 このファイルは通常の `tsconfig.json` をベースにしていて、`extends` によって設定を継承しています。
 
 `compilerOptions` の中で `"jsx": "react-jsx"` を指定しているのは、React の新しい JSX 変換方式を有効にするためです。  
-これにより、テスト環境で JSX が正しくコンパイルされ、React コンポーネントのテストがスムーズに実行できます。
+これにより、テスト環境で JSX が正しくコンパイルされ、React コンポーネントのテストが可能になります。
 
 ## Jest のテストファイルについて
 
 ### テストファイルの作成
 
 1. テスト用のディレクトリとしてプロジェクト直下に `__tests__` ディレクトリを作成します。
-1. テストしたいファイルと同じディレクトリ構成を、`__tests__` ディレクトリの中に作成します。
+1. テストしたいファイルと同じディレクトリ構成を `__tests__` ディレクトリの中に作成します。
 1. テストファイルの名前は、元のファイル名の拡張子の前に `.test` をつけます。例えば `timeUtils.ts` なら `timeUtils.test.ts` です。
 
 **例：**  
@@ -189,6 +190,8 @@ Jest でテストを書くときは、以下のルールを守ると読みやす
 // テスト対象の関数をインポート
 import { 関数名1, 関数名2 } from "テスト対象ファイルのパス";
 
+// モックの宣言（後述）
+
 describe("ファイル名", () => {
   describe("関数名", () => {
     test("期待される挙動を自然文で記載", () => {
@@ -202,7 +205,8 @@ describe("ファイル名", () => {
     });
   });
 
-  // 状況に応じて describe の階層をもっと深くして細分化してもよい
+  // 状況に応じて describe の階層をもっと深くして細分化する
+  // 例：クラスのメソッドテストする場合は、ファイル名＞クラス名＞メソッド名という3階層のdescribeを作成する
 });
 ```
 
@@ -259,3 +263,145 @@ $ docker compose exec frontend npm run test [__tests__/からのテストファ�
 例）describe 名にマッチするテストだけを実行する場合
 $ docker compose exec frontend npm run test -- -t [describeの第一引数に指定した文字列（部分一致）]
 ```
+
+## モックに関するガイド
+
+テスト対象のコードが依存している外部モジュールは、**原則としてすべてモック化してからテストを行います。**  
+これにより、依存モジュールの影響を排除し、対象コードだけを純粋に検証できます。
+
+### モジュールの関数を自動でモック化する場合
+
+```typescript
+import { currentJST } from "@/lib/utils/timeUtils";
+
+// currentJST モック化する場合
+jest.mock("@/lib/utils/timeUtils");
+
+console.log(currentJST()); // => undefined（jest.fn()に置き換えられているため）
+```
+
+- `jest.mock('モジュールパス')` によって、対象モジュールの `export` 関数はすべて `jest.fn()` に置き換えられます。
+- このとき、関数の挙動（戻り値や副作用）は一切なくなり、戻り値は常に `undefined` になります。
+
+### モック関数に固定の戻り値を設定する場合
+
+```typescript
+(currentJST as jest.Mock).mockReturnValue(new Date("2000-01-01T00:00:00Z"));
+
+console.log(currentJST()); // => 常に同じDateを返す
+```
+
+- `currentJST` は `jest.mock()` によって `jest.fn()` に置き換わりますが、TypeScript はモック関数になったことを自動では認識しないため、モック関数専用のメソッド（`.mockReturnValue()` など）を使う際に `jest.Mock` 型へのアサーションが必要です。
+- `.mockReturnValue()` により、常に同じ値を返すようになります。
+- 非同期関数には `.mockResolvedValue()` を使用します。
+
+### 引数に応じてモック関数の戻り値を変更する場合
+
+```typescript
+(currentJST as jest.Mock).mockImplementation(() => {
+  return new Date("2000-01-01T00:00:00Z");
+});
+```
+
+- `.mockImplementation(fn)` は、モック関数の内部実装そのものを自由に定義できます。
+- 非同期処理にも使用可能です（`async () => {...}`）
+
+### テストごとにモック関数の戻り値を維持する場合
+
+```typescript
+test("A", () => {
+  (currentJST as jest.Mock).mockReturnValue(new Date("2000-01-01"));
+});
+
+test("B", () => {
+  // test 関数に設定している A の設定は B に引き継がれない
+});
+```
+
+- **`test()` 関数内で設定したモック挙動は他の `test()` に引き継がれません。**
+- すべてのテストで同じ設定を使いたい場合は、`beforeAll` や `beforeEach` に記述します。
+
+### モジュール構造が複雑でモック化できない場合
+
+Prisma などの一部ライブラリでは、単純な `jest.mock()` ではモックが正しく適用されないことがあります。
+
+```typescript
+jest.mock("@/lib/prisma/masterPrisma", () => ({
+  masterPrisma: {
+    mTest: {
+      findFirst: jest.fn(), // 明示的にモック関数にする
+    },
+  },
+}));
+```
+
+- 上記のように、第 2 引数で返すオブジェクト内にモック関数を明示的に定義することで、Prisma Client の複雑な型と型アサーションエラーを回避しやすくなります。
+- 特に `Prisma Client` のような自動生成された型は、モジュールの構造が複雑なため、暗黙的なモックが失敗しやすいです。
+
+### モック関数の呼び出し履歴を検証する場合
+
+```typescript
+import { useRouter } from "next/navigation";
+
+jest.mock("next/navigation");
+
+test("should navigate to /exam/take", () => {
+  (useRouter as jest.Mock).mockReturnValue({ push: jest.fn() });
+
+  const router = useRouter();
+  router.push("/exam/take");
+
+  // push 関数が "/exam/take" を引数に呼び出されたことを確認します
+  expect(router.push).toHaveBeenCalledWith("/exam/take");
+});
+```
+
+- `useRouter` はモック化されると `jest.fn()` によって関数として差し替えられるため、戻り値として返すオブジェクト（この例では `router`）にも、テストで使う関数（例: `push`）を `jest.fn()` で用意しておく必要があります。
+- `jest.fn()` によって作られたモック関数には、呼び出し回数や引数などの呼び出し履歴が自動で記録されるため、`expect(...).toHaveBeenCalledWith(...)` を使って、指定された引数で関数が呼び出されたかどうかを検証できます。
+
+### モック関数の呼び出し履歴をリセットする場合
+
+```typescript
+// モック関数を個別に呼び出し履歴をリセットする場合
+// モック関数.mockClear(); という形で呼び出す。
+router.push.mockClear();
+
+または
+
+// すべてのモック関数の呼び出し履歴をリセットする場合
+jest.clearAllMocks();
+```
+
+- 1 つのテスト内でモック関数の呼び出し検証が 1 回だけの場合、呼び出し履歴のクリアは不要です。
+- 同じテスト関数内で同じモック関数を複数回呼び出して検証する場合は、途中で履歴をクリアする必要があるケースがあります。
+- テスト関数が異なってもモック関数の呼び出し履歴は引き継がれるため、テストごとに履歴をリセットしたい場合は `beforeEach` でクリアするのが一般的です。
+- 呼び出し履歴をまとめてクリアするには `jest.clearAllMocks()` を使います。これは履歴のみをクリアし、モックの実装は維持されます。
+- モック関数の実装も含めてリセットしたい場合は `jest.resetAllMocks()` を使います。
+
+### 特定の関数を spy して挙動を一時的に上書きする場合
+
+テスト中に `console.error` などのグローバル関数が呼ばれると、テストの実行結果にエラーメッセージが表示されてしまうことがあります。  
+これは視認性が下がるだけでなく、エラーかどうかを判別しにくくなるため、テストの実行時には 一時的に spy して何も出力しないようにするのが一般的です。
+
+```typescript
+test("テスト中にconsole.errorを実行してもエラーが出力されない", () => {
+  const errorSpy = jest.spyOn(console, "error").mockImplementation(() => {});
+
+  // ここで console.error を呼び出しても、実際には何も出力されない
+  console.error("これは表示されない");
+
+  // 必要なテスト処理...
+
+  // spy を解除して元の実装に戻す
+  errorSpy.mockRestore();
+});
+```
+
+- `jest.spyOn(obj, "method")` は、対象のオブジェクトのメソッドに対して **呼び出し監視や上書き** を行うことができます。
+- `.mockImplementation(fn)` を使うことで、元の関数の代わりに任意の処理（例：何もしない）を差し込めます。
+- テスト後は `.mockRestore()` を呼び出して spy の効果を元に戻すのが推奨されます。
+  - **spy の効果は `test()` 間でも引き継がれるため、他のテストに影響を与えないよう明示的にリセットしておくことが重要です。**
+
+> **使い分けの判断基準としては、**
+> - グローバル関数をモックや監視するときは、`jest.spyOn` で一時的に差し替え、あとで元に戻す。
+> - 単純に関数を置き換えっぱなしにしたい（元に戻さなくて良い）場合は `jest.fn()` を使う。
