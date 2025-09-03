@@ -24,24 +24,17 @@ jest.mock("next/navigation");
 
 describe("StartExamButton.tsx", () => {
     describe("StartExamButton", () => {
-        let mockPush: jest.Mock;
-        let mTest: MTest;
+        const testId = 1;
 
-        beforeAll(() => {
+        beforeEach(() => {
             // コンポーネント呼び出し直後にuseRouterを使用しているため、その前にモックを定義する必要がある
-            mockPush = jest.fn();
-            (useRouter as jest.Mock).mockReturnValue({ push: mockPush });
-        });
-
-        beforeAll(() => {
-            // mockPushの呼び出し履歴をクリア
-            mockPush.mockClear();
+            (useRouter as jest.Mock).mockReturnValue({ push: jest.fn() });
         });
 
         describe("試験実施期間中・未受験", () => {
             beforeEach(() => {
-                mTest = {
-                    id: 1,
+                const mTest: MTest = {
+                    id: testId,
                     name: "2025年度 Pマーク試験",
                     startAt: new Date("1900-01-01T00:00:00Z"),
                     endAt: new Date("2100-12-31T23:59:59Z"),
@@ -65,7 +58,7 @@ describe("StartExamButton.tsx", () => {
                 const mTestQuestions: MTestQuestion[] = [
                     {
                         id: 1,
-                        testId: 1,
+                        testId,
                         questionNo: 1,
                         question: "問題1",
                         commentary: "解説1",
@@ -76,7 +69,7 @@ describe("StartExamButton.tsx", () => {
                     },
                     {
                         id: 2,
-                        testId: 1,
+                        testId,
                         questionNo: 2,
                         question: "問題2",
                         commentary: "解説2",
@@ -97,11 +90,11 @@ describe("StartExamButton.tsx", () => {
                 await userEvent.click(button);
 
                 // 正しい引数でサーバアクションが呼ばれたことを確認
-                expect(startAction).toHaveBeenCalledWith(mTest.id);
+                expect(startAction).toHaveBeenCalledWith(testId);
 
                 // セッションストレージに保存されたデータ構造を確認
                 const examData: ExamData = {
-                    testId: mTest.id,
+                    testId,
                     testCnt: 1,
                     questions: [{ questionNo: 1, question: "問題1" }, { questionNo: 2, question: "問題2" }],
                     answers: [],
@@ -111,7 +104,8 @@ describe("StartExamButton.tsx", () => {
                 expect(sessionStorageSpy).toHaveBeenCalledWith(SESSION_STORAGE_EXAM_DATA_KEY, JSON.stringify(examData));
 
                 // 試験画面への遷移が実行されたか確認
-                expect(mockPush).toHaveBeenCalledWith("/exam/take");
+                const router = useRouter();
+                expect(router.push).toHaveBeenCalledWith("/exam/take");
 
                 // スパイの解除
                 sessionStorageSpy.mockRestore();
@@ -142,7 +136,7 @@ describe("StartExamButton.tsx", () => {
         describe("試験実施期間中・未合格", () => {
             beforeEach(() => {
                 const mTest: MTest = {
-                    id: 1,
+                    id: testId,
                     name: "2025年度 Pマーク試験",
                     startAt: new Date("1900-01-01T00:00:00Z"),
                     endAt: new Date("2100-12-31T23:59:59Z"),
@@ -155,7 +149,7 @@ describe("StartExamButton.tsx", () => {
                 const tTest: TTest = {
                     id: 1,
                     employeeId: 1,
-                    testId: 1,
+                    testId,
                     testCnt: 1,
                     correctNum: 6,
                     result: TestResult.Fail,
@@ -177,7 +171,7 @@ describe("StartExamButton.tsx", () => {
         describe("試験実施期間中・合格済", () => {
             beforeEach(() => {
                 const mTest: MTest = {
-                    id: 1,
+                    id: testId,
                     name: "2025年度 Pマーク試験",
                     startAt: new Date("1900-01-01T00:00:00Z"),
                     endAt: new Date("2100-12-31T23:59:59Z"),
@@ -190,7 +184,7 @@ describe("StartExamButton.tsx", () => {
                 const tTest: TTest = {
                     id: 1,
                     employeeId: 1,
-                    testId: 1,
+                    testId,
                     testCnt: 1,
                     correctNum: 10,
                     result: TestResult.Pass,

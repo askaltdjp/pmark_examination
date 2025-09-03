@@ -1,6 +1,6 @@
 import { MTest } from ".prisma/client_master";
 import { masterPrisma } from "@/lib/prisma/masterPrisma";
-import { currentJST } from "../../utils/timeUtils";
+import { currentJST } from "@/lib/utils/timeUtils";
 
 /**
  * MTestモデルのデータ操作を行うリポジトリクラス
