@@ -1,11 +1,26 @@
 "use client";
 
-import { ArrowRightStartOnRectangleIcon } from '@heroicons/react/24/outline'
+import { useRouter } from "next/navigation";
+import { ArrowRightStartOnRectangleIcon } from "@heroicons/react/24/outline";
+import { logoutAction } from "@/app/actions/auth/logoutAction";
 
+/**
+ * 認証後画面の共通ヘッダーのクライアントコンポーネント
+ */
 export default function Header() {
+    const router = useRouter();
+
+    // ログアウトボタン押下時の処理
+    const handleLogoutButtonClick = async () => {
+        // ログアウト処理の実行
+        await logoutAction();
+        // ログイン画面に遷移
+        router.push("/auth/login");
+    };
+
     return (
         <header className="flex justify-end h-13 grid grid-cols-3 items-center justify-end border-b border-sky-700 bg-sky-700 text-white">
-            
+
             {/* 左側（なし） */}
             <div></div>
 
@@ -16,7 +31,10 @@ export default function Header() {
 
             {/* 右側（ログアウトボタン） */}
             <div className="flex justify-end pr-3">
-                <button className="btn btn-sm border-slate-500 bg-slate-600 hover:bg-slate-500 text-white">
+                <button
+                    className="btn btn-sm border-slate-500 bg-slate-600 hover:bg-slate-500 text-white"
+                    onClick={handleLogoutButtonClick}
+                >
                     <ArrowRightStartOnRectangleIcon className="w-5 h-5" />
                     ログアウト
                 </button>

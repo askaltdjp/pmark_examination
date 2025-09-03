@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { verifyJwt } from '@/lib/utils/authUtils';
-import { AUTH_TOKEN_COOKIE_NAME, LOGIN_ID_HEADER } from "@/lib/constants";
+import { AUTH_TOKEN_COOKIE_NAME, LOGIN_ID_HEADER } from "@/lib/definitions/system";
 
 /**
  * 認証用ミドルウェア関数
@@ -29,7 +29,7 @@ export async function authMiddleware(request: NextRequest): Promise<NextResponse
         return redirectToLogin(request);
     }
 
-    // 認証成功時はレスポンスヘッダーに employeeId をセットしリクエストを続行
+    // 認証成功時はレスポンスヘッダーに loginId をセットしリクエストを続行
     const response = NextResponse.next();
     response.headers.set(LOGIN_ID_HEADER, String(payload.loginId));
     return response;

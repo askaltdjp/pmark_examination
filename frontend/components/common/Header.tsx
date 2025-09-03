@@ -1,7 +1,6 @@
 "use client";
 
 import { useRouter, usePathname } from "next/navigation";
-import { SITE_TITLE } from "@/lib/definitions/labels";
 import { ArrowRightStartOnRectangleIcon } from "@heroicons/react/24/outline";
 import { logoutAction } from "@/app/actions/auth/logoutAction";
 
@@ -33,7 +32,7 @@ export default function Header() {
         <header className="fixed top-0 left-0 w-full h-14 z-50 bg-[#1a0f2c] text-white shadow-md px-4 flex items-center justify-center">
             <div className="flex-1" /> {/* 左側の空き */}
             <div className="flex-none">
-                <h1 className="text-xl font-bold text-center">{SITE_TITLE}</h1>
+                <h1 className="text-xl font-bold text-center">Pマーク 教育テスト</h1>
             </div>
             {/* 右側はボタンの有無にかかわらずflex-1で空き確保 */}
             <div className="flex-1 flex justify-end">

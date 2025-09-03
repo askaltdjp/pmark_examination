@@ -2,12 +2,13 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { loginAction } from "@/app/actions/auth/loginAction";
 
 // ログインフォームコンポーネント
 export default function LoginForm() {
     const router = useRouter();
 
-    // 入力されたメールアドレスとパスワードの状態を管理
+    // 入力されたログインIDとパスワードの状態を管理
     const [loginId, setLoginId] = useState("");
     const [password, setPassword] = useState("");
 
@@ -19,19 +20,16 @@ export default function LoginForm() {
         e.preventDefault();
         setErrorMessage("");
 
-        // 認証APIにPOSTリクエストを送信
-        const res = await fetch("/api/auth/login", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ loginId, password }),
-        });
-
-        // 認証成功時はダッシュボードへ遷移
-        if (res.ok) {
+        try {
+            // ユーザ認証の実行
+            await loginAction(loginId, password);
+            // 認証成功時はダッシュボードへ遷移
             router.push("/exam/list");
-        } else {
-            // 認証失敗時はエラーメッセージを表示
-            setErrorMessage("メールアドレスまたはパスワードが間違っています。");
+        } catch (error) {
+            // エラーをコンソールに出力
+            console.error("ユーザ認証エラー:", error);
+            // ユーザにエラーメッセージを表示
+            setErrorMessage("ログインIDまたはパスワードが間違っています。");
         }
     };
 

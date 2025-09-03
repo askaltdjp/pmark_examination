@@ -1,8 +1,8 @@
-// サイトのタイトル
-export const SITE_TITLE = "Pマーク 教育テスト";
+// ブラウザのタブなどに表示されるHTMLタイトル用
+export const HTML_TITLE = "Pマーク 教育テスト";
 
 // サイトの説明文
-export const SITE_DESCRIPTION = "個人情報保護（Pマーク）に関する理解度を測るWEB教育テストです。従業員の知識向上と社内の情報管理体制強化を目的としています。";
+export const HTML_DESCRIPTION = "個人情報保護（Pマーク）に関する理解度を測るWEB教育テストです。従業員の知識向上と社内の情報管理体制強化を目的としています。";
 
 // 合否ステータスの定義
 export const TestResult = {

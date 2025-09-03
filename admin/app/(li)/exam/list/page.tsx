@@ -1,5 +1,7 @@
-import LoginForm from "@/components/auth/login/LoginForm";
-import Breadcrumb from "@/components/common/Breadcrumb";
+import CreateButton from "@/components/exam/list/CreateButton"
+import DeleteButton from "@/components/exam/list/DeleteButton";
+import StatusButton from "@/components/exam/list/StatusButton";
+import UpdateButton from "@/components/exam/list/UpdateButton";
 
 /**
  * 試験管理一覧のサーバコンポーネント
@@ -39,15 +41,12 @@ export default function LoginPage() {
                                         <td className="text-center">2025/01/31</td>
                                         <td className="text-center">31/31</td>
                                         <td className="text-center">
-                                            <button className="btn btn-sm border-slate-500 bg-slate-600 hover:bg-slate-500 text-white mx-1">
-                                                変更
-                                            </button>
-                                            <button className="btn btn-sm border-slate-500 bg-slate-600 hover:bg-slate-500 text-white mx-1">
-                                                状況
-                                            </button>
-                                            <button className="btn btn-sm border-slate-500 bg-slate-600 hover:bg-slate-500 text-white mx-1">
-                                                削除
-                                            </button>
+                                            {/* 変更ボタン */}
+                                            <UpdateButton />
+                                            {/* 状況ボタン */}
+                                            <StatusButton />
+                                            {/* 削除ボタン */}
+                                            <DeleteButton />
                                         </td>
                                     </tr>
                                 ))}
@@ -57,13 +56,8 @@ export default function LoginPage() {
                 </div>
             </div>
 
-            <div className="flex justify-center">
-                <div className="w-[90%] text-right py-3">
-                    <button className="btn border-slate-500 bg-slate-600 hover:bg-slate-500 text-white mx-1">
-                        新規登録
-                    </button>
-                </div>
-            </div>
+            {/* 新規登録 */}
+            <CreateButton />
         </div>
     );
 }

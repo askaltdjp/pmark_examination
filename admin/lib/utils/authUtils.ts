@@ -1,4 +1,5 @@
 import { SignJWT, jwtVerify, type JWTPayload } from 'jose';
+import { AUTH_TOKEN_COOKIE_MAX_AGE } from '@/lib/definitions/system';
 
 const JWT_SECRET_KEY = process.env.JWT_SECRET || 'your-secret-key';
 const JWT_SECRET = new TextEncoder().encode(JWT_SECRET_KEY);
@@ -14,9 +15,9 @@ export interface JwtPayload extends JWTPayload {
 /**
  * JWT を発行する
  * @param payload - { loginId: string } を含むオブジェクト
- * @param expiresIn - 有効期限（秒）。デフォルトは3600（1時間）
+ * @param expiresIn - 有効期限（秒）。
  */
-export async function signJwt(payload: JwtPayload, expiresIn: number = 3600): Promise<string> {
+export async function signJwt(payload: JwtPayload, expiresIn: number = AUTH_TOKEN_COOKIE_MAX_AGE): Promise<string> {
     const now = Math.floor(Date.now() / 1000);
     const exp = now + expiresIn;
 
