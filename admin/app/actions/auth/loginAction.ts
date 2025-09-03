@@ -1,6 +1,6 @@
 "use server";
 
-import { authenticateEmployee } from "@/services/api/auth/loginService";
+import { authenticateEmployee } from "@/services/actions/auth/loginService";
 import { cookies } from 'next/headers'
 import { AUTH_TOKEN_COOKIE_NAME, AUTH_TOKEN_COOKIE_MAX_AGE } from "@/lib/definitions/system";
 
