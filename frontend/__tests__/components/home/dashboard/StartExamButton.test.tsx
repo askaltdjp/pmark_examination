@@ -18,11 +18,15 @@ import { SESSION_STORAGE_EXAM_DATA_KEY } from "@/lib/definitions/system";
 // 固定された日時（全テストで共通に使用）
 const fixedDate = new Date("2025-08-29T11:01:20Z");
 
-// モックの宣言（StartExamButtonの依存モジュール）
+// モック化（StartExamButtonの依存モジュール）
 jest.mock("@/app/actions/exam/startAction");
 jest.mock("next/navigation");
 
 describe("StartExamButton.tsx", () => {
+    beforeEach(() => {
+        jest.resetAllMocks();
+    });
+
     describe("StartExamButton", () => {
         const testId = 1;
 
@@ -215,6 +219,5 @@ describe("StartExamButton.tsx", () => {
                 expect(button).toBeDisabled();
             });
         });
-
     });
 });

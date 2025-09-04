@@ -17,14 +17,16 @@ import { useRouter } from "next/navigation";
 // 固定された日時（全テストで共通に使用）
 const fixedDate = new Date("2025-08-29T11:01:20Z");
 
-// モックの宣言（DashBoardPageの依存モジュール）
+// モック化（DashBoardPageの依存モジュール）
 jest.mock("next/headers");
 jest.mock("@/lib/utils/employeeUtils");
 jest.mock("next/navigation");
 jest.mock("@/services/web/home/dashboardService");
 
 describe("page.tsx", () => {
-    beforeAll(() => {
+    beforeEach(() => {
+        jest.resetAllMocks();
+
         (headers as jest.Mock).mockResolvedValue({});
         const tEmployee: TEmployee = {
             id: 1,
@@ -42,7 +44,6 @@ describe("page.tsx", () => {
     });
 
     describe("DashBoardPage", () => {
-
         describe("試験実施期間中・未合格", () => {
             beforeEach(async () => {
                 // dashboardService用のモックデータ作成
@@ -253,6 +254,5 @@ describe("page.tsx", () => {
                 expect(button).toBeDisabled();
             });
         });
-
     });
 });

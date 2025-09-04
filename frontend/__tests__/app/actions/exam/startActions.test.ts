@@ -8,12 +8,16 @@ import { startAction } from "@/app/actions/exam/startAction";
 // 固定された日時（全テストで共通に使用）
 const fixedDate = new Date("2025-08-29T11:01:20Z");
 
-// モックの宣言（startActionの依存モジュール）
+// モック化（startActionの依存モジュール）
 jest.mock("next/headers");
 jest.mock("@/lib/utils/employeeUtils");
 jest.mock("@/services/actions/exam/startService");
 
 describe("startActions.ts", () => {
+    beforeEach(() => {
+        jest.resetAllMocks();
+    });
+
     describe("startAction", () => {
         test("試験開始用のデータを返却する", async () => {
             // モックの定義
@@ -68,6 +72,5 @@ describe("startActions.ts", () => {
         test("試験IDが提供されていない場合に例外が発生する", async () => {
             await expect(startAction(0)).rejects.toThrow("試験IDが提供されていません");
         });
-
     });
 });

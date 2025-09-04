@@ -11,7 +11,7 @@ import { TestResult } from "@/lib/definitions/labels";
 // 固定された日時（全テストで共通に使用）
 const fixedDate = new Date("2025-08-29T11:01:20Z");
 
-// モックの宣言（startServiceの依存モジュール）
+// モック化（startServiceの依存モジュール）
 jest.mock("@/lib/repositories/master/mTestRepository");
 jest.mock("@/lib/repositories/transaction/tTestRepository");
 jest.mock("@/lib/repositories/master/mTestQuestionRepository");
@@ -23,8 +23,11 @@ jest.mock("@/lib/prisma/transactionPrisma", () => ({
 }));
 
 describe("startService.ts", () => {
-    describe("startService", () => {
+    beforeEach(() => {
+        jest.resetAllMocks();
+    });
 
+    describe("startService", () => {
         test("試験開始用のデータを返却する", async () => {
             const testId = 1;
             const questionNum = 10;
@@ -54,9 +57,9 @@ describe("startService.ts", () => {
             }));
             (MTestQuestionRepository.findAllByTestId as jest.Mock).mockResolvedValue(mTestQuestions);
             (TTestRepository.findMaxTestCntByEmployeeIdAndTestId as jest.Mock).mockResolvedValue(0);
+            const txObj = { test: "test" };
             (transactionPrisma.$transaction as jest.Mock).mockImplementation(async (callback) => {
-                const tx = {};
-                await callback(tx);
+                await callback(txObj);
             });
 
             const employeeId = 1;
@@ -66,7 +69,7 @@ describe("startService.ts", () => {
                 employeeId,
                 testId,
                 1,
-                {},
+                txObj,
             );
             expect(result.mTestQuestions).toHaveLength(questionNum); // 厳密な検証ではない
             expect(result.testCnt).toBe(1); // 初回受験
@@ -146,6 +149,5 @@ describe("startService.ts", () => {
 
             await expect(startService(employeeId, testId)).rejects.toThrow(`合格した試験は開始できません。[employeeId=${employeeId}] [testId=${testId}]`);
         });
-
     });
 });

@@ -6,7 +6,7 @@ import { currentJST } from "@/lib/utils/timeUtils";
 // 固定された日時（全テストで共通に使用）
 const fixedDate = new Date("2025-08-29T11:01:20Z");
 
-// モックの宣言（MTestRepositoryの依存モジュール）
+// モック化（MTestRepositoryの依存モジュール）
 jest.mock("@/lib/prisma/masterPrisma", () => ({
     masterPrisma: {
         mTest: {
@@ -17,8 +17,11 @@ jest.mock("@/lib/prisma/masterPrisma", () => ({
 jest.mock("@/lib/utils/timeUtils");
 
 describe("mTestRepository.ts", () => {
-    describe("MTestRepository", () => {
+    beforeEach(() => {
+        jest.resetAllMocks();
+    });
 
+    describe("MTestRepository", () => {
         describe("findById", () => {
             test("m_testにidに相当するレコードが存在すれば、MTestオブジェクトを返却する", async () => {
                 const id = 1;
@@ -43,7 +46,7 @@ describe("mTestRepository.ts", () => {
                         deleteAt: null,
                     },
                 });
-                expect(result).toBe(mTest);
+                expect(result).toEqual(mTest);
             });
 
             test("m_testにidに相当するレコードが存在しなければ、nullを返却する", async () => {
@@ -87,7 +90,7 @@ describe("mTestRepository.ts", () => {
                         deleteAt: null,
                     },
                 });
-                expect(result).toBe(mTest);
+                expect(result).toEqual(mTest);
             });
 
             test("開催中の試験が存在しなければ、nullを返却する", async () => {
@@ -106,6 +109,5 @@ describe("mTestRepository.ts", () => {
                 expect(result).toBeNull();
             });
         });
-
     });
 });
