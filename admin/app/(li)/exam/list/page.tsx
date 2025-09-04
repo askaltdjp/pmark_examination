@@ -2,11 +2,19 @@ import CreateButton from "@/components/exam/list/CreateButton"
 import DeleteButton from "@/components/exam/list/DeleteButton";
 import StatusButton from "@/components/exam/list/StatusButton";
 import UpdateButton from "@/components/exam/list/UpdateButton";
+import { formatDate } from "@/lib/utils/timeUtils";
+import { withRedirectErrorHandler } from "@/lib/utils/withRedirectErrorHandler";
+import { listService } from "@/services/web/exam/listService";
 
 /**
  * 試験管理一覧のサーバコンポーネント
  */
-export default function LoginPage() {
+export default async function LoginPage() {
+    const { mTests, testSummary } = await withRedirectErrorHandler(async () => {
+        // 試験一覧と各試験の集計結果を取得
+        return await listService();
+    });
+
     return (
         /* ヘッダー分だけ高さを調整（モバイル対応） */
         <div className="h-[calc(100vh-116px)] lg:h-[calc(100vh-52px)] flex flex-col justify-start bg-base-200">
@@ -28,28 +36,32 @@ export default function LoginPage() {
                                     <th>試験名</th>
                                     <th className="w-28">開始日</th>
                                     <th className="w-28">終了日</th>
-                                    <th className="w-25">合格者数</th>
-                                    <th className="w-52">操作</th>
+                                    <th className="w-12">受験者数</th>
+                                    <th className="w-12">合格者数</th>
+                                    <th className="w-53">操作</th>
                                 </tr>
                             </thead>
                             <tbody className="bg-white">
-                                {Array.from({ length: 50 }).map((_, i) => (
-                                    <tr key={i} className="text-gray-600">
-                                        <td className="text-center">{i + 1}</td>
-                                        <td>試験名 {i + 1}</td>
-                                        <td className="text-center">2025/01/01</td>
-                                        <td className="text-center">2025/01/31</td>
-                                        <td className="text-center">31/31</td>
-                                        <td className="text-center">
-                                            {/* 変更ボタン */}
-                                            <UpdateButton />
-                                            {/* 状況ボタン */}
-                                            <StatusButton />
-                                            {/* 削除ボタン */}
-                                            <DeleteButton />
-                                        </td>
-                                    </tr>
-                                ))}
+                                {mTests.map((mTest, i) => {
+                                    return (
+                                        <tr key={i} className="text-gray-600">
+                                            <td className="text-center">{i + 1}</td>
+                                            <td>{mTest.name}</td>
+                                            <td className="text-center">{formatDate(mTest.startAt, "YYYY/MM/DD")}</td>
+                                            <td className="text-center">{formatDate(mTest.endAt, "YYYY/MM/DD")}</td>
+                                            <td className="text-center">{testSummary[mTest.id]?.examineeNum ?? 0}</td>
+                                            <td className="text-center">{testSummary[mTest.id]?.passerNum ?? 0}</td>
+                                            <td className="text-center">
+                                                {/* 変更ボタン */}
+                                                <UpdateButton />
+                                                {/* 状況ボタン */}
+                                                <StatusButton />
+                                                {/* 削除ボタン */}
+                                                <DeleteButton mTest={mTest} />
+                                            </td>
+                                        </tr>
+                                    );
+                                })}
                             </tbody>
                         </table>
                     </div>
