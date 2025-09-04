@@ -1,12 +1,12 @@
-import CreateButton from "@/components/exam/list/CreateButton"
+import AddButton from "@/components/exam/list/AddButton"
 import ExamListTable from "@/components/exam/list/ExamListTable";
 import { withRedirectErrorHandler } from "@/lib/utils/withRedirectErrorHandler";
 import { listService } from "@/services/web/exam/listService";
 
 /**
- * 試験管理一覧のサーバコンポーネント
+ * 試験管理 - 一覧画面のサーバコンポーネント
  */
-export default async function LoginPage() {
+export default async function ListPage() {
     const { mTests, testSummary } = await withRedirectErrorHandler(async () => {
         // 試験一覧と各試験の集計結果を取得
         return await listService();
@@ -26,8 +26,8 @@ export default async function LoginPage() {
             {/* 試験一覧（テーブル） */}
             <ExamListTable mTests={mTests} testSummary={testSummary} />
 
-            {/* 新規登録 */}
-            <CreateButton />
+            {/* 新規登録ボタン */}
+            <AddButton />
         </div>
     );
 }

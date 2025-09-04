@@ -5,7 +5,7 @@ import { TestSummaryRecord } from "@/lib/definitions/types";
 import { formatDate } from "@/lib/utils/timeUtils";
 import DeleteButton from "@/components/exam/list/DeleteButton";
 import StatusButton from "@/components/exam/list/StatusButton";
-import UpdateButton from "@/components/exam/list/UpdateButton";
+import EditButton from "@/components/exam/list/EditButton";
 import { deleteAction } from "@/app/actions/exam/deleteAction";
 import { useState } from "react";
 
@@ -70,7 +70,7 @@ export default function ExamListTable({
                                         <td className="text-center">{testSummary[mTest.id]?.passerNum ?? 0}</td>
                                         <td className="text-center">
                                             {/* 変更ボタン */}
-                                            <UpdateButton />
+                                            <EditButton testId={mTest.id} />
                                             {/* 状況ボタン */}
                                             <StatusButton />
                                             {/* 削除ボタン */}
