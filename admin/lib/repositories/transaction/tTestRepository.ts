@@ -1,5 +1,7 @@
+import { Prisma } from ".prisma/client_transaction";
 import { TestSummaryRecord } from "@/lib/definitions/types";
 import { transactionPrisma } from "@/lib/prisma/transactionPrisma";
+import { currentJST } from "@/lib/utils/timeUtils";
 
 /**
  * TTestモデルのデータ操作を行うリポジトリクラス
@@ -30,5 +32,23 @@ export class TTestRepository {
             acc[cur.testId] = { examineeNum: cur.examineeNum, passerNum: cur.passerNum };
             return acc;
         }, {});
+    }
+
+    /**
+     * 指定された testId に一致する TTest レコードを論理削除する
+     * 
+     * @param testId - 論理削除対象の testId
+     * @param tx - トランザクションオブジェクト
+     */
+    static async deleteByTestId(testId: number, tx: Prisma.TransactionClient): Promise<void> {
+        const now = currentJST();
+
+        await tx.tTest.updateMany({
+            where: { testId },
+            data: {
+                deleteAt: now,
+                updateAt: now,
+            },
+        });
     }
 }

@@ -33,6 +33,6 @@ export async function saveAction(
         throw new Error("解答情報が提供されていません。");
     }
 
-    // 試験解答結果の保存を実行
+    // 試験解答結果を保存
     await saveService(tEmployee.id, testId, testCnt, answers);
 }

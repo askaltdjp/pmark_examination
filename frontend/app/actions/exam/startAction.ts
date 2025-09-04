@@ -22,9 +22,6 @@ export async function startAction(
     const requestHeaders = await headers();
     const tEmployee = await getEmployeeFromRequest(requestHeaders);
 
-    // 受験履歴を新規作成して、対象の試験問題マスタと受験回数を取得
-    const { mTestQuestions, testCnt } = await startService(tEmployee.id, testId);
-
-    // 取得したデータを返却
-    return { mTestQuestions, testCnt };
+    // 受験履歴を新規作成して、対象の試験問題マスタと受験回数を返却
+    return await startService(tEmployee.id, testId);
 }
