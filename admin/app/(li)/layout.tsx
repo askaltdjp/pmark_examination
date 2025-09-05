@@ -1,5 +1,3 @@
-"use client";
-
 import SideMenu from "@/components/common/SideMenu";
 import Header from "@/components/common/Header";
 import Breadcrumb from "@/components/common/Breadcrumb";
