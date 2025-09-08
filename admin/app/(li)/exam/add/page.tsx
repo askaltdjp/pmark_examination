@@ -1,7 +1,7 @@
 import ExamClientWrapper from "@/components/exam/add/ExamClientWrapper";
 
 /**
- * 試験管理 - 登録画面のサーバコンポーネント
+ * 試験管理 > 登録画面のサーバコンポーネント
  */
 export default async function AddPage() {
     return (

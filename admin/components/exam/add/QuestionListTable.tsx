@@ -7,7 +7,7 @@ export default function QuestionListTable() {
     return (
         <div className="bg-white p-3 rounded-xl shadow-md w-full text-gray-800 overflow-x-auto mb-4">
             <table className="table table-zebra w-full border border-gray-300 border-collapse text-gray-700 text-[15px]">
-                <thead className="bg-gray-800 text-gray-300">
+                <thead className="bg-gray-700 text-gray-300">
                     <tr>
                         <th className="text-center w-12 py-2">No</th>
                         <th className="text-center py-2">問題文</th>

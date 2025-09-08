@@ -4,7 +4,7 @@ import { withRedirectErrorHandler } from "@/lib/utils/withRedirectErrorHandler";
 import { listService } from "@/services/web/exam/listService";
 
 /**
- * 試験管理 - 一覧画面のサーバコンポーネント
+ * 試験管理 > 一覧画面のサーバコンポーネント
  */
 export default async function ListPage() {
     const { mTests, testSummary } = await withRedirectErrorHandler(async () => {
