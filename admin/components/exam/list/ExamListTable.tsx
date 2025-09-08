@@ -43,7 +43,7 @@ export default function ExamListTable({
     };
 
     return (
-        <div className="flex justify-center h-[75%]">
+        <div className="flex justify-center max-h-[70vh]">
             <div className="w-[90%] p-3 bg-white shadow rounded">
                 <div className="h-full overflow-y-auto">
                     <table className="table table-zebra w-full">
