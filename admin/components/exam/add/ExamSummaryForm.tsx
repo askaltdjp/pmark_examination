@@ -5,7 +5,7 @@
  */
 export default function ExamSummaryForm() {
     return (
-        <div className="bg-white p-4 rounded-xl shadow-md w-full text-gray-800 mb-4">
+        <div className="bg-white p-3 rounded-xl shadow-md w-full text-gray-800 mb-4">
             <table className="table w-full border border-white border-collapse">
                 <tbody>
                     {/* 1行目 */}

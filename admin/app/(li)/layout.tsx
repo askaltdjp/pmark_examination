@@ -5,7 +5,7 @@ import Breadcrumb from "@/components/common/Breadcrumb";
 export default function LoginLayout({ children }: { children: React.ReactNode }) {
 
     return (
-        <main>
+        <main className="bg-base-200">
             <div className="drawer lg:drawer-open">
                 {/* トグルボタン (モバイル向け) */}
                 <input id="my-drawer" type="checkbox" className="drawer-toggle" />
