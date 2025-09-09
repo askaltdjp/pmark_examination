@@ -21,11 +21,11 @@ export async function resultService(
     testId: number,
     testCnt: number
 ): Promise<{
-    mTest: MTest,
-    mTestQuestionMap: Record<number, MTestQuestion>,
-    tTest: TTest,
-    tTestAnswers: TTestAnswer[],
-    isPass: boolean
+    mTest: MTest;
+    mTestQuestionMap: Record<number, MTestQuestion>;
+    tTest: TTest;
+    tTestAnswers: TTestAnswer[];
+    isPass: boolean;
 }> {
     // 試験IDに基づいて試験マスタを取得
     const mTest = await MTestRepository.findById(testId);

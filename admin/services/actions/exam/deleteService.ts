@@ -22,12 +22,12 @@ import { TTestAnswerRepository } from "@/lib/repositories/transaction/tTestAnswe
  * @param testId - 削除対象の試験ID
  */
 export async function deleteService(testId: number): Promise<void> {
+    // FIXME: 複数DBを跨いだ厳密なトランザクション制御が必要
     // pme_masterのトランザクション処理
     await masterPrisma.$transaction(async (tx) => {
         await MTestRepository.deleteById(testId, tx);
         await MTestQuestionRepository.deleteByTestId(testId, tx);
     });
-
     // pme_transactionのトランザクション処理
     await transactionPrisma.$transaction(async (tx) => {
         await TTestRepository.deleteByTestId(testId, tx);

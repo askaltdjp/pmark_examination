@@ -103,22 +103,18 @@ export class TTestRepository {
      * @param employeeId - 社員ID
      * @param testId - 試験ID
      * @param testCnt - 受験回数
-     * @param tx - トランザクションオブジェクト（オプション）
+     * @param tx - トランザクションオブジェクト
      * @returns 作成した TTest レコード
-     * 
-     * トランザクション内で使用する場合、`tx` パラメータを指定してください。
-     * 指定しない場合、`transactionPrisma` がデフォルトで使用されます。
      */
     static async createTTest(
         employeeId: number,
         testId: number,
         testCnt: number,
-        tx?: Prisma.TransactionClient
+        tx: Prisma.TransactionClient
     ): Promise<TTest> {
-        const prisma = tx || transactionPrisma;
         const now = currentJST();
 
-        const tTest = await prisma.tTest.create({
+        const tTest = await tx.tTest.create({
             data: {
                 employeeId,
                 testId,
@@ -140,21 +136,17 @@ export class TTestRepository {
      * @param id - 更新対象の TTest レコードのID
      * @param correctNum - 正解数
      * @param result - 試験結果（TestResult enum を参照）
-     * @param tx - トランザクションオブジェクト（オプション）
-     *
-     * トランザクション内で使用する場合は `tx` を指定してください。
-     * 指定しない場合は `transactionPrisma` が使用されます。
+     * @param tx - トランザクションオブジェクト
      */
     static async updateCorrectNumAndResult(
         id: number,
         correctNum: number,
         result: number,
-        tx?: Prisma.TransactionClient
+        tx: Prisma.TransactionClient
     ): Promise<void> {
-        const prisma = tx || transactionPrisma;
         const now = currentJST();
 
-        await prisma.tTest.update({
+        await tx.tTest.update({
             where: {
                 id,
             },

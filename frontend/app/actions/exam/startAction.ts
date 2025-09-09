@@ -13,8 +13,8 @@ import { startService } from "@/services/actions/exam/startService";
 export async function startAction(
     testId: number
 ): Promise<{ mTestQuestions: MTestQuestion[]; testCnt: number }> {
-    // 試験IDがない場合はエラー
-    if (!testId) {
+    // 試験IDの入力チェック
+    if (testId === 0) {
         throw new Error("試験IDが提供されていません。");
     }
 

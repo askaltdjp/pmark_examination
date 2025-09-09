@@ -6,7 +6,7 @@ import { withRedirectErrorHandler } from "@/lib/utils/withRedirectErrorHandler";
 import HomeButton from "@/components/exam/result/HomeButton";
 
 type Props = {
-    searchParams: { [key: string]: string | string[] | undefined }
+    searchParams: { [key: string]: string | string[] | undefined };
 }
 
 /**

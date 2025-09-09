@@ -1,27 +1,13 @@
 import { DocumentDuplicateIcon, UsersIcon } from '@heroicons/react/24/outline';
 import { DocumentPlusIcon, DocumentTextIcon, DocumentChartBarIcon } from '@heroicons/react/24/outline';
 import { UserPlusIcon, UserIcon } from '@heroicons/react/24/outline';
-import { FC, SVGProps } from 'react';
+import { PageType } from '@/lib/definitions/types';
 
 // ブラウザのタブなどに表示されるHTMLタイトル用
 export const HTML_TITLE = "Pマーク 教育テスト | 管理画面";
 
 // サイトの説明文
 export const HTML_DESCRIPTION = "Pマーク（個人情報保護）WEB教育テストの受講状況や成績を一元管理できる管理者用画面です。受講者の進捗確認、結果の確認、アカウント管理などを通じて、社内の情報管理体制の強化と教育の継続的改善をサポートします。";
-
-// SVGアイコン用の型定義
-export type IconType = FC<SVGProps<SVGSVGElement>>;
-
-// ページ情報の型定義
-export type PageType = Record<
-    string,
-    {
-        label: string;
-        basePath: string;
-        icon: IconType;
-        actions: Record<string, { label: string, icon: IconType }>;
-    }
->;
 
 // ページごとの設定データ
 export const pageMap: PageType = {

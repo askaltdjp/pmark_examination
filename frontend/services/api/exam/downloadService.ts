@@ -23,7 +23,10 @@ export async function downloadService(
     tEmployee: TEmployee,
     testId: number,
     testCnt: number,
-): Promise<{ buffer: ArrayBuffer, fileName: string }> {
+): Promise<{
+    buffer: ArrayBuffer;
+    fileName: string;
+}> {
     // Excelに書き込む最大の問題数
     const MAX_QUESTIONS = 20;
     // 1問目〜10問目と11問目〜20問目の間に余白があるため、11問目を境に行の開始位置をずらす

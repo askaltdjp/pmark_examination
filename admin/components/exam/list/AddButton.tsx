@@ -15,7 +15,7 @@ export default function AddButton() {
 
     return (
         <div className="flex justify-center">
-            <div className="w-[90%] text-right py-3">
+            <div className="w-[100%] text-right py-3">
                 <button
                     className="btn bg-slate-600 hover:bg-slate-500 text-white mx-1"
                     onClick={handleAddButtonClick}

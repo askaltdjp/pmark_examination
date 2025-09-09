@@ -8,6 +8,10 @@ import { AUTH_TOKEN_COOKIE_NAME, AUTH_TOKEN_COOKIE_MAX_AGE } from "@/lib/definit
  * ユーザ認証を行うサーバアクション
  * 認証に成功した場合はJWTトークンをHttpOnlyクッキーにセットする
  * 認証に失敗した場合は例外を投げる
+ * 
+ * @param loginId - ログインID
+ * @param password - パスワード
+ * @throws 認証失敗時に例外をスロー
  */
 export async function loginAction(loginId: string, password: string): Promise<void> {
     // 認証サービスを呼び出し、トークンを取得

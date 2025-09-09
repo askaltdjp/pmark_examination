@@ -12,8 +12,8 @@ import { TTestRepository } from "@/lib/repositories/transaction/tTestRepository"
 export async function dashboardService(
     employeeId: number
 ): Promise<{
-    mTest: MTest | null,
-    tTests: TTest[]
+    mTest: MTest | null;
+    tTests: TTest[];
 }> {
     // 実施中の試験情報取得
     const mTest = await MTestRepository.findActive();

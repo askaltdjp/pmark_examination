@@ -1,4 +1,5 @@
 import { Prisma } from ".prisma/client_master/";
+import { QuestionData } from "@/lib/definitions/types";
 import { currentJST } from "@/lib/utils/timeUtils";
 
 /**
@@ -20,6 +21,31 @@ export class MTestQuestionRepository {
                 deleteAt: now,
                 updateAt: now,
             },
+        });
+    }
+
+    /**
+     * MTestQuestionレコードを複数一括で作成する
+     * 
+     * @param testId - 追加対象の試験ID
+     * @param questionDataList - 試験問題
+     * @param tx - トランザクションオブジェクト
+     */
+    static async createManyMTestQuestions(
+        testId: number,
+        questionDataList: QuestionData[],
+        tx: Prisma.TransactionClient,
+    ): Promise<void> {
+        const now = currentJST();
+
+        await tx.mTestQuestion.createMany({
+            data: questionDataList.map(questionData => ({
+                ...questionData,
+                testId,
+                createAt: now,
+                updateAt: now,
+                deleteAt: null,
+            })),
         });
     }
 }

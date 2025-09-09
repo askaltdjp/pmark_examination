@@ -14,11 +14,11 @@ export default async function ListPage() {
 
     return (
         /* ヘッダー分だけ高さを調整（モバイル対応） */
-        <div className="h-[calc(100vh-116px)] flex flex-col justify-start bg-base-200">
+        <div className="h-[calc(100vh-116px)] flex flex-col justify-start bg-base-200 w-full max-w-7xl mx-auto">
 
             {/* 試験一覧（見出し） */}
             <div className="flex justify-center">
-                <div className="w-[90%]">
+                <div className="w-[100%]">
                     <h2 className="text-gray-600 text-3xl font-bold text-center mb-4">試験一覧</h2>
                 </div>
             </div>

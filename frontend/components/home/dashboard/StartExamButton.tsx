@@ -9,8 +9,8 @@ import { startAction } from "@/app/actions/exam/startAction";
 import { ExamData } from "@/lib/definitions/types";
 
 type Props = {
-    mTest: MTest | null,
-    tTest: TTest | null,
+    mTest: MTest | null;
+    tTest: TTest | null;
 };
 
 /**
