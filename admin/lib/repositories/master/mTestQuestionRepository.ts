@@ -1,5 +1,6 @@
-import { Prisma } from ".prisma/client_master/";
+import { MTestQuestion, Prisma } from ".prisma/client_master/";
 import { QuestionData } from "@/lib/definitions/types";
+import { masterPrisma } from "@/lib/prisma/masterPrisma";
 import { currentJST } from "@/lib/utils/timeUtils";
 
 /**
@@ -7,7 +8,22 @@ import { currentJST } from "@/lib/utils/timeUtils";
  */
 export class MTestQuestionRepository {
     /**
-     * 指定された testId に一致する MTestQuestion レコードを論理削除する
+     * 指定された testId に紐づくすべての MTestQuestion レコードを取得する
+     * 
+     * @param testId - 検索対象の testId
+     * @returns 指定された testId に関連するMTestQuestionオブジェクトの配列
+     */
+    static async findAllByTestId(testId: number): Promise<MTestQuestion[]> {
+        return await masterPrisma.mTestQuestion.findMany({
+            where: {
+                testId,
+                deleteAt: null,
+            },
+        });
+    }
+
+    /**
+     * 指定された testId に一致する削除されていない MTestQuestion レコードを論理削除する
      * 
      * @param testId - 論理削除対象の testId
      * @param tx - トランザクションオブジェクト
@@ -16,7 +32,10 @@ export class MTestQuestionRepository {
         const now = currentJST();
 
         await tx.mTestQuestion.updateMany({
-            where: { testId },
+            where: {
+                testId,
+                deleteAt: null, // 削除されていないレコードのみ対象
+            },
             data: {
                 deleteAt: now,
                 updateAt: now,

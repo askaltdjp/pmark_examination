@@ -20,9 +20,11 @@ export default function ExamSummaryForm({
         passNum,
         setPassNum,
     },
+    isExpired,
 }: {
-    testId: number;
+    testId: number,
     examState: ExamState;
+    isExpired: boolean,
 }) {
     return (
         <div className="bg-white px-16 py-3 rounded-xl shadow-md w-full text-gray-800 mb-4">
@@ -52,6 +54,7 @@ export default function ExamSummaryForm({
                                 maxLength={MAX_TEST_NAME_LENGTH}
                                 onChange={e => setName(e.target.value)}
                                 className="input input-bordered input-md w-full focus:outline-none focus:ring-2 focus:ring-indigo-300"
+                                disabled={isExpired}
                             />
                         </td>
                     </tr>
@@ -72,6 +75,7 @@ export default function ExamSummaryForm({
                                     max="2100-12-31"
                                     onChange={e => setStartAt(e.target.value)}
                                     className="input input-bordered input-md w-full max-w-[160px] focus:outline-none focus:ring-2 focus:ring-indigo-300"
+                                    disabled={isExpired}
                                 />
                                 <span className="whitespace-nowrap">～</span>
                                 <input
@@ -80,6 +84,7 @@ export default function ExamSummaryForm({
                                     max="2100-12-31"
                                     onChange={e => setEndAt(e.target.value)}
                                     className="input input-bordered input-md w-full max-w-[160px] focus:outline-none focus:ring-2 focus:ring-indigo-300"
+                                    disabled={isExpired}
                                 />
                             </div>
                         </td>
@@ -101,6 +106,7 @@ export default function ExamSummaryForm({
                                 value={questionNum}
                                 onChange={e => setQuestionNum(e.target.value)}
                                 className="input input-bordered input-md w-full max-w-[120px] focus:outline-none focus:ring-2 focus:ring-indigo-300"
+                                disabled={isExpired}
                             />
                         </td>
                         <th
@@ -115,6 +121,7 @@ export default function ExamSummaryForm({
                                 value={passNum}
                                 onChange={e => setPassNum(e.target.value)}
                                 className="input input-bordered input-md w-full max-w-[120px] focus:outline-none focus:ring-2 focus:ring-indigo-300"
+                                disabled={isExpired}
                             />
                         </td>
                     </tr>

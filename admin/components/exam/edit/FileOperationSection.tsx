@@ -1,6 +1,6 @@
 "use client";
 
-import { addAction } from "@/app/actions/exam/addAction";
+import { editAction } from "@/app/actions/exam/editActions";
 import { importAction } from "@/app/actions/exam/importAction";
 import { MAX_QUESTION_NUM } from "@/lib/definitions/system";
 import { ExamState, QuestionData } from "@/lib/definitions/types";
@@ -9,9 +9,10 @@ import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
 
 /**
- * ファイル操作と登録ボタンのクライアントコンポーネント
+ * ファイル操作と変更ボタンのクライアントコンポーネント
  */
 export default function FileOperationSection({
+    testId,
     examState: {
         name,
         startAt,
@@ -19,10 +20,15 @@ export default function FileOperationSection({
         questionNum,
         passNum,
     },
+    questionDataList: initQuestionDataList,
+    isExpired,
 }: {
+    testId: number,
     examState: ExamState;
+    questionDataList: QuestionData[];
+    isExpired: boolean;
 }) {
-    const [questionDataList, setQuestionDataList] = useState<QuestionData[]>([]);
+    const [questionDataList, setQuestionDataList] = useState<QuestionData[]>(initQuestionDataList);
     const fileInputRef = useRef<HTMLInputElement>(null);
     const router = useRouter();
 
@@ -65,8 +71,61 @@ export default function FileOperationSection({
         }
     };
 
-    // 登録ボタン押下時の処理
-    const handleAddButtonClick = async () => {
+    // エクスポートボタン押下時の処理
+    const handleExportButtonClick = async () => {
+        try {
+            // ファイルダウンロードAPIへPOSTリクエスト
+            const response = await fetch("/api/exam/export", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ testId }),
+            });
+
+            // レスポンスの正常確認
+            if (!response.ok) {
+                const errorData = await response.json();
+                throw new Error(errorData.error || "ファイルのダウンロードに失敗しました。もう一度お試しください。");
+            }
+
+            // Content-Dispositionヘッダーからファイル名を取得
+            const disposition = response.headers.get("Content-Disposition");
+            if (!disposition) {
+                throw new Error("ファイル名の情報がヘッダーに含まれていません。");
+            }
+
+            // ファイル名を正規表現で抽出
+            const match = disposition.match(/filename\*\=UTF-8''([^;]+)/);
+            if (!match || !match[1]) {
+                throw new Error("ファイル名を取得できませんでした。");
+            }
+
+            const filename = decodeURIComponent(match[1]);
+
+            // レスポンスをBlobに変換し、一時URLを生成
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+
+            // ダウンロード用リンクを作成してクリックイベントを発火
+            const link = document.createElement("a");
+            link.href = url;
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+
+            // 使い終わったリンクとURLを削除
+            link.remove();
+            window.URL.revokeObjectURL(url);
+        } catch (error) {
+            // エラー発生時、コンソールにエラーメッセージを出力し、アラートを表示
+            console.error("ファイルダウンロード時のエラー:", error);
+            alert(error instanceof Error ? error.message : "予期しないエラーが発生しました。");
+        }
+    };
+
+    // 変更ボタン押下時の処理
+    const handleEditButtonClick = async () => {
         // 試験名の入力チェック
         if (!name.trim()) {
             alert("試験名を入力してください。");
@@ -134,8 +193,18 @@ export default function FileOperationSection({
         }
 
         try {
-            // 試験情報の新規登録
-            await addAction(
+            // 確認ダイアログ
+            const confirmed = window.confirm(
+                "この試験をすでに受験している受験者がいる場合、その受験履歴はすべて削除されます。\n" +
+                "本当に試験情報を更新してもよろしいですか？"
+            );
+            if (!confirmed) {
+                return;
+            }
+
+            // 試験情報の変更
+            await editAction(
+                testId,
                 name,
                 startDate,
                 endDate,
@@ -143,10 +212,10 @@ export default function FileOperationSection({
                 passNumVal,
                 questionDataList,
             );
-            alert("試験情報の新規登録に成功しました。\n試験一覧画面に戻ります。");
+            alert("試験情報の変更に成功しました。\n試験一覧画面に戻ります。");
             router.push("/exam/list");
         } catch (error) {
-            console.error("試験登録時のエラー:", error);
+            console.error("試験変更時のエラー:", error);
             alert(error instanceof Error ? error.message : "予期しないエラーが発生しました。");
         }
     };
@@ -192,10 +261,12 @@ export default function FileOperationSection({
                             accept=".csv"
                             className="file-input file-input-bordered file-input-sm w-full rounded-none border-none focus:outline-none text-gray-800"
                             style={{ height: '100%' }}
+                            disabled={isExpired}
                         />
                         <button
                             className="btn btn-sm btn-outline btn-secondary h-full"
                             onClick={handleFileUploadButtonClick}
+                            disabled={isExpired}
                         >
                             参 照
                         </button>
@@ -205,18 +276,25 @@ export default function FileOperationSection({
                     <button
                         className="btn btn-sm btn-secondary w-full h-10"
                         onClick={handleImportButtonClick}
+                        disabled={isExpired}
                     >
                         インポート
                     </button>
 
-                    {/* エクスポート + 登録 */}
+                    {/* エクスポート + 変更 */}
                     <div className="flex flex-col items-stretch gap-4 w-full">
-                        <button className="btn btn-sm btn-secondary w-full h-10" disabled>エクスポート</button>
+                        <button
+                            className="btn btn-sm btn-secondary w-full h-10"
+                            onClick={handleExportButtonClick}
+                        >
+                            エクスポート
+                        </button>
                         <button
                             className="btn btn-primary w-full h-10"
-                            onClick={handleAddButtonClick}
+                            onClick={handleEditButtonClick}
+                            disabled={isExpired}
                         >
-                            登 録
+                            変 更
                         </button>
                     </div>
                 </div>

@@ -1,4 +1,4 @@
-import { parse } from "csv-parse/sync";
+import Papa from "papaparse";
 import { QuestionData } from "@/lib/definitions/types";
 
 /**
@@ -12,25 +12,33 @@ import { QuestionData } from "@/lib/definitions/types";
  * @throws CSVのフォーマットが不正である場合に例外をスロー
  */
 export async function importService(file: File): Promise<QuestionData[]> {
-    // ファイルのバイナリデータをBufferに変換
-    const arrayBuffer = await file.arrayBuffer();
-    const buffer = Buffer.from(arrayBuffer);
+    // ファイルを文字列として読み取る
+    const text = await file.text();
 
-    // BufferをCSVとしてパース（1行 = 1レコード）
-    const records = parse(buffer, {
-        columns: false, // ヘッダーなし
-        skip_empty_lines: true,
-        trim: true,
+    // パース処理
+    const result = Papa.parse<string[]>(text, {
+        header: false,
+        skipEmptyLines: true,
+        transform: (value) => value.trim(), // 各セルをトリム
     });
 
+    // エラー処理
+    if (result.errors.length > 0) {
+        const error = result.errors[0];
+        throw new Error(
+            `CSVのパースエラー: ${error.message}（行: ${error.row}）`
+        );
+    }
+
     // 各レコードをQuestionData型に変換
+    const records = result.data;
     return records.map((row, i) => {
         const [questionRaw, commentaryRaw, correctRaw] = row;
 
         // 質問文のチェック
         const question = questionRaw?.trim();
         if (!question) {
-            throw new Error(`CSVの${i + 1}行目の質問文が空です。`);
+            throw new Error(`CSV の ${i + 1} 行目の質問文が空です。`);
         }
 
         // 解説（空白はnullとして扱う）
@@ -38,11 +46,16 @@ export async function importService(file: File): Promise<QuestionData[]> {
 
         // 正解のチェック
         if (correctRaw !== "0" && correctRaw !== "1") {
-            throw new Error(`CSVの${i + 1}行目の正解は 0 もしくは 1 でなければなりません。`);
+            throw new Error(`CSV の ${i + 1} 行目の正解は 0 もしくは 1 でなければなりません。`);
         }
         const correct = correctRaw === "1";
 
-        // 試験問題内容の作成
+        // 正解と解説の整合性チェック
+        if (!correct && !commentary) {
+            throw new Error(`CSV の ${i + 1} 行目の問題は不正解なので解説が必要です。`);
+        }
+
+        // 試験問題の作成
         const questionData: QuestionData = {
             questionNo: i + 1,
             question,

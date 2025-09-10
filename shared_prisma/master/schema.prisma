@@ -60,6 +60,6 @@ model MTestQuestion {
   /// 削除日時
   deleteAt   DateTime? @map("delete_at")
 
-  @@unique([testId, questionNo])
+  @@index([testId, questionNo])
   @@map("m_test_question")
 }

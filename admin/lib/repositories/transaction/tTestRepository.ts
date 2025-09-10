@@ -35,7 +35,7 @@ export class TTestRepository {
     }
 
     /**
-     * 指定された testId に一致する TTest レコードを論理削除する
+     * 指定された testId に一致する削除されていない TTest レコードを論理削除する
      * 
      * @param testId - 論理削除対象の testId
      * @param tx - トランザクションオブジェクト
@@ -44,7 +44,10 @@ export class TTestRepository {
         const now = currentJST();
 
         await tx.tTest.updateMany({
-            where: { testId },
+            where: {
+                testId,
+                deleteAt: null, // 削除されていないレコードのみ対象
+            },
             data: {
                 deleteAt: now,
                 updateAt: now,

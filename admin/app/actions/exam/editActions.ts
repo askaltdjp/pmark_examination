@@ -1,15 +1,17 @@
 "use server";
 
-import { addService } from "@/services/actions/exam/addService";
+import { editService } from "@/services/actions/exam/editService";
 import { QuestionData } from "@/lib/definitions/types";
 import { MAX_TEST_NAME_LENGTH, MAX_QUESTION_NUM } from "@/lib/definitions/system";
 import { currentJST } from "@/lib/utils/timeUtils";
 
 /**
- * 試験の登録処理を行うサーバアクション
+ * 試験の変更処理を行うサーバアクション
  * 引数で受け取った試験情報を元に、試験期間の重複チェックを行い、
- * 問題がなければ試験マスタと試験問題マスタへ新規登録を実施する。
+ * 問題がなければ試験マスタと試験問題マスタの変更を実施する。
+ * また、受験者の受験履歴と解答履歴は全て削除する。
  * 
+ * @param testId - 試験ID
  * @param name - 名前
  * @param startAt - 開始日
  * @param endAt - 終了日
@@ -18,7 +20,8 @@ import { currentJST } from "@/lib/utils/timeUtils";
  * @param questionDataList - 試験問題
  * @throws パラメータエラー時、期間重複時に例外をスロー
  */
-export async function addAction(
+export async function editAction(
+    testId: number,
     name: string,
     startAt: Date,
     endAt: Date,
@@ -26,6 +29,11 @@ export async function addAction(
     passNum: number,
     questionDataList: QuestionData[],
 ): Promise<void> {
+    // 試験IDの入力チェック
+    if (!testId) {
+        throw new Error("試験IDが提供されていません。");
+    }
+
     // 試験名の入力チェック
     if (!name.trim()) {
         throw new Error("試験名が提供されていません。");
@@ -66,8 +74,9 @@ export async function addAction(
         throw new Error("試験問題が提供されていません。");
     }
 
-    // 試験情報の新規登録
-    await addService(
+    // 試験情報の変更
+    await editService(
+        testId,
         name,
         startAt,
         endAt,

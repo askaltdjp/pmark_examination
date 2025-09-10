@@ -31,7 +31,7 @@ export default function ExamClientWrapper({ maxId }: { maxId: number }) {
     return (
         <>
             {/* 試験概要 */}
-            <ExamSummaryForm maxId={maxId} examState={examState} />
+            <ExamSummaryForm testId={maxId + 1} examState={examState} />
 
             {/* ファイル操作と登録ボタン */}
             <FileOperationSection examState={examState} />

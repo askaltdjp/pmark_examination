@@ -15,7 +15,9 @@ export default function DeleteButton(
         onDelete: () => void;
     }
 ) {
+    // 試験が期限切れかどうか
     const now = currentJST();
+    now.setHours(0, 0, 0, 0);
     const isExpired = mTest.endAt < now;
 
     return (

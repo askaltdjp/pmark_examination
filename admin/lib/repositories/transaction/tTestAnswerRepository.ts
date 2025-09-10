@@ -6,7 +6,7 @@ import { currentJST } from "@/lib/utils/timeUtils";
  */
 export class TTestAnswerRepository {
     /**
-     * 指定された testId に一致する TTestAnswer レコードを論理削除する
+     * 指定された testId に一致する削除されていない TTestAnswer レコードを論理削除する
      * 
      * @param testId - 論理削除対象の testId
      * @param tx - トランザクションオブジェクト
@@ -15,7 +15,10 @@ export class TTestAnswerRepository {
         const now = currentJST();
 
         await tx.tTestAnswer.updateMany({
-            where: { testId },
+            where: {
+                testId,
+                deleteAt: null, // 削除されていないレコードのみ対象
+            },
             data: {
                 deleteAt: now,
                 updateAt: now,

@@ -12,7 +12,7 @@ async function handler(request: NextRequest): Promise<NextResponse> {
     const tEmployee = await getEmployeeFromRequest(request.headers);
 
     // リクエストボディから試験IDと受験回数を取得
-    const body: { testId: number, testCnt: number } = await request.json();
+    const body: { testId: number; testCnt: number; } = await request.json();
     const { testId, testCnt } = body;
 
     // 試験IDの入力チェック

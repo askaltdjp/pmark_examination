@@ -5,20 +5,20 @@ import { resultService } from "@/services/web/exam/resultService";
 import { withRedirectErrorHandler } from "@/lib/utils/withRedirectErrorHandler";
 import HomeButton from "@/components/exam/result/HomeButton";
 
-type Props = {
-    searchParams: { [key: string]: string | string[] | undefined };
-}
-
 /**
  * 試験結果画面のサーバコンポーネント
  */
-export default async function ResultPage({ searchParams }: Props) {
+export default async function ResultPage({
+    searchParams
+}: {
+    searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+}) {
     const { mTest, mTestQuestionMap, tTest, tTestAnswers, isPass } = await withRedirectErrorHandler(async () => {
         // リクエストヘッダから社員情報を取得し、認証済みかを判定
         const requestHeaders = await headers();
         const tEmployee = await getEmployeeFromRequest(requestHeaders);
 
-        // 非同期の searchParams からクエリパラメータを取得
+        // クエリパラメータを取得
         const params = await searchParams;
 
         // クエリパラメータから試験IDを取得

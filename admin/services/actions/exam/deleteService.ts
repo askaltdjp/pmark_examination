@@ -23,14 +23,20 @@ import { TTestAnswerRepository } from "@/lib/repositories/transaction/tTestAnswe
  */
 export async function deleteService(testId: number): Promise<void> {
     // FIXME: 複数DBを跨いだ厳密なトランザクション制御が必要
+
     // pme_masterのトランザクション処理
     await masterPrisma.$transaction(async (tx) => {
+        // 試験マスタの削除
         await MTestRepository.deleteById(testId, tx);
+        // 試験問題マスタの削除
         await MTestQuestionRepository.deleteByTestId(testId, tx);
     });
+
     // pme_transactionのトランザクション処理
     await transactionPrisma.$transaction(async (tx) => {
+        // 受験履歴の削除
         await TTestRepository.deleteByTestId(testId, tx);
+        // 解答履歴の削除
         await TTestAnswerRepository.deleteByTestId(testId, tx);
     });
 }

@@ -19,6 +19,20 @@ export class MTestRepository {
     }
 
     /**
+     * IDをキーにMTestレコードを検索する
+     * @param id - 検索する試験ID
+     * @returns 見つかったMTestオブジェクト、なければnull
+     */
+    static async findById(id: number): Promise<MTest | null> {
+        return await masterPrisma.mTest.findFirst({
+            where: {
+                id,
+                deleteAt: null,
+            },
+        });
+    }
+
+    /**
      * MTestテーブルのIDの最大値を取得する
      * @returns 最大のID
      */
@@ -36,17 +50,23 @@ export class MTestRepository {
      * 入力された期間が重複しているMTestレコードを1件だけ取得する
      * @param startAt - 開始日
      * @param endAt - 終了日
+     * @param id - 試験ID（オプション）
      * @returns 重複しているMTestレコード1件 または null
      */
     static async findOverlappingRecord(
         startAt: Date,
         endAt: Date,
+        id?: number,
     ): Promise<MTest | null> {
         return await masterPrisma.mTest.findFirst({
             where: {
                 startAt: { lte: endAt },
                 endAt: { gte: startAt },
                 deleteAt: null,
+                // 試験IDが指定されたら、そのレコードは抽出対象外にする
+                ...(id !== undefined && {
+                    id: { not: id },
+                })
             },
         });
     }
@@ -81,6 +101,41 @@ export class MTestRepository {
                 createAt: now,
                 updateAt: now,
                 deleteAt: null,
+            },
+        });
+    }
+
+    /**
+     * 指定されたMTestレコードを更新する（トランザクション内で実行）
+     * @param id - 試験ID
+     * @param name - 名前
+     * @param startAt - 開始日
+     * @param endAt - 終了日
+     * @param questionNum - 出題数
+     * @param passNum - 合格数
+     * @param tx - トランザクションオブジェクト
+     * @returns 更新後のMTestレコード
+     */
+    static async update(
+        id: number,
+        name: string,
+        startAt: Date,
+        endAt: Date,
+        questionNum: number,
+        passNum: number,
+        tx: Prisma.TransactionClient,
+    ): Promise<void> {
+        const now = currentJST();
+
+        await tx.mTest.update({
+            where: { id },
+            data: {
+                name,
+                startAt,
+                endAt,
+                questionNum,
+                passNum,
+                updateAt: now,
             },
         });
     }
