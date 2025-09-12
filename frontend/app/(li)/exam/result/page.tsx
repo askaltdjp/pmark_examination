@@ -50,7 +50,7 @@ export default async function ResultPage({
                 {/* 合否表示 */}
                 <div className="flex justify-center mb-6">
                     <div className={`${isPass ? 'bg-success' : 'bg-error'} text-white text-lg font-semibold py-4 px-10 rounded-md shadow`}>
-                        【{isPass ? '合格' : '不合格'}】正解率： {Number(tTest.correctNum * 100 / mTest.questionNum)}%
+                        【{isPass ? '合格' : '不合格'}】正解率： {Math.floor((tTest.correctNum * 1000) / mTest.questionNum) / 10}%
                     </div>
                 </div>
 

@@ -50,3 +50,13 @@ export type QuestionData = {
     commentary?: string | null;
     correct: boolean;
 };
+
+// 試験状況の型定義
+export type StateData = {
+    employeeId: number;
+    employeeNo: string;
+    name: string;
+    testCnt: number;
+    testAt: Date | null;
+    result: number | null;
+};

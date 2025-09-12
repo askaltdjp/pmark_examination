@@ -35,3 +35,15 @@ export function formatDate(date: Date, format: string = "YYYY/MM/DD HH:mm"): str
 
     return format.replace(/YYYY|MM|DD|HH|mm|ss/g, match => replacements[match]);
 }
+
+// 年度を取得する関数
+// @param date - 年度取得対象の Date オブジェクト
+// @returns 引数の日付の年度
+export function getFiscalYear(date: Date): number {
+    const d = new Date(date);
+    const year = d.getUTCFullYear();
+    const month = d.getUTCMonth(); // 0 = Jan, 3 = April
+
+    // 4月以降はその年が年度、1月〜3月は前年が年度（UTC基準）
+    return month >= 3 ? year : year - 1;
+}

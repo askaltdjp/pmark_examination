@@ -3,7 +3,7 @@ import { withRedirectErrorHandler } from "@/lib/utils/withRedirectErrorHandler";
 import { addService } from "@/services/web/exam/addService";
 
 /**
- * 試験管理 > 登録画面のサーバコンポーネント
+ * 試験管理 > 試験登録画面のサーバコンポーネント
  */
 export default async function AddPage() {
     // 試験IDの最大値取得

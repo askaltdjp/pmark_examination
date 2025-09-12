@@ -1,4 +1,3 @@
-import { TEmployee } from ".prisma/client_transaction";
 import { MTestRepository } from "@/lib/repositories/master/mTestRepository";
 import { MTestQuestion } from ".prisma/client_master";
 import { MTestQuestionRepository } from "@/lib/repositories/master/mTestQuestionRepository";
@@ -9,19 +8,20 @@ import { EXAM_TEMPLATE_DIR, EXAM_RESULT_TEMPLATE_FILENAME } from "@/lib/definiti
 import { testResultLabels } from "@/lib/definitions/labels";
 import path from "path";
 import ExcelJS from "exceljs";
+import { TEmployeeRepository } from "@/lib/repositories/transaction/tEmployeeRepository";
 import { generateExcelFromTemplate } from "@/lib/utils/excelUtils";
 
 /**
  * 指定した社員の特定試験の受験結果をExcelファイルとして生成し、
  * バイナリデータとファイル名を返すサービス関数
  *
- * @param tEmployee - 社員情報
+ * @param employeeId - 社員ID
  * @param testId - 試験ID
  * @param testCnt - 受験回数
  * @returns Excelファイルのバッファとダウンロード用ファイル名
  */
-export async function downloadService(
-    tEmployee: TEmployee,
+export async function stateDownloadService(
+    employeeId: number,
     testId: number,
     testCnt: number,
 ): Promise<{
@@ -39,6 +39,12 @@ export async function downloadService(
         const START_ROW_FIRST_HALF = 5;     // 1問目〜10問目の開始行番号
         const START_ROW_SECOND_HALF = 7;    // 11問目〜20問目の開始行番号
 
+        // 社員IDに基づいて社員情報取得
+        const tEmployee = await TEmployeeRepository.findById(employeeId);
+        if (!tEmployee) {
+            throw new Error(`社員情報が存在しません。[employeeId=${employeeId}]`);
+        }
+
         // 試験IDに基づいて試験マスタを取得
         const mTest = await MTestRepository.findById(testId);
         if (!mTest) {
@@ -46,13 +52,13 @@ export async function downloadService(
         }
 
         // 社員の該当試験とその受験回数に応じた受験履歴を取得
-        const tTest = await TTestRepository.findByEmployeeIdAndTestIdAndTestCnt(tEmployee.id, testId, testCnt);
+        const tTest = await TTestRepository.findByEmployeeIdAndTestIdAndTestCnt(employeeId, testId, testCnt);
         if (!tTest) {
-            throw new Error(`受験履歴が存在しません。[employeeId=${tEmployee.id}] [testId=${testId}] [testCnt=${testCnt}]`);
+            throw new Error(`受験履歴が存在しません。[employeeId=${employeeId}] [testId=${testId}] [testCnt=${testCnt}]`);
         }
 
         // 社員の受験時の解答履歴を取得
-        const tTestAnswers = await TTestAnswerRepository.findAllByEmployeeIdAndTestIdAndTestCnt(tEmployee.id, testId, testCnt);
+        const tTestAnswers = await TTestAnswerRepository.findAllByEmployeeIdAndTestIdAndTestCnt(employeeId, testId, testCnt);
         // 解答履歴から問題Noのリストを抽出
         const questionNos = tTestAnswers.map(tTestAnswer => tTestAnswer.questionNo);
 

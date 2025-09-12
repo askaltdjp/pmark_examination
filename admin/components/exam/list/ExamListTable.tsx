@@ -72,7 +72,7 @@ export default function ExamListTable({
                                             {/* 変更ボタン */}
                                             <EditButton testId={mTest.id} />
                                             {/* 状況ボタン */}
-                                            <StatusButton />
+                                            <StatusButton testId={mTest.id} />
                                             {/* 削除ボタン */}
                                             <DeleteButton mTest={mTest} onDelete={() => handleDeleteButtonClick(mTest.id)} />
                                         </td>

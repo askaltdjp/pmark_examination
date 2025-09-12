@@ -157,12 +157,12 @@ export default function FileOperationSection({
             <div className="bg-white rounded-xl shadow-md w-full text-gray-800 mb-4 p-3">
                 <div className="overflow-y-auto max-h-[380px]">
                     <table className="table table-zebra w-full border border-gray-300 border-separate border-spacing-0 text-gray-700 text-[15px]">
-                        <thead className="bg-gray-800 text-gray-300" style={{ position: 'sticky', top: 0, zIndex: 10 }}>
+                        <thead className="text-center py-2 bg-gray-200 text-gray-800" style={{ position: 'sticky', top: 0, zIndex: 10 }}>
                             <tr>
-                                <th className="text-center w-12 py-2 bg-gray-800" style={{ width: '5%' }}>No</th>
-                                <th className="text-center py-2 bg-gray-800" style={{ width: '45%' }}>問題文</th>
-                                <th className="text-center py-2 bg-gray-800" style={{ width: '45%' }}>解説</th>
-                                <th className="text-center w-16 py-2 bg-gray-800" style={{ width: '5%' }}>正解</th>
+                                <th className="text-center py-2" style={{ width: '5%' }}>No</th>
+                                <th className="text-center py-2" style={{ width: '45%' }}>問題文</th>
+                                <th className="text-center py-2" style={{ width: '45%' }}>解説</th>
+                                <th className="text-center py-2" style={{ width: '5%' }}>正解</th>
                             </tr>
                         </thead>
                         <tbody>

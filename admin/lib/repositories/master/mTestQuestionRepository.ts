@@ -23,6 +23,25 @@ export class MTestQuestionRepository {
     }
 
     /**
+     * 試験IDと問題番号の配列を条件に、MTestQuestionレコードを複数件取得する
+     * 
+     * @param testId - 検索対象の試験ID
+     * @param questionNos - 検索対象の問題Noの配列（IN句として使用）
+     * @returns 条件に一致するMTestQuestionオブジェクトの配列
+     */
+    static async findAllByTestIdAndQuestionNos(testId: number, questionNos: number[]): Promise<MTestQuestion[]> {
+        return await masterPrisma.mTestQuestion.findMany({
+            where: {
+                testId,
+                questionNo: {
+                    in: questionNos,
+                },
+                deleteAt: null,
+            },
+        });
+    }
+
+    /**
      * 指定された testId に一致する削除されていない MTestQuestion レコードを論理削除する
      * 
      * @param testId - 論理削除対象の testId

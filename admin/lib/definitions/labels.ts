@@ -9,6 +9,19 @@ export const HTML_TITLE = "Pマーク 教育テスト | 管理画面";
 // サイトの説明文
 export const HTML_DESCRIPTION = "Pマーク（個人情報保護）WEB教育テストの受講状況や成績を一元管理できる管理者用画面です。受講者の進捗確認、結果の確認、アカウント管理などを通じて、社内の情報管理体制の強化と教育の継続的改善をサポートします。";
 
+// 合否ステータスの定義
+export const TestResult = {
+    Interrupted: 0,
+    Pass: 1,
+    Fail: 2,
+} as const;
+
+// 合否ステータスの表示ラベルマップ
+export const testResultLabels: string[] = [];
+testResultLabels[TestResult.Interrupted] = "中断";
+testResultLabels[TestResult.Pass] = "合格";
+testResultLabels[TestResult.Fail] = "不合格";
+
 // ページごとの設定データ
 export const pageMap: PageType = {
     exam: {

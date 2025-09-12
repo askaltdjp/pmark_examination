@@ -4,6 +4,7 @@ import { editAction } from "@/app/actions/exam/editActions";
 import { importAction } from "@/app/actions/exam/importAction";
 import { MAX_QUESTION_NUM } from "@/lib/definitions/system";
 import { ExamState, QuestionData } from "@/lib/definitions/types";
+import { downloadFileFromPost } from "@/lib/utils/downloadUtils";
 import { currentJST } from "@/lib/utils/timeUtils";
 import { useRouter } from "next/navigation";
 import { useRef, useState } from "react";
@@ -73,55 +74,9 @@ export default function FileOperationSection({
 
     // エクスポートボタン押下時の処理
     const handleExportButtonClick = async () => {
-        try {
-            // ファイルダウンロードAPIへPOSTリクエスト
-            const response = await fetch("/api/exam/export", {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({ testId }),
-            });
-
-            // レスポンスの正常確認
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.error || "ファイルのダウンロードに失敗しました。もう一度お試しください。");
-            }
-
-            // Content-Dispositionヘッダーからファイル名を取得
-            const disposition = response.headers.get("Content-Disposition");
-            if (!disposition) {
-                throw new Error("ファイル名の情報がヘッダーに含まれていません。");
-            }
-
-            // ファイル名を正規表現で抽出
-            const match = disposition.match(/filename\*\=UTF-8''([^;]+)/);
-            if (!match || !match[1]) {
-                throw new Error("ファイル名を取得できませんでした。");
-            }
-
-            const filename = decodeURIComponent(match[1]);
-
-            // レスポンスをBlobに変換し、一時URLを生成
-            const blob = await response.blob();
-            const url = window.URL.createObjectURL(blob);
-
-            // ダウンロード用リンクを作成してクリックイベントを発火
-            const link = document.createElement("a");
-            link.href = url;
-            link.download = filename;
-            document.body.appendChild(link);
-            link.click();
-
-            // 使い終わったリンクとURLを削除
-            link.remove();
-            window.URL.revokeObjectURL(url);
-        } catch (error) {
-            // エラー発生時、コンソールにエラーメッセージを出力し、アラートを表示
-            console.error("ファイルダウンロード時のエラー:", error);
-            alert(error instanceof Error ? error.message : "予期しないエラーが発生しました。");
-        }
+        await downloadFileFromPost("/api/exam/export", {
+            testId,
+        });
     };
 
     // 変更ボタン押下時の処理
@@ -226,12 +181,12 @@ export default function FileOperationSection({
             <div className="bg-white rounded-xl shadow-md w-full text-gray-800 mb-4 p-3">
                 <div className="overflow-y-auto max-h-[380px]">
                     <table className="table table-zebra w-full border border-gray-300 border-separate border-spacing-0 text-gray-700 text-[15px]">
-                        <thead className="bg-gray-800 text-gray-300" style={{ position: 'sticky', top: 0, zIndex: 10 }}>
+                        <thead className="text-center py-2 bg-gray-200 text-gray-800" style={{ position: 'sticky', top: 0, zIndex: 10 }}>
                             <tr>
-                                <th className="text-center w-12 py-2 bg-gray-800" style={{ width: '5%' }}>No</th>
-                                <th className="text-center py-2 bg-gray-800" style={{ width: '45%' }}>問題文</th>
-                                <th className="text-center py-2 bg-gray-800" style={{ width: '45%' }}>解説</th>
-                                <th className="text-center w-16 py-2 bg-gray-800" style={{ width: '5%' }}>正解</th>
+                                <th className="text-center py-2" style={{ width: '5%' }}>No</th>
+                                <th className="text-center py-2" style={{ width: '45%' }}>問題文</th>
+                                <th className="text-center py-2" style={{ width: '45%' }}>解説</th>
+                                <th className="text-center py-2" style={{ width: '5%' }}>正解</th>
                             </tr>
                         </thead>
                         <tbody>
