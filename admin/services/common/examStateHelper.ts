@@ -26,7 +26,7 @@ export async function buildExamStateDataList(testId: number): Promise<{
     }
 
     // 退職した社員も含めた社員情報取得
-    const tEmployees = await TEmployeeRepository.findAll();
+    const tEmployees = await TEmployeeRepository.findAll(true);
 
     // 社員ごとの最新の受験履歴を取得
     const latestTestMap = await TTestRepository.getLatestResultMapByTestId(testId);

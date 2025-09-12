@@ -10,7 +10,9 @@ import { PrismaClient as TransactionPrismaClient } from ".prisma/client_transact
 const globalForPrisma = global as unknown as { transactionPrisma: TransactionPrismaClient };
 
 // すでにインスタンスがあれば使う。なければ新しく作る。
-export const transactionPrisma = globalForPrisma.transactionPrisma || new TransactionPrismaClient();
+export const transactionPrisma = globalForPrisma.transactionPrisma || new TransactionPrismaClient(
+    // { log: ['query', 'info', 'warn', 'error'] },
+);
 
 // 開発モードの場合だけglobalに保存しておく（本番は不要）
 if (process.env.NODE_ENV !== "production") globalForPrisma.transactionPrisma = transactionPrisma;
