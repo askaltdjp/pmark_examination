@@ -67,73 +67,64 @@ export default function FileOperationSection({
 
     // 登録ボタン押下時の処理
     const handleAddButtonClick = async () => {
-        // 試験名の入力チェック
-        if (!name.trim()) {
-            alert("試験名を入力してください。");
-            return;
-        }
-
-        // 開始日の入力チェック
-        if (!startAt.trim()) {
-            alert("開始日を入力してください。");
-            return;
-        }
-        const startDate = new Date(startAt);
-
-        // 終了日の入力チェック
-        if (!endAt.trim()) {
-            alert("終了日を入力してください。");
-            return;
-        }
-        const endDate = new Date(endAt);
-        const now = currentJST();
-        now.setHours(0, 0, 0, 0);
-        if (endDate < now) {
-            alert("終了日は本日以降の日付を入力してください。");
-            return;
-        }
-
-        // 開始日と終了日の整合性チェック
-        if (startDate > endDate) {
-            alert("期間の開始日は終了日より前または同じ日にしてください。");
-            return;
-        }
-
-        // 出題数の入力チェック
-        if (!questionNum.trim()) {
-            alert("出題数を入力してください。");
-            return;
-        }
-        const questionNumVal = Number(questionNum);
-        if (questionNumVal < 1 || questionNumVal > MAX_QUESTION_NUM) {
-            alert(`出題数は 1 ～ ${MAX_QUESTION_NUM} の間で入力してください。`);
-            return;
-        }
-
-        // 合格数の入力チェック
-        if (!passNum.trim()) {
-            alert("合格数を入力してください。");
-            return;
-        }
-        const passNumVal = Number(passNum);
-        if (passNumVal < 1) {
-            alert("合格数は1以上で入力してください。");
-            return;
-        }
-
-        // 出題数と合格数の整合性チェック
-        if (questionNumVal < passNumVal) {
-            alert("出題数は合格数以上で入力してください。");
-            return;
-        }
-
-        // 試験問題の入力チェック
-        if (questionDataList.length <= 0) {
-            alert("試験問題がインポートされていません。");
-            return;
-        }
-
         try {
+            // 試験名の入力チェック
+            if (!name.trim()) {
+                throw new Error("試験名を入力してください。");
+            }
+
+            // 開始日の入力チェック
+            if (!startAt.trim()) {
+                throw new Error("開始日を入力してください。");
+            }
+            const startDate = new Date(startAt);
+
+            // 終了日の入力チェック
+            if (!endAt.trim()) {
+                throw new Error("終了日を入力してください。");
+            }
+            const endDate = new Date(endAt);
+            const now = currentJST();
+            now.setHours(0, 0, 0, 0);
+            if (endDate < now) {
+                throw new Error("終了日は本日以降の日付を入力してください。");
+            }
+
+            // 開始日と終了日の整合性チェック
+            if (startDate > endDate) {
+                throw new Error("期間の開始日は終了日より前または同じ日にしてください。");
+            }
+
+            // 出題数の入力チェック
+            if (!questionNum.trim()) {
+                throw new Error("出題数を入力してください。");
+            }
+            const questionNumVal = Number(questionNum);
+            if (questionNumVal < 1 || questionNumVal > MAX_QUESTION_NUM) {
+                throw new Error(`出題数は 1 ～ ${MAX_QUESTION_NUM} の間で入力してください。`);
+            }
+
+            // 出題数と試験問題の整合性チェック
+            if (questionDataList.length < questionNumVal) {
+                throw new Error("出題数は登録問題数以下で入力してください。");
+            }
+
+            // 合格数の入力チェック
+            if (!passNum.trim()) {
+                throw new Error("合格数を入力してください。");
+            }
+            const passNumVal = Number(passNum);
+
+            // 出題数と合格数の整合性チェック
+            if (questionNumVal < passNumVal) {
+                throw new Error("合格数は出題数以下で入力してください。");
+            }
+
+            // 試験問題の入力チェック
+            if (questionDataList.length <= 0) {
+                throw new Error("試験問題がインポートされていません。");
+            }
+
             // 試験情報の新規登録
             await addAction(
                 name,
