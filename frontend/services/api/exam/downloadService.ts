@@ -64,6 +64,9 @@ export async function downloadService(
             return acc;
         }, {});
 
+        // シート名を変更
+        worksheet.name = "受験結果";
+
         // 試験名を書き込む
         worksheet.getCell("A1").value = `${mTest.name} 試験結果`;
         // 受験日を書き込む

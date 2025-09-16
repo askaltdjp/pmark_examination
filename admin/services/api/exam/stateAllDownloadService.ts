@@ -30,6 +30,9 @@ export async function stateAllDownloadService(
         // 試験概要と受験状況取得
         const { mTest, stateDataList } = await buildExamStateDataList(testId);
 
+        // シート名を変更
+        worksheet.name = "受験状況一覧";
+
         // 試験名を書き込む
         worksheet.getCell("A1").value = `${mTest.name} 受験状況一覧`;
 
