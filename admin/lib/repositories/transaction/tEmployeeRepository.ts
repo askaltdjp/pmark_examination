@@ -23,12 +23,14 @@ export class TEmployeeRepository {
     /**
      * employeeNoをキーにTEmployeeレコードを検索する
      * @param employeeNo - 検索するemployeeNo
+     * @param excludeId - 除外したいID（オプション）
      * @returns 見つかったTEmployeeオブジェクトの配列
      */
-    static async findByEmployeeNo(employeeNo: string): Promise<TEmployee[]> {
+    static async findByEmployeeNo(employeeNo: string, excludeId?: number): Promise<TEmployee[]> {
         return transactionPrisma.tEmployee.findMany({
             where: {
                 employeeNo,
+                ...(excludeId ? { id: { not: excludeId } } : {}),
                 deleteAt: null,
             }
         });
@@ -37,12 +39,14 @@ export class TEmployeeRepository {
     /**
      * emailAddressをキーにTEmployeeレコードを検索する
      * @param emailAddress - 検索するemailAddress
+     * @param excludeId - 除外したいID（オプション）
      * @returns 見つかったTEmployeeオブジェクトの配列
      */
-    static async findByEmailAddress(emailAddress: string): Promise<TEmployee[]> {
+    static async findByEmailAddress(emailAddress: string, excludeId?: number): Promise<TEmployee[]> {
         return transactionPrisma.tEmployee.findMany({
             where: {
                 emailAddress,
+                ...(excludeId ? { id: { not: excludeId } } : {}),
                 deleteAt: null,
             }
         });
@@ -92,6 +96,40 @@ export class TEmployeeRepository {
                 createAt: now,
                 updateAt: now,
                 deleteAt: null,
+            },
+        });
+    }
+
+    /**
+     * TEmployeeレコードを更新する（トランザクション内で実行）
+     * @param id - 社員ID
+     * @param employeeNo - 社員No
+     * @param name - 名前
+     * @param emailAddress - メールアドレス
+     * @param password - パスワード
+     * @param joinDate - 入社日
+     * @param tx - トランザクションオブジェクト
+     */
+    static async update(
+        id: number,
+        employeeNo: string,
+        name: string,
+        emailAddress: string,
+        password: string,
+        joinDate: Date,
+        tx: Prisma.TransactionClient,
+    ): Promise<void> {
+        const now = currentJST();
+
+        await tx.tEmployee.update({
+            where: { id },
+            data: {
+                employeeNo,
+                name,
+                emailAddress,
+                password,
+                joinDate,
+                updateAt: now,
             },
         });
     }

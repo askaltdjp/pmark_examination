@@ -8,9 +8,9 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 /**
- * 社員情報登録フォームのクライアントコンポーネント
+ * 登録フォームのクライアントコンポーネント
  */
-export default function EmployeeAddForm() {
+export default function AddForm() {
     const router = useRouter();
     const [employeeNo, setEmployeeNo] = useState("");
     const [name, setName] = useState("");

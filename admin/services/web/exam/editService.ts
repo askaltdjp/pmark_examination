@@ -6,6 +6,7 @@ import { MTestRepository } from "@/lib/repositories/master/mTestRepository";
 /**
  * 試験変更画面の表示に必要な情報を取得するサービス関数
  *
+ * @param testId - 試験ID
  * @returns 試験マスタと試験問題
  */
 export async function editService(testId: number): Promise<{
