@@ -1,5 +1,5 @@
 // 認証用クッキーの名前
-export const AUTH_TOKEN_COOKIE_NAME = "auth-token";
+export const AUTH_TOKEN_COOKIE_NAME = "frontend-auth-token";
 
 // 認証トークンの有効期限（秒単位）※例：1時間
 export const AUTH_TOKEN_COOKIE_MAX_AGE = 60 * 60;
