@@ -35,7 +35,7 @@ export default function EmployeeListTable({
             {
                 accessorKey: "joinDate",
                 header: "入社日",
-                cell: (info: any) => formatDate(info.getValue() as Date, "YYYY/MM/DD HH:mm"),
+                cell: (info: any) => formatDate(info.getValue() as Date, "YYYY/MM/DD"),
             },
             {
                 accessorKey: "emailAddress",

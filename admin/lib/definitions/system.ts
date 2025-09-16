@@ -14,6 +14,9 @@ export const MAX_TEST_NAME_LENGTH = 64;
 // 20問以上設定したい場合はExcelテンプレートの調整が必要
 export const MAX_QUESTION_NUM = 20;
 
+// 社員のデフォルトのパスワード長
+export const EMPLOYEE_DEFAULT_PASSWORD_LENGTH = 8;
+
 // Excelテンプレートファイルが格納されているディレクトリ名
 export const EXAM_TEMPLATE_DIR = "templates";
 
