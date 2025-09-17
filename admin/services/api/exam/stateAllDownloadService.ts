@@ -3,7 +3,6 @@ import path from "path";
 import ExcelJS from "exceljs";
 import { buildExamStateDataList } from "@/services/common/examStateHelper";
 import { formatDate, getFiscalYear } from "@/lib/utils/timeUtils";
-import { TestResult } from "@/lib/definitions/labels";
 import { generateExcelFromTemplate } from "@/lib/utils/excelUtils";
 
 /**
@@ -40,6 +39,13 @@ export async function stateAllDownloadService(
         const fiscalYear = getFiscalYear(mTest.startAt);
         worksheet.getCell("N2").value = `${fiscalYear}年度`;
 
+        // No1の社員のセルに文字が埋め込まれているのでクリア
+        worksheet.getCell(`B${START_ROW}`).value = "";
+        worksheet.getCell(`D${START_ROW}`).value = "";
+        worksheet.getCell(`K${START_ROW}`).value = "";
+        worksheet.getCell(`O${START_ROW}`).value = "";
+        worksheet.getCell(`Q${START_ROW}`).value = "";
+
         // FIXME: 社員が31人以上の場合はテンプレートの修正が必要
         stateDataList.forEach((stateData, i) => {
             // 社員Noを書き込む
@@ -51,7 +57,7 @@ export async function stateAllDownloadService(
             // 受験回数を書き込む
             worksheet.getCell(`O${START_ROW + i}`).value = stateData.testCnt;
             // 合否を書き込む
-            worksheet.getCell(`Q${START_ROW + i}`).value = stateData.result === null ? "-" : (stateData.result === TestResult.Pass ? "〇" : "✕");
+            worksheet.getCell(`Q${START_ROW + i}`).value = stateData.passed === null ? "-" : (stateData.passed ? "〇" : "✕");
         });
 
         // ダウンロード時のファイル名を作成し、URLエンコードする
