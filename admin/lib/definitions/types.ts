@@ -58,5 +58,6 @@ export type StateData = {
     name: string;
     testCnt: number;
     testAt: Date | null;
-    result: number | null;
+    passed: boolean | null;
+    lastJudgedTestCnt: number | null;
 };

@@ -1,6 +1,5 @@
 "use client";
 
-import { TestResult } from "@/lib/definitions/labels";
 import { StateData } from "@/lib/definitions/types";
 import { downloadFileFromPost } from "@/lib/utils/downloadUtils";
 import { formatDate } from "@/lib/utils/timeUtils";
@@ -49,9 +48,10 @@ export default function StateListTable({
                 accessorKey: "result",
                 header: "合否",
                 cell: (info: any) => {
-                    const val = info.getValue() as number | null | undefined;
-                    if (val === null) return "-";
-                    return val === TestResult.Pass ? "〇" : "✕";
+                    const val = info.getValue() as boolean | null;
+                    return val === null
+                        ? "-"
+                        : (val ? "〇" : "✕");
                 },
             },
             {
@@ -62,8 +62,8 @@ export default function StateListTable({
                     return (
                         <button
                             className="btn btn-md bg-slate-600 hover:bg-slate-500 text-white mx-1"
-                            disabled={rowData.testCnt === 0}
-                            onClick={() => handleConfirmButtonClick(rowData.employeeId, testId, rowData.testCnt)}
+                            disabled={rowData.lastJudgedTestCnt === null}
+                            onClick={() => handleConfirmButtonClick(rowData.employeeId, testId, rowData.lastJudgedTestCnt)}
                         >
                             確 認
                         </button>
@@ -89,7 +89,16 @@ export default function StateListTable({
     });
 
     // 確認ボタン押下時の処理
-    const handleConfirmButtonClick = async (employeeId: number, testId: number, testCnt: number) => {
+    const handleConfirmButtonClick = async (employeeId: number, testId: number, testCnt: number | null) => {
+        // nullの場合、通常はボタンが非活性のため呼ばれないが、念のためチェック
+        if (testCnt === null) {
+            return;
+        }
+        // 0 の場合は、まだ一度も合否判定を受けていない状態のため、最終受験時の解答をダウンロードすることはできない
+        if (testCnt === 0) {
+            alert("合否判定を一度も受けていないため、最終受験時の解答をダウンロードできません。");
+            return;
+        }
         await downloadFileFromPost("/api/exam/stateDownload", {
             employeeId,
             testId,

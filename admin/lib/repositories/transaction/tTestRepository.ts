@@ -1,4 +1,5 @@
 import { Prisma, TTest } from ".prisma/client_transaction";
+import { TestResult } from "@/lib/definitions/labels";
 import { TestSummaryRecord } from "@/lib/definitions/types";
 import { transactionPrisma } from "@/lib/prisma/transactionPrisma";
 import { currentJST } from "@/lib/utils/timeUtils";
@@ -58,45 +59,59 @@ export class TTestRepository {
     }
 
     /**
-     * 指定された testId に対して、各 employee_id ごとの最新の受験結果（test_cnt が最大）を取得する
+     * 指定された testId に対して、各 employee_id ごとの最新の受験結果を取得する
      * 
      * @param testId - 対象の testId
      * @returns employee_id をキーとした最新受験結果のマップ
      */
     static async getLatestResultMapByTestId(testId: number): Promise<Record<number, {
         testCnt: number;
-        result: number;
         testAt: Date;
+        passed: boolean;
+        lastJudgedTestCnt: number;
     }>> {
-        const result = await transactionPrisma.$queryRaw<
+        const result = await transactionPrisma.$queryRaw <
             {
                 employeeId: number;
                 testCnt: number;
-                result: number;
                 testAt: Date;
+                passed: boolean;
+                lastJudgedTestCnt: number;
             }[]
         >`
-            SELECT DISTINCT ON (employee_id)
+            SELECT
                 employee_id AS "employeeId"
-               ,test_cnt AS "testCnt"
-               ,result
-               ,test_at AS "testAt"
+               ,MAX(test_cnt) AS "testCnt"
+               ,MAX(test_at) AS "testAt"
+               ,CASE WHEN
+                    SUM(CASE WHEN result = ${TestResult.Pass} THEN 1 ELSE 0 END) > 0
+                THEN
+                    true
+                ELSE
+                    false
+                END AS "passed"
+               ,MAX(CASE WHEN result <> ${TestResult.Interrupted} THEN test_cnt ELSE 0 END) AS "lastJudgedTestCnt"
             FROM
                 t_test
             WHERE
                 test_id = ${testId}
             AND delete_at IS NULL
-            ORDER BY
+            GROUP BY
                 employee_id
-               ,test_cnt DESC
         `;
 
         return result.reduce<Record<number, {
             testCnt: number;
-            result: number;
             testAt: Date;
+            passed: boolean;
+            lastJudgedTestCnt: number,
         }>>((acc, cur) => {
-            acc[cur.employeeId] = { testCnt: cur.testCnt, result: cur.result, testAt: cur.testAt };
+            acc[cur.employeeId] = {
+                testCnt: cur.testCnt,
+                testAt: cur.testAt,
+                passed: cur.passed,
+                lastJudgedTestCnt: cur.lastJudgedTestCnt,
+            };
             return acc;
         }, {});
     }
