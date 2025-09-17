@@ -39,8 +39,8 @@ export async function stateDownloadService(
         const START_ROW_FIRST_HALF = 5;     // 1問目〜10問目の開始行番号
         const START_ROW_SECOND_HALF = 7;    // 11問目〜20問目の開始行番号
 
-        // 社員IDに基づいて社員情報取得
-        const tEmployee = await TEmployeeRepository.findById(employeeId);
+        // 社員IDに基づいて社員情報取得 ※退職社員も取得する
+        const tEmployee = await TEmployeeRepository.findById(employeeId, true);
         if (!tEmployee) {
             throw new Error(`社員情報が存在しません。[employeeId=${employeeId}]`);
         }

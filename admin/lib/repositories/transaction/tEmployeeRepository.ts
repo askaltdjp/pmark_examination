@@ -9,13 +9,14 @@ export class TEmployeeRepository {
     /**
      * idをキーにTEmployeeレコードを検索する
      * @param id - 検索するID
+     * @param includeDeleted - 退職社員（delete_at が NOT NULL）も含めるかどうか（デフォルト: false）
      * @returns 見つかったTEmployeeオブジェクト、なければnull
      */
-    static async findById(id: number): Promise<TEmployee | null> {
+    static async findById(id: number, includeDeleted: boolean = false): Promise<TEmployee | null> {
         return transactionPrisma.tEmployee.findFirst({
             where: {
                 id,
-                deleteAt: null,
+                ...(includeDeleted ? {} : { deleteAt: null })
             }
         });
     }
@@ -55,7 +56,7 @@ export class TEmployeeRepository {
     /**
      * t_employee テーブルの全レコードを取得する
      * 
-     * @param includeDeleted 退職社員（delete_at が NOT NULL）も含めるかどうか（デフォルト: false）
+     * @param includeDeleted - 退職社員（delete_at が NOT NULL）も含めるかどうか（デフォルト: false）
      * @returns TEmployee のレコード配列
      */
     static async findAll(includeDeleted: boolean = false): Promise<TEmployee[]> {
