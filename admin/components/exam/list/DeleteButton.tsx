@@ -22,11 +22,11 @@ export default function DeleteButton(
 
     return (
         <button
-            className="btn btn-sm bg-slate-600 hover:bg-slate-500 text-white mx-1"
+            className="btn btn-md bg-slate-600 hover:bg-slate-500 text-white mx-1"
             onClick={onDelete}
             disabled={isExpired}
         >
-            削除
+            削 除
         </button>
     );
 }

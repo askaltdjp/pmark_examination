@@ -5,7 +5,13 @@ import EditButton from "./EditButton";
 import DeleteButton from "./DeleteButton";
 import { TEmployee } from ".prisma/client_transaction/client";
 import { useMemo, useState } from "react";
-import { flexRender, getCoreRowModel, getSortedRowModel, SortingState, useReactTable } from "@tanstack/react-table";
+import {
+    flexRender,
+    getCoreRowModel,
+    getSortedRowModel,
+    SortingState,
+    useReactTable,
+} from "@tanstack/react-table";
 import { deleteAction } from "@/app/actions/employee/deleteAction";
 
 /**
@@ -48,13 +54,11 @@ export default function EmployeeListTable({
                 cell: (info: any) => {
                     const rowData: TEmployee = info.row.original;
                     return (
-                        <>
-                            {/* 変更ボタン */}
+                        <div className="flex justify-center gap-2">
                             <EditButton employeeId={rowData.id} />
-                            {/* 削除ボタン */}
                             <DeleteButton onDelete={() => handleDeleteButtonClick(rowData.id)} />
-                        </>
-                    )
+                        </div>
+                    );
                 },
                 enableSorting: false,
             },
@@ -77,17 +81,13 @@ export default function EmployeeListTable({
 
     // 削除ボタン押下時の処理
     const handleDeleteButtonClick = async (employeeId: number) => {
-        // 社員の削除確認
         const confirmed = window.confirm("削除すると元に戻すことができません。\n本当に削除しますか？");
         if (!confirmed) {
             return;
         }
 
-        // 社員の削除
         try {
-            // テーブルから該当社員のレコードを削除
             await deleteAction(employeeId);
-            // 画面から該当社員の行を削除
             setTEmployees(prev => prev.filter(tEmployee => tEmployee.id !== employeeId));
             alert("削除が完了しました。");
         } catch (error) {
@@ -97,10 +97,10 @@ export default function EmployeeListTable({
     };
 
     return (
-        <div className="flex justify-center max-h-[70vh]">
+        <div className="flex justify-center max-h-[70vh] text-sm">
             <div className="w-[100%] p-3 bg-white shadow rounded">
                 <div className="h-full overflow-y-auto">
-                    <table className="table table-zebra w-full">
+                    <table className="table table-zebra w-full text-sm">
                         <thead className="sticky top-0 bg-white">
                             {table.getHeaderGroups().map((headerGroup) => (
                                 <tr key={headerGroup.id}>
@@ -115,13 +115,12 @@ export default function EmployeeListTable({
                                                 header.column.columnDef.header,
                                                 header.getContext()
                                             )}
-                                            {/* ソート状態を表示 */}
                                             {header.column.getCanSort() && (
                                                 <span className="ml-1 text-sm">
                                                     {{
                                                         asc: "🔼",
                                                         desc: "🔽",
-                                                    }[header.column.getIsSorted() as string] ?? "⇅" /* ← 初期状態は薄い双方向アイコン */}
+                                                    }[header.column.getIsSorted() as string] ?? "⇅"}
                                                 </span>
                                             )}
                                         </th>
@@ -133,7 +132,7 @@ export default function EmployeeListTable({
                             {table.getRowModel().rows.map((row) => (
                                 <tr key={row.id}>
                                     {row.getVisibleCells().map((cell) => (
-                                        <td key={cell.id} className="text-center align-middle text-gray-800">
+                                        <td key={cell.id} className="text-center align-middle text-gray-800 py-2">
                                             {flexRender(cell.column.columnDef.cell, cell.getContext())}
                                         </td>
                                     ))}

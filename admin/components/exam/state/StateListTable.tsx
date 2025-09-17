@@ -109,7 +109,7 @@ export default function StateListTable({
 
     return (
         <div className="bg-white rounded-xl shadow-md w-full text-gray-800 mb-4 p-3">
-            <div className="overflow-y-auto max-h-[480px]">
+            <div className="overflow-y-auto max-h-[500px]">
                 <table className="table table-zebra w-full border border-gray-300 border-separate border-spacing-0 text-gray-700 text-[15px]">
                     <thead
                         style={{ backgroundColor: '#f0f0f0', position: 'sticky', top: 0, zIndex: 10 }}
@@ -145,7 +145,7 @@ export default function StateListTable({
                         {table.getRowModel().rows.map((row) => (
                             <tr key={row.id}>
                                 {row.getVisibleCells().map((cell) => (
-                                    <td key={cell.id} className="text-center align-middle">
+                                    <td key={cell.id} className="text-center align-middle text-gray-800 py-2">
                                         {flexRender(cell.column.columnDef.cell, cell.getContext())}
                                     </td>
                                 ))}

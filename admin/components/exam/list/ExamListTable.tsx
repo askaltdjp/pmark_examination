@@ -47,38 +47,33 @@ export default function ExamListTable({
             <div className="w-[100%] p-3 bg-white shadow rounded">
                 <div className="h-full overflow-y-auto">
                     <table className="table table-zebra w-full">
-                        <thead className="sticky top-0 bg-white">
+                        <thead className="sticky top-0 bg-gray-200 text-gray-800">
                             <tr className="text-center text-gray-600">
-                                <th className="w-10">ID</th>
-                                <th>試験名</th>
-                                <th className="w-28">開始日</th>
-                                <th className="w-28">終了日</th>
-                                <th className="w-12">受験者数</th>
-                                <th className="w-12">合格者数</th>
-                                <th className="w-53">操作</th>
+                                <th className="w-20 py-2">ID</th>
+                                <th className="py-2">試験名</th>
+                                <th className="w-30 py-2">開始日</th>
+                                <th className="w-30 py-2">終了日</th>
+                                <th className="w-15 py-2">受験者数</th>
+                                <th className="w-15 py-2">合格者数</th>
+                                <th className="w-65 py-2">操作</th>
                             </tr>
                         </thead>
                         <tbody className="bg-white">
-                            {mTests.map((mTest, i) => {
-                                return (
-                                    <tr key={mTest.id} className="text-gray-600">
-                                        <td className="text-center">{mTest.id}</td>
-                                        <td>{mTest.name}</td>
-                                        <td className="text-center">{formatDate(mTest.startAt, "YYYY/MM/DD")}</td>
-                                        <td className="text-center">{formatDate(mTest.endAt, "YYYY/MM/DD")}</td>
-                                        <td className="text-center">{testSummary[mTest.id]?.examineeNum ?? 0}</td>
-                                        <td className="text-center">{testSummary[mTest.id]?.passerNum ?? 0}</td>
-                                        <td className="text-center">
-                                            {/* 変更ボタン */}
-                                            <EditButton testId={mTest.id} />
-                                            {/* 状況ボタン */}
-                                            <StatusButton testId={mTest.id} />
-                                            {/* 削除ボタン */}
-                                            <DeleteButton mTest={mTest} onDelete={() => handleDeleteButtonClick(mTest.id)} />
-                                        </td>
-                                    </tr>
-                                );
-                            })}
+                            {mTests.map((mTest) => (
+                                <tr key={mTest.id} className="text-gray-600">
+                                    <td className="text-center py-2">{mTest.id}</td>
+                                    <td className="py-2">{mTest.name}</td>
+                                    <td className="text-center py-2">{formatDate(mTest.startAt, "YYYY/MM/DD")}</td>
+                                    <td className="text-center py-2">{formatDate(mTest.endAt, "YYYY/MM/DD")}</td>
+                                    <td className="text-center py-2">{testSummary[mTest.id]?.examineeNum ?? 0}</td>
+                                    <td className="text-center py-2">{testSummary[mTest.id]?.passerNum ?? 0}</td>
+                                    <td className="text-center py-2">
+                                        <EditButton testId={mTest.id} />
+                                        <StatusButton testId={mTest.id} />
+                                        <DeleteButton mTest={mTest} onDelete={() => handleDeleteButtonClick(mTest.id)} />
+                                    </td>
+                                </tr>
+                            ))}
                         </tbody>
                     </table>
                 </div>
