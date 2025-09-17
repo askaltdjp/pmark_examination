@@ -69,11 +69,11 @@ export default async function DashBoardPage() {
                     <div className="overflow-x-auto max-h-[500px]">
                         <table className="table table-zebra table-pin-rows table-pin-cols">
                             <thead>
-                                <tr className="text-center text-gray-600">
-                                    <th>受験日時</th>
-                                    <th>正解状況</th>
-                                    <th>結果</th>
-                                    <th>解答</th>
+                                <tr className="text-center">
+                                    <th className="bg-gray-200 text-gray-800 py-2 px-2">受験日時</th>
+                                    <th className="bg-gray-200 text-gray-800 py-2 px-2">正解状況</th>
+                                    <th className="bg-gray-200 text-gray-800 py-2 px-2">結果</th>
+                                    <th className="bg-gray-200 text-gray-800 py-2 px-2">解答</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -84,11 +84,11 @@ export default async function DashBoardPage() {
                                     const result = testResultLabels[tTest.result];
                                     return (
                                         <tr key={i} className="text-center">
-                                            <td>{date}</td>
-                                            <td>{correct}</td>
-                                            <td>{result}</td>
+                                            <td className="py-2 px-2">{date}</td>
+                                            <td className="py-2 px-2">{correct}</td>
+                                            <td className="py-2 px-2">{result}</td>
                                             {/* 確認ボタン */}
-                                            <td><ConfirmButton tTest={tTest} /></td>
+                                            <td className="py-2 px-2"><ConfirmButton tTest={tTest} /></td>
                                         </tr>
                                     );
                                 })}

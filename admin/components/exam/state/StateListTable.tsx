@@ -61,7 +61,7 @@ export default function StateListTable({
                     const rowData: StateData = info.row.original;
                     return (
                         <button
-                            className="btn btn-md bg-slate-600 hover:bg-slate-500 text-white mx-1"
+                            className="btn bg-[#6E5E48] hover:bg-[#544734] text-white mx-1"
                             disabled={rowData.lastJudgedTestCnt === null}
                             onClick={() => handleConfirmButtonClick(rowData.employeeId, testId, rowData.lastJudgedTestCnt)}
                         >
@@ -108,7 +108,7 @@ export default function StateListTable({
     };
 
     return (
-        <div className="bg-white rounded-xl shadow-md w-full text-gray-800 mb-4 p-3">
+        <div className="bg-white rounded-xl shadow-md w-full text-gray-800 mb-1 p-3">
             <div className="overflow-y-auto max-h-[500px]">
                 <table className="table table-zebra w-full border border-gray-300 border-separate border-spacing-0 text-gray-700 text-[15px]">
                     <thead

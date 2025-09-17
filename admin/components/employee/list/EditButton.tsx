@@ -15,7 +15,7 @@ export default function EditButton({ employeeId }: { employeeId: number }) {
 
     return (
         <button
-            className="btn btn-md bg-slate-600 hover:bg-slate-500 text-white mx-1"
+            className="btn bg-[#2A5D9F] hover:bg-[#204673] text-white mx-1"
             onClick={handleEditButtonClick}
         >
             変 更

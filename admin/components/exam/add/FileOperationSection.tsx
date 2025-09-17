@@ -192,7 +192,7 @@ export default function FileOperationSection({
 
                     {/* インポート */}
                     <button
-                        className="btn btn-sm btn-secondary w-full h-10"
+                        className="btn bg-[#c4623f] hover:bg-[#9b4e31] text-white w-full h-10"
                         onClick={handleImportButtonClick}
                     >
                         インポート
@@ -200,9 +200,9 @@ export default function FileOperationSection({
 
                     {/* エクスポート + 登録 */}
                     <div className="flex flex-col items-stretch gap-4 w-full">
-                        <button className="btn btn-sm btn-secondary w-full h-10" disabled>エクスポート</button>
+                        <button className="btn bg-[#c4623f] hover:bg-[#9b4e31] text-white w-full h-10" disabled>エクスポート</button>
                         <button
-                            className="btn btn-primary w-full h-10"
+                            className="btn bg-[#3B7A57] hover:bg-[#2F5E42] text-white w-full h-10"
                             onClick={handleAddButtonClick}
                         >
                             登 録

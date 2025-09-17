@@ -15,7 +15,7 @@ export default function StatusButton({ testId }: { testId: number }) {
 
     return (
         <button
-            className="btn btn-md bg-slate-600 hover:bg-slate-500 text-white mx-1"
+            className="btn bg-[#6E5E48] hover:bg-[#544734] text-white mx-1"
             onClick={handleStateButtonClick}
         >
             状 況

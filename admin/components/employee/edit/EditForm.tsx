@@ -161,7 +161,7 @@ export default function EditForm({ tEmployee }: { tEmployee: TEmployee; }) {
             <div className="flex justify-center">
                 <div className="w-[100%] text-right py-3">
                     <button
-                        className="btn bg-slate-600 hover:bg-slate-500 text-white mx-1 w-28"
+                        className="btn bg-[#2A5D9F] hover:bg-[#204673] text-white mx-1 w-28"
                         onClick={handleEditButtonClick}
                     >
                         変 更

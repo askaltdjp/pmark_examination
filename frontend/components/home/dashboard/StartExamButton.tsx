@@ -67,8 +67,14 @@ export default function StartExamButton({ mTest, tTest }: Props) {
     const disabled = !mTest || tTest?.result === TestResult.Pass;
 
     return (
-        <div className="mt-6 flex justify-center">
-            <button className="btn btn-lg bg-slate-600 hover:bg-slate-500 text-white" disabled={disabled} onClick={handleStartButtonClick}>試験開始</button>
+        <div className="mt-4 flex justify-center">
+            <button
+                className="btn btn-lg bg-[#2A5D9F] hover:bg-[#204673] text-white px-10"
+                disabled={disabled}
+                onClick={handleStartButtonClick}
+            >
+                試験開始
+            </button>
         </div>
     );
 }

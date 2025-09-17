@@ -6,7 +6,7 @@
 export default function DeleteButton({ onDelete }: { onDelete: () => void }) {
     return (
         <button
-            className="btn btn-md bg-slate-600 hover:bg-slate-500 text-white mx-1"
+            className="btn bg-[#A53E3E] hover:bg-[#732C2C] text-white mx-1"
             onClick={onDelete}
         >
             削 除

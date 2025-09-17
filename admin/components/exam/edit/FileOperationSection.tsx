@@ -218,7 +218,7 @@ export default function FileOperationSection({
 
                     {/* インポート */}
                     <button
-                        className="btn btn-sm btn-secondary w-full h-10"
+                        className="btn bg-[#c4623f] hover:bg-[#9b4e31] text-white w-full h-10"
                         onClick={handleImportButtonClick}
                         disabled={isExpired}
                     >
@@ -228,13 +228,13 @@ export default function FileOperationSection({
                     {/* エクスポート + 変更 */}
                     <div className="flex flex-col items-stretch gap-4 w-full">
                         <button
-                            className="btn btn-sm btn-secondary w-full h-10"
+                            className="btn bg-[#c4623f] hover:bg-[#9b4e31] text-white w-full h-10"
                             onClick={handleExportButtonClick}
                         >
                             エクスポート
                         </button>
                         <button
-                            className="btn btn-primary w-full h-10"
+                            className="btn bg-[#2A5D9F] hover:bg-[#204673] text-white w-full h-10"
                             onClick={handleEditButtonClick}
                             disabled={isExpired}
                         >

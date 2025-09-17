@@ -220,14 +220,14 @@ export default function ExamNavigator() {
             {/* 前の問題と次の問題に遷移するためのボタン */}
             <div className="flex justify-center mt-16 gap-10">
                 <button
-                    className="btn btn-lg bg-slate-300 hover:bg-slate-400 text-black"
+                    className="btn btn-lg bg-[#3B7A57] hover:bg-[#2F5E42] text-white w-[160px]"
                     onClick={handlePrevButtonClick}
                     disabled={questionIndex === 0}
                 >
                     前 へ
                 </button>
                 <button
-                    className="btn btn-lg bg-slate-600 hover:bg-slate-500 text-white"
+                    className="btn btn-lg bg-[#2A5D9F] hover:bg-[#204673] text-white w-[160px]"
                     onClick={isLastQuestion ? handleAnswerCompleteButtonClick : handleNextButtonClick}
                     disabled={answers[questionIndex] === undefined}
                 >

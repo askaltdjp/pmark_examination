@@ -22,9 +22,11 @@ export default function ConfirmButton({ tTest }: Props) {
 
     return (
         <button
-            className="btn bg-slate-600 hover:bg-slate-500 text-white"
+            className="btn bg-[#c4623f] hover:bg-[#9b4e31] text-white"
             onClick={() => handleConfirmButtonClick(tTest.testId, tTest.testCnt)}
             disabled={tTest.result === TestResult.Interrupted}
-        >確 認</button>
+        >
+            確 認
+        </button>
     );
 }

@@ -15,7 +15,10 @@ export default function HomeButton() {
 
     return (
         <div className="flex justify-center mt-6">
-            <button className="btn btn-lg bg-slate-600 hover:bg-slate-500 text-white" onClick={handleHomeButtonClick}>
+            <button
+                className="btn btn-lg bg-[#2A5D9F] hover:bg-[#204673] text-white px-10"
+                onClick={handleHomeButtonClick}
+            >
                 ホームへ
             </button>
         </div>

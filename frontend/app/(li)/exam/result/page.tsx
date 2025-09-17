@@ -59,11 +59,11 @@ export default async function ResultPage({
                     <div className="overflow-x-auto max-h-[500px]">
                         <table className="table table-pin-rows table-pin-cols">
                             <thead>
-                                <tr className="text-center text-gray-600">
-                                    <th>No</th>
-                                    <th colSpan={2}>問題 / 解説</th>
-                                    <th>解答</th>
-                                    <th>正解</th>
+                                <tr className="text-center">
+                                    <th className="bg-gray-200 text-gray-800">No</th>
+                                    <th className="bg-gray-200 text-gray-800" colSpan={2}>問題 / 解説</th>
+                                    <th className="bg-gray-200 text-gray-800">解答</th>
+                                    <th className="bg-gray-200 text-gray-800">正解</th>
                                 </tr>
                             </thead>
                             <tbody>

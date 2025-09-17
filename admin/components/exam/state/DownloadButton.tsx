@@ -24,7 +24,7 @@ export default function DownloadButton({
         <div className="flex justify-center">
             <div className="w-[100%] text-right py-3">
                 <button
-                    className="btn bg-slate-600 hover:bg-slate-500 text-white mx-1"
+                    className="btn bg-[#c4623f] hover:bg-[#9b4e31] text-white mx-1 px-10"
                     onClick={handleDownloadButtonClick}
                 >
                     ダウンロード

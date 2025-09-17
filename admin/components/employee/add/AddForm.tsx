@@ -160,7 +160,7 @@ export default function AddForm() {
             <div className="flex justify-center">
                 <div className="w-[100%] text-right py-3">
                     <button
-                        className="btn bg-slate-600 hover:bg-slate-500 text-white mx-1 w-28"
+                        className="btn bg-[#3B7A57] hover:bg-[#2F5E42] text-white mx-1 w-28"
                         onClick={handleAddButtonClick}
                     >
                         登 録
