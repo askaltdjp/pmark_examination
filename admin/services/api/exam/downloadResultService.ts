@@ -20,7 +20,7 @@ import { generateExcelFromTemplate } from "@/lib/utils/excelUtils";
  * @param testCnt - 受験回数
  * @returns Excelファイルのバッファとダウンロード用ファイル名
  */
-export async function stateDownloadService(
+export async function downloadResultService(
     employeeId: number,
     testId: number,
     testCnt: number,

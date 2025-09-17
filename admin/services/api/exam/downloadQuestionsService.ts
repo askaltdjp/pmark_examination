@@ -9,7 +9,7 @@ import Papa from 'papaparse';
  * @param testId - 試験ID
  * @returns BOM付きCSV文字列とダウンロード用ファイル名
  */
-export async function downloadService(
+export async function downloadQuestionsService(
     testId: number,
 ): Promise<{
     csvWithBom: string;

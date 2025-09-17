@@ -40,22 +40,20 @@ export default function FileOperationSection({
 
     // インポートボタン押下時の処理
     const handleImportButtonClick = async () => {
-        // インポートファイルの入力チェック
-        const file = fileInputRef.current?.files?.[0];
-        if (!file) {
-            alert("インポートファイルが選択されていません。");
-            return;
-        }
-        if (file.size <= 0) {
-            alert("インポートファイルの中身が空です。");
-            return;
-        }
-
-        // 送信用のフォームデータ作成
-        const formData = new FormData();
-        formData.append("file", file);
-
         try {
+            // インポートファイルの入力チェック
+            const file = fileInputRef.current?.files?.[0];
+            if (!file) {
+                throw new Error("インポートファイルが選択されていません。");
+            }
+            if (file.size <= 0) {
+                throw new Error("インポートファイルの中身が空です。");
+            }
+
+            // 送信用のフォームデータ作成
+            const formData = new FormData();
+            formData.append("file", file);
+
             // 試験問題のインポート処理の実行
             const questionDataList = await importAction(formData);
             // 問題一覧に反映
@@ -74,7 +72,7 @@ export default function FileOperationSection({
 
     // エクスポートボタン押下時の処理
     const handleExportButtonClick = async () => {
-        await downloadFileFromPost("/api/exam/export", {
+        await downloadFileFromPost("/api/exam/download-questions", {
             testId,
         });
     };

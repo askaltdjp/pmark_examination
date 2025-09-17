@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { withApiErrorHandler } from "@/lib/utils/withApiErrorHandler";
-import { downloadService } from "@/services/api/exam/downloadService";
+import { downloadQuestionsService } from "@/services/api/exam/downloadQuestionsService";
 
 /**
  * POSTリクエストを処理するAPIハンドラ
@@ -17,7 +17,7 @@ async function handler(request: NextRequest): Promise<NextResponse> {
     }
 
     // ダウンロード用CSVファイルの生成処理を呼び出す
-    const { csvWithBom, fileName } = await downloadService(testId);
+    const { csvWithBom, fileName } = await downloadQuestionsService(testId);
 
     // CSVファイルをレスポンスにセットし、ダウンロードさせる
     return new NextResponse(csvWithBom, {

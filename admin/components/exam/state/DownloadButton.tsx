@@ -15,7 +15,7 @@ export default function DownloadButton({
 
     // ダウンロードボタン押下時の処理
     const handleDownloadButtonClick = async () => {
-        await downloadFileFromPost("/api/exam/stateAllDownload", {
+        await downloadFileFromPost("/api/exam/download-results", {
             testId,
         });
     };

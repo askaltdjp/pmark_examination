@@ -12,7 +12,7 @@ import { generateExcelFromTemplate } from "@/lib/utils/excelUtils";
  * @param testId - 試験ID
  * @returns Excelファイルのバッファとダウンロード用ファイル名
  */
-export async function stateAllDownloadService(
+export async function downloadResultsService(
     testId: number,
 ): Promise<{
     buffer: ArrayBuffer;

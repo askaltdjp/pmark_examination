@@ -90,7 +90,7 @@ export default function StateListTable({
 
     // 確認ボタン押下時の処理
     const handleConfirmButtonClick = async (employeeId: number, testId: number, testCnt: number | null) => {
-        // nullの場合、通常はボタンが非活性のため呼ばれないが、念のためチェック
+        // null の場合、通常はボタンが非活性のため呼ばれないが、念のためチェック
         if (testCnt === null) {
             return;
         }
@@ -99,7 +99,8 @@ export default function StateListTable({
             alert("合否判定を一度も受けていないため、最終受験時の解答をダウンロードできません。");
             return;
         }
-        await downloadFileFromPost("/api/exam/stateDownload", {
+
+        await downloadFileFromPost("/api/exam/download-result", {
             employeeId,
             testId,
             testCnt,
