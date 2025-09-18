@@ -1,8 +1,8 @@
 "use client";
 
 import { formatDate } from "@/lib/utils/timeUtils";
-import EditButton from "./EditButton";
-import DeleteButton from "./DeleteButton";
+import EditButton from "@/components/employee/list/EditButton";
+import DeleteButton from "@/components/employee/list/DeleteButton";
 import { TEmployee } from ".prisma/client_transaction/client";
 import { useMemo, useState } from "react";
 import {

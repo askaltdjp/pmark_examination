@@ -30,25 +30,19 @@ export default async function DashBoardPage() {
                     <table className="table">
                         <tbody>
                             <tr className="text-center">
-                                <th className="text-gray-600 bg-base-200 w-[30%]">
-                                    氏名
-                                </th>
-                                <td>
-                                    {tEmployee.name}
-                                </td>
+                                <th className="text-gray-800 bg-base-200 w-[10%]">社員No</th>
+                                <td className="w-[40%]">{tEmployee.employeeNo}</td>
+                                <th className="text-gray-800 bg-base-200 w-[10%]">氏名</th>
+                                <td className="w-[40%]">{tEmployee.name}</td>
                             </tr>
-                        </tbody>
-                    </table>
-                </div>
-                <div className="rounded-box border border-base-content/5 bg-base-100 mt-2">
-                    <table className="table">
-                        <tbody>
                             <tr className="text-center">
-                                <th className="text-gray-600 bg-base-200 w-[30%]">
-                                    試験内容
-                                </th>
+                                <th className="text-gray-800 bg-base-200">試験内容</th>
+                                <td>{mTest?.name ?? "実施中の試験はありません"}</td>
+                                <th className="text-gray-800 bg-base-200">合格条件</th>
                                 <td>
-                                    {mTest?.name ?? "実施中の試験はありません"}
+                                    {mTest
+                                        ? `${mTest.questionNum} 問中 ${mTest.passNum} 問正解で合格`
+                                        : "－"}
                                 </td>
                             </tr>
                         </tbody>
@@ -57,7 +51,7 @@ export default async function DashBoardPage() {
             </div>
 
             {/* 受験履歴テキスト */}
-            <h2 className="text-gray-600 text-3xl font-bold text-center mb-4 pt-8">受験履歴</h2>
+            <h2 className="text-gray-800 text-3xl font-bold text-center mb-4 pt-8">受験履歴</h2>
 
             {/* 受験履歴一覧 */}
             {(!mTest || tTests.length === 0) ? (
