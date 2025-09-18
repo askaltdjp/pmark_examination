@@ -27,9 +27,9 @@ export default function EditForm({ tEmployee }: { tEmployee: TEmployee; }) {
         const trimmedPassword = password.trim();
 
         try {
-            // 社員番号の入力チェック
+            // 社員Noの入力チェック
             if (!trimmedEmployeeNo) {
-                throw new Error("社員番号を入力してください。");
+                throw new Error("社員Noを入力してください。");
             }
 
             // 氏名の入力チェック
@@ -80,10 +80,10 @@ export default function EditForm({ tEmployee }: { tEmployee: TEmployee; }) {
             <div className="bg-white px-8 py-6 rounded-xl shadow-md text-gray-800">
                 <table className="w-full">
                     <tbody>
-                        {/* 1行目：社員番号と氏名 */}
+                        {/* 1行目：社員Noと氏名 */}
                         <tr>
                             <th className="text-left text-sm font-semibold text-gray-700 py-5 pr-6 whitespace-nowrap w-32">
-                                社員番号
+                                社員No
                             </th>
                             <td className="py-5 pr-10">
                                 <input
