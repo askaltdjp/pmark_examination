@@ -81,6 +81,12 @@ export async function buildExamStateDataList(testId: number): Promise<{
         };
 
         return stateData;
+    }).sort((a, b) => {
+        // 社員Noで昇順ソート
+        if (a.employeeNo < b.employeeNo) return -1;
+        if (a.employeeNo > b.employeeNo) return 1;
+
+        return 0;
     });
 
     return { mTest, stateDataList };

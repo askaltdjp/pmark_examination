@@ -58,6 +58,7 @@ export default function FileOperationSection({
             const questionDataList = await importAction(formData);
             // 問題一覧に反映
             setQuestionDataList(questionDataList);
+            alert("試験問題のインポートが完了しました。");
         } catch (error) {
             console.error("試験問題インポート時のエラー:", error);
             alert(error instanceof Error ? error.message : "予期しないエラーが発生しました。");
