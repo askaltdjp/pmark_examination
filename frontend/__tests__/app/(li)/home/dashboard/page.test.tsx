@@ -105,20 +105,27 @@ describe("page.tsx", () => {
                 render(page);
             });
 
-            test("社員情報と試験内容の概要表示が正しく表示される", () => {
+            test("社員情報と試験内容が正しく表示される", () => {
                 const expectedRows = [
-                    { label: "氏名", value: "テスト太郎" },
-                    { label: "試験内容", value: "2025年度 Pマーク試験" },
+                    [
+                        { rowIndex: 0, label: "社員No", value: "001" },
+                        { rowIndex: 0, label: "氏名", value: "テスト太郎" },
+                    ],
+                    [
+                        { rowIndex: 1, label: "試験内容", value: "2025年度 Pマーク試験" },
+                        { rowIndex: 1, label: "合格条件", value: "10 問中 8 問正解で合格" },
+                    ],
                 ];
 
                 const tables = screen.getAllByRole("table");
+                const rows = within(tables[0]).getAllByRole("row");
 
-                expectedRows.forEach(({ label, value }, i) => {
-                    const row = within(tables[i]).getByRole("row");
-                    const header = within(row).getByRole("columnheader");
-                    const cell = within(row).getByRole("cell");
-                    expect(header.textContent).toBe(label);
-                    expect(cell.textContent).toBe(value);
+                rows.forEach((row, rowIndex) => {
+                    const cells = row.querySelectorAll("th, td");
+                    expectedRows[rowIndex].forEach(({ label, value }, i) => {
+                        expect(cells[i * 2].textContent).toBe(label);
+                        expect(cells[i * 2 + 1].textContent).toBe(value);
+                    });
                 });
             });
 
@@ -127,7 +134,7 @@ describe("page.tsx", () => {
                 expect(heading.textContent).toBe("受験履歴");
 
                 const tables = screen.getAllByRole("table");
-                const table = tables[2];
+                const table = tables[1];
 
                 const rows = within(table).getAllByRole("row");
                 const headers = within(rows[0]).getAllByRole("columnheader");
@@ -241,6 +248,30 @@ describe("page.tsx", () => {
 
                 const page = await DashBoardPage();
                 render(page);
+            });
+
+            test("社員情報と試験内容が正しく表示される", () => {
+                const expectedRows = [
+                    [
+                        { rowIndex: 0, label: "社員No", value: "001" },
+                        { rowIndex: 0, label: "氏名", value: "テスト太郎" },
+                    ],
+                    [
+                        { rowIndex: 1, label: "試験内容", value: "実施中の試験はありません" },
+                        { rowIndex: 1, label: "合格条件", value: "－" },
+                    ],
+                ];
+
+                const tables = screen.getAllByRole("table");
+                const rows = within(tables[0]).getAllByRole("row");
+
+                rows.forEach((row, rowIndex) => {
+                    const cells = row.querySelectorAll("th, td");
+                    expectedRows[rowIndex].forEach(({ label, value }, i) => {
+                        expect(cells[i * 2].textContent).toBe(label);
+                        expect(cells[i * 2 + 1].textContent).toBe(value);
+                    });
+                });
             });
 
             test("受験履歴が表示されない", () => {
