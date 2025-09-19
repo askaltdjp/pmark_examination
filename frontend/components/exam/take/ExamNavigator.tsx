@@ -148,6 +148,12 @@ export default function ExamNavigator() {
 
     // 解答終了ボタン押下時の処理
     const handleAnswerCompleteButtonClick = async () => {
+        // 確認ダイアログ
+        const confirmed = window.confirm("最後の問題に解答しました。\nこのまま試験結果画面へ進みますか？\n※一度進むと解答の変更はできません。");
+        if (!confirmed) {
+            return;
+        }
+
         try {
             // 解答情報をサーバで処理する形式に整形（questionNoとanswerのペア）
             const examAnswers = questions.map((question, i) => {
@@ -184,8 +190,10 @@ export default function ExamNavigator() {
             {/* 問題文 */}
             <div className="flex justify-center mt-10 text-gray-600">
                 <div className="card w-256 bg-base-100 card-xl shadow-sm">
-                    <div className="card-body">
-                        <h2 className="card-title justify-center w-full mb-6">問題 {questionIndex + 1} / {questions.length}</h2>
+                    <div className="card-body pt-4 pb-14 px-6">
+                        <h2 className="card-title justify-center w-full mb-10 py-2 bg-base-200">
+                            問題 {questionIndex + 1} / {questions.length}
+                        </h2>
                         <p>{questions[questionIndex]?.question}</p>
                     </div>
                 </div>

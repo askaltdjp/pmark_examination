@@ -38,6 +38,7 @@ export default function LoginForm() {
             <input
                 type="text"
                 value={loginId}
+                maxLength={64}
                 onChange={e => setLoginId(e.target.value)}
                 placeholder="ログインID"
                 required
@@ -48,6 +49,7 @@ export default function LoginForm() {
                 type="password"
                 value={password}
                 onChange={e => setPassword(e.target.value)}
+                maxLength={64}
                 placeholder="パスワード"
                 required
                 className="input input-bordered w-full mb-6 placeholder-gray-500 text-black"

@@ -9,7 +9,7 @@ import { loginAction } from "@/app/actions/auth/loginAction";
  */
 export default function LoginForm() {
     const router = useRouter();
-    const [emailAddress, setAddressEmail] = useState("");
+    const [emailAddress, setEmailAddress] = useState("");
     const [password, setPassword] = useState("");
     const [errorMessage, setErrorMessage] = useState("");
 
@@ -36,7 +36,8 @@ export default function LoginForm() {
             <input
                 type="email"
                 value={emailAddress}
-                onChange={e => setAddressEmail(e.target.value)}
+                maxLength={256}
+                onChange={e => setEmailAddress(e.target.value)}
                 placeholder="メールアドレス"
                 required
                 className="input input-bordered w-full mb-4 placeholder-gray-500 text-black"
@@ -45,6 +46,7 @@ export default function LoginForm() {
             <input
                 type="password"
                 value={password}
+                maxLength={64}
                 onChange={e => setPassword(e.target.value)}
                 placeholder="パスワード"
                 required
